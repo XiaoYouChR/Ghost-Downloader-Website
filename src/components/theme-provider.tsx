@@ -10,6 +10,8 @@ import {
 } from 'react';
 import {
   THEME_MEDIA_QUERY,
+  THEME_COOKIE_MAX_AGE,
+  THEME_RESOLVED_COOKIE_KEY,
   THEME_STORAGE_KEY,
   type ResolvedTheme,
   type ThemeMode,
@@ -59,6 +61,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 
       root.classList.toggle('dark', nextResolvedTheme === 'dark');
       root.style.colorScheme = nextResolvedTheme;
+      document.cookie = `${THEME_RESOLVED_COOKIE_KEY}=${nextResolvedTheme}; path=/; max-age=${THEME_COOKIE_MAX_AGE}; SameSite=Lax`;
       setResolvedTheme(nextResolvedTheme);
     };
 

@@ -1,33 +1,20 @@
 import type { ReactNode } from 'react';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { i18n } from '@/lib/i18n';
 import { i18nUI } from '@/lib/layout.shared';
-import { THEME_MEDIA_QUERY, THEME_STORAGE_KEY } from '@/lib/theme';
+import {
+  THEME_RESOLVED_COOKIE_KEY,
+  isResolvedTheme,
+} from '@/lib/theme';
 import '../global.css';
 
 const inter = Inter({
   subsets: ['latin'],
 });
-
-const themeScript = `
-  (() => {
-    try {
-      const root = document.documentElement;
-      const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}');
-      const resolvedTheme =
-        storedTheme === 'light' || storedTheme === 'dark'
-          ? storedTheme
-          : window.matchMedia('${THEME_MEDIA_QUERY}').matches ? 'dark' : 'light';
-
-      root.classList.toggle('dark', resolvedTheme === 'dark');
-      root.style.colorScheme = resolvedTheme;
-    } catch {}
-  })();
-`;
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -45,18 +32,23 @@ export default async function LocaleLayout({
   params,
 }: LocaleLayoutProps) {
   const { lang } = await params;
+  const cookieStore = await cookies();
 
   if (!i18n.languages.includes(lang as (typeof i18n.languages)[number])) {
     notFound();
   }
 
+  const resolvedThemeCookie = cookieStore.get(THEME_RESOLVED_COOKIE_KEY)?.value ?? null;
+  const resolvedTheme = isResolvedTheme(resolvedThemeCookie)
+    ? resolvedThemeCookie
+    : 'light';
+
   return (
-    <html lang={lang} className={inter.className} suppressHydrationWarning>
-      <head>
-        <Script id="ghost-theme-init" strategy="beforeInteractive">
-          {themeScript}
-        </Script>
-      </head>
+    <html
+      lang={lang}
+      className={`${inter.className}${resolvedTheme === 'dark' ? ' dark' : ''}`}
+      suppressHydrationWarning
+    >
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
           <RootProvider theme={{ enabled: false }} i18n={i18nUI.provider(lang)}>
