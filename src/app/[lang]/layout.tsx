@@ -1,20 +1,24 @@
 import type { ReactNode } from 'react';
-import { cookies } from 'next/headers';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { i18n } from '@/lib/i18n';
 import { i18nUI } from '@/lib/layout.shared';
-import {
-  THEME_RESOLVED_COOKIE_KEY,
-  isResolvedTheme,
-} from '@/lib/theme';
 import '../global.css';
 
 const inter = Inter({
   subsets: ['latin'],
 });
+
+export const metadata: Metadata = {
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
+};
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -27,26 +31,22 @@ export function generateStaticParams() {
   }));
 }
 
+export const dynamicParams = false;
+
 export default async function LocaleLayout({
   children,
   params,
 }: LocaleLayoutProps) {
   const { lang } = await params;
-  const cookieStore = await cookies();
 
   if (!i18n.languages.includes(lang as (typeof i18n.languages)[number])) {
     notFound();
   }
 
-  const resolvedThemeCookie = cookieStore.get(THEME_RESOLVED_COOKIE_KEY)?.value ?? null;
-  const resolvedTheme = isResolvedTheme(resolvedThemeCookie)
-    ? resolvedThemeCookie
-    : 'light';
-
   return (
     <html
       lang={lang}
-      className={`${inter.className}${resolvedTheme === 'dark' ? ' dark' : ''}`}
+      className={inter.className}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col">

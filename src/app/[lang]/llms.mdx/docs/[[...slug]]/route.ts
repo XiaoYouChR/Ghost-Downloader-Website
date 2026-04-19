@@ -2,6 +2,7 @@ import { getLLMText, source } from '@/lib/source';
 import { notFound } from 'next/navigation';
 
 export const revalidate = false;
+export const dynamicParams = false;
 
 export async function GET(
   _req: Request,
@@ -19,5 +20,8 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.generateParams();
+  return source.generateParams().map((params) => ({
+    ...params,
+    slug: [...(params.slug ?? []), 'content.md'],
+  }));
 }

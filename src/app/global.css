@@ -74,10 +74,6 @@ html > body[data-scroll-locked] {
   align-items: center;
   gap: 0.7rem;
   padding: 0.55rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.34);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38);
 }
 
 #nd-nav nav > ul {
@@ -144,12 +140,6 @@ html > body[data-scroll-locked] {
 .dark #nd-nav > div::before {
   background: linear-gradient(180deg, rgba(148, 163, 184, 0.12), transparent 52%);
   opacity: 1;
-}
-
-.dark #nd-nav nav > a:first-of-type {
-  border-color: rgba(148, 163, 184, 0.12);
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .dark #nd-nav nav > ul a[data-active],

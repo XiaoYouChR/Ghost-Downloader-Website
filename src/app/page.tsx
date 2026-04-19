@@ -1,26 +1,27 @@
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { i18n } from '@/lib/i18n';
+'use client';
 
-function resolveLocale(acceptLanguage: string | null) {
-  for (const entry of acceptLanguage?.toLowerCase().split(',') ?? []) {
-    const language = entry.split(';')[0]?.trim();
+import { useEffect } from 'react';
 
-    if (language?.startsWith('zh')) {
+function resolveLocale(languages: readonly string[]) {
+  for (const language of languages) {
+    const normalized = language.toLowerCase();
+
+    if (normalized.startsWith('zh')) {
       return 'zh';
     }
 
-    if (language?.startsWith('en')) {
+    if (normalized.startsWith('en')) {
       return 'en';
     }
   }
 
-  return i18n.defaultLanguage;
+  return 'en';
 }
 
-export default async function RootPage() {
-  const headerStore = await headers();
-  const locale = resolveLocale(headerStore.get('accept-language'));
+export default function RootPage() {
+  useEffect(() => {
+    window.location.replace(`/${resolveLocale(navigator.languages)}/`);
+  }, []);
 
-  redirect(`/${locale}`);
+  return null;
 }

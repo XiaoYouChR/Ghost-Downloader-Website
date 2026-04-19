@@ -56,19 +56,13 @@ jobs:
       - name: Prepare deploy bundle
         run: |
           rm -rf deploy
-          mkdir -p deploy
-          cp -R .next public content deploy/
-          if [ -d data ]; then cp -R data deploy/data; fi
-          cp package.json pnpm-lock.yaml next.config.mjs source.config.ts proxy.ts deploy/
-          if [ -d .source ]; then cp -R .source deploy/.source; fi
-          rm -rf deploy/.next/cache
+          cp -R out deploy
 
       - name: Verify deploy bundle
         run: |
-          test -f deploy/.next/BUILD_ID
-          test -d deploy/public
-          test -f deploy/package.json
-          test -f deploy/pnpm-lock.yaml
+          test -f deploy/index.html
+          test -f deploy/en/index.html
+          test -f deploy/zh/index.html
 
       - name: Upload deploy artifact
         uses: actions/upload-artifact@v4
@@ -84,9 +78,6 @@ jobs:
     timeout-minutes: 15
     needs: build
     environment: production
-    env:
-      DEPLOY_RESTART_COMMAND: ${{ secrets.DEPLOY_RESTART_COMMAND }}
-
     steps:
       - name: Download deploy artifact
         uses: actions/download-artifact@v4
@@ -130,27 +121,10 @@ jobs:
             ./deploy/ \
             "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/"
 
-      - name: Install production dependencies
-        run: |
-          ssh -i ~/.ssh/id_ed25519 \
-              -p "${{ secrets.DEPLOY_PORT }}" \
-              -o StrictHostKeyChecking=yes \
-              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
-              "cd '${{ secrets.DEPLOY_PATH }}' && if command -v corepack >/dev/null 2>&1; then corepack enable; fi && pnpm install --prod --frozen-lockfile --ignore-scripts"
-
-      - name: Restart service
-        if: ${{ env.DEPLOY_RESTART_COMMAND != '' }}
-        run: |
-          ssh -i ~/.ssh/id_ed25519 \
-              -p "${{ secrets.DEPLOY_PORT }}" \
-              -o StrictHostKeyChecking=yes \
-              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
-              "cd '${{ secrets.DEPLOY_PATH }}' && $DEPLOY_RESTART_COMMAND"
-
       - name: Verify deployed build
         run: |
           ssh -i ~/.ssh/id_ed25519 \
               -p "${{ secrets.DEPLOY_PORT }}" \
               -o StrictHostKeyChecking=yes \
               "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
-              "test -f '${{ secrets.DEPLOY_PATH }}/.next/BUILD_ID'"
+              "test -f '${{ secrets.DEPLOY_PATH }}/index.html' && test -f '${{ secrets.DEPLOY_PATH }}/en/index.html' && test -f '${{ secrets.DEPLOY_PATH }}/zh/index.html'"
