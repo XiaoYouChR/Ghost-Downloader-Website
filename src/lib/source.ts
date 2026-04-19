@@ -22,13 +22,10 @@ export function getPageImage(page: InferPageType<typeof source>) {
 }
 
 export function getPageMarkdownUrl(page: InferPageType<typeof source>) {
-  const segments = [...page.slugs, 'content.md'];
-  const localePrefix = page.locale ? `/${page.locale}` : '';
-
-  return {
-    segments,
-    url: `${localePrefix}${docsContentRoute}/${segments.join('/')}`,
-  };
+  return `${page.locale ? `/${page.locale}` : ''}${docsContentRoute}/${[
+    ...page.slugs,
+    'content.md',
+  ].join('/')}`;
 }
 
 export async function getLLMText(page: InferPageType<typeof source>) {

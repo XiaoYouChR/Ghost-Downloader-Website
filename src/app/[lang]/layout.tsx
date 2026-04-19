@@ -1,16 +1,33 @@
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ThemeScript } from '@/components/theme-script';
 import { i18n } from '@/lib/i18n';
 import { i18nUI } from '@/lib/layout.shared';
+import { THEME_MEDIA_QUERY, THEME_STORAGE_KEY } from '@/lib/theme';
 import '../global.css';
 
 const inter = Inter({
   subsets: ['latin'],
 });
+
+const themeScript = `
+  (() => {
+    try {
+      const root = document.documentElement;
+      const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}');
+      const resolvedTheme =
+        storedTheme === 'light' || storedTheme === 'dark'
+          ? storedTheme
+          : window.matchMedia('${THEME_MEDIA_QUERY}').matches ? 'dark' : 'light';
+
+      root.classList.toggle('dark', resolvedTheme === 'dark');
+      root.style.colorScheme = resolvedTheme;
+    } catch {}
+  })();
+`;
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -36,7 +53,9 @@ export default async function LocaleLayout({
   return (
     <html lang={lang} className={inter.className} suppressHydrationWarning>
       <head>
-        <ThemeScript />
+        <Script id="ghost-theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
       </head>
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>

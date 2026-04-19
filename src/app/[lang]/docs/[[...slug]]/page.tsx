@@ -23,7 +23,7 @@ export default async function Page({ params }: DocsPageProps) {
   if (!page) notFound();
 
   const MDX = page.data.body;
-  const markdownUrl = getPageMarkdownUrl(page).url;
+  const markdownUrl = getPageMarkdownUrl(page);
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>

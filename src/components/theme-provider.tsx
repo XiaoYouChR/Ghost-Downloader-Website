@@ -26,45 +26,23 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function getSystemTheme(): ResolvedTheme {
-  if (typeof window === 'undefined') {
-    return 'light';
-  }
-
   return window.matchMedia(THEME_MEDIA_QUERY).matches ? 'dark' : 'light';
 }
 
-function getStoredTheme(): ThemeMode {
-  if (typeof window === 'undefined') {
-    return 'system';
-  }
-
-  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return isThemeMode(storedTheme) ? storedTheme : 'system';
-}
-
-function getInitialResolvedTheme(): ResolvedTheme {
-  if (typeof document === 'undefined') {
-    return 'light';
-  }
-
-  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-}
-
-function resolveTheme(theme: ThemeMode): ResolvedTheme {
-  return theme === 'system' ? getSystemTheme() : theme;
-}
-
-function applyResolvedTheme(theme: ResolvedTheme) {
-  const root = document.documentElement;
-
-  root.classList.toggle('dark', theme === 'dark');
-  root.style.colorScheme = theme;
-}
-
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const [theme, setTheme] = useState<ThemeMode>(() => getStoredTheme());
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') {
+      return 'system';
+    }
+
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return isThemeMode(storedTheme) ? storedTheme : 'system';
+  });
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-    getInitialResolvedTheme(),
+    typeof document !== 'undefined' &&
+    document.documentElement.classList.contains('dark')
+      ? 'dark'
+      : 'light',
   );
   const [mounted, setMounted] = useState(false);
 
@@ -76,25 +54,25 @@ export function ThemeProvider({ children }: PropsWithChildren) {
     const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY);
 
     const syncTheme = () => {
-      const nextResolvedTheme = resolveTheme(theme);
-      applyResolvedTheme(nextResolvedTheme);
+      const nextResolvedTheme = theme === 'system' ? getSystemTheme() : theme;
+      const root = document.documentElement;
+
+      root.classList.toggle('dark', nextResolvedTheme === 'dark');
+      root.style.colorScheme = nextResolvedTheme;
       setResolvedTheme(nextResolvedTheme);
-    };
-
-    const handleSystemThemeChange = () => {
-      if (theme !== 'system') {
-        return;
-      }
-
-      syncTheme();
     };
 
     syncTheme();
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
+
+    if (theme !== 'system') {
+      return;
+    }
+
+    mediaQuery.addEventListener('change', syncTheme);
 
     return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+      mediaQuery.removeEventListener('change', syncTheme);
     };
   }, [theme]);
 
