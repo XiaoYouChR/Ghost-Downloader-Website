@@ -41,7 +41,7 @@ export function baseOptions(locale: string): BaseLayoutProps {
           <span>{appName}</span>
         </>
       ),
-      url: `/${locale}`,
+      url: `/${locale}/`,
     },
     slots: {
       themeSwitch: ThemeSwitch,

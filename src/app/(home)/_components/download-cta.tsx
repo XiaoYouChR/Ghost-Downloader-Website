@@ -173,7 +173,7 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
         >
           {copy.footer.githubSource}
         </a>
-        <Link href={`/${lang}/docs`} className="transition-colors hover:text-blue-500">
+        <Link href={`/${lang}/docs/`} className="transition-colors hover:text-blue-500">
           {copy.footer.documentation}
         </Link>
         <a
