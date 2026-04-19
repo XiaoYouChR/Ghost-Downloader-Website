@@ -57,11 +57,27 @@ type PlatformOptionPanel = {
   title: string;
 };
 
+type PlatformTarget = {
+  href: string | null;
+  panel: PlatformOptionPanel | null;
+};
+
 const platformLogos = {
   linux: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg',
   macos: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg',
   windows: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/windows.svg',
 } satisfies Record<DownloadPlatform, string>;
+
+const zhMirrorDownloads = {
+  linux: 'https://gd3.lanzouu.com/b00jf2kvpe',
+  macos: 'https://gd3.lanzouu.com/b00jf2kvqf',
+  windows: {
+    installer: 'https://gd3.lanzouu.com/b00jf2kvji',
+    portable: 'https://gd3.lanzouu.com/b00jf2kvkj',
+  },
+} as const;
+
+const zhMirrorHost = 'gd3.lanzouu.com';
 
 export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
   const [activeSheet, setActiveSheet] = useState<PlatformOptionPanel | null>(null);
@@ -127,11 +143,12 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
               key={platform}
               copy={copy}
               isMobile={isMobile}
+              lang={lang}
+              onOpenSheet={setActiveSheet}
               platform={platform}
               release={release}
               subtitle={subtitle}
               title={title}
-              onOpenSheet={setActiveSheet}
             />
           ))}
         </div>
@@ -229,6 +246,7 @@ function BrowserLink({
 function PlatformDownloadCard({
   copy,
   isMobile,
+  lang,
   onOpenSheet,
   platform,
   release,
@@ -237,18 +255,30 @@ function PlatformDownloadCard({
 }: {
   copy: HomeCopy['download'];
   isMobile: boolean;
+  lang: string;
   onOpenSheet: (panel: PlatformOptionPanel | null) => void;
   platform: DownloadPlatform;
   release: DownloadReleaseState;
   subtitle: string;
   title: string;
 }) {
-  const panel = useMemo(
-    () => createPlatformPanel(copy, platform, release),
-    [copy, platform, release],
+  const target = useMemo(
+    () => createPlatformTarget(copy, lang, platform, release),
+    [copy, lang, platform, release],
   );
 
-  if (panel.groups.length === 0) {
+  if (target.href) {
+    return (
+      <DownloadCardLink
+        href={target.href}
+        platform={platform}
+        subtitle={subtitle}
+        title={title}
+      />
+    );
+  }
+
+  if (!target.panel || target.panel.groups.length === 0) {
     return (
       <DownloadCardLink
         href={release.data.releaseUrl}
@@ -258,6 +288,8 @@ function PlatformDownloadCard({
       />
     );
   }
+
+  const panel = target.panel;
 
   if (isMobile) {
     return (
@@ -588,6 +620,53 @@ function createPlatformPanel(
   };
 }
 
+function createPlatformTarget(
+  copy: HomeCopy['download'],
+  lang: string,
+  platform: DownloadPlatform,
+  release: DownloadReleaseState,
+): PlatformTarget {
+  if (lang !== 'zh') {
+    return {
+      href: null,
+      panel: createPlatformPanel(copy, platform, release),
+    };
+  }
+
+  if (platform === 'windows') {
+    return {
+      href: null,
+      panel: {
+        groups: [
+          createGroup(copy.installer, [
+            createMirrorOption(
+              copy.downloads.windows.label,
+              copy.installer,
+              zhMirrorDownloads.windows.installer,
+              true,
+            ),
+          ]),
+          createGroup(copy.portable, [
+            createMirrorOption(
+              copy.downloads.windows.label,
+              copy.portable,
+              zhMirrorDownloads.windows.portable,
+            ),
+          ]),
+        ].filter((group): group is OptionGroup => group !== null),
+        latestLabel: null,
+        platform,
+        title: copy.downloads.windows.label,
+      },
+    };
+  }
+
+  return {
+    href: zhMirrorDownloads[platform],
+    panel: null,
+  };
+}
+
 function createGroup(label: string, items: Array<DownloadOption | null>) {
   const availableItems = items.filter((item): item is DownloadOption => item !== null);
 
@@ -626,6 +705,21 @@ function createOption(
   return {
     fileName: asset.fileName,
     href: asset.url,
+    label,
+    meta,
+    recommended,
+  };
+}
+
+function createMirrorOption(
+  label: string,
+  meta: string,
+  href: string,
+  recommended = false,
+): DownloadOption {
+  return {
+    fileName: zhMirrorHost,
+    href,
     label,
     meta,
     recommended,
