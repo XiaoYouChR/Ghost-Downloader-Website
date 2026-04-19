@@ -1,0 +1,28 @@
+---
+title: 项目概览
+description: 用一页理解 Ghost Downloader 是什么、由哪些模块组成、先读哪里。
+---
+
+Ghost Downloader 是一个跨平台桌面下载器。开发者最需要先记住四件事：桌面端是 PySide6，任务调度在 AsyncIO 后台线程，下载能力通过 Feature Pack 扩展，浏览器扩展通过本地 WebSocket 把网页资源交给桌面端。
+
+<Callout type="info" title="推荐阅读顺序">
+第一次贡献通常从 `Ghost-Downloader-3.py`、`app/services/core_service.py`、`app/services/feature_service.py` 和目标 `features/*_pack` 开始。
+</Callout>
+
+## 模块边界
+
+| 模块 | 职责 |
+| --- | --- |
+| 应用入口 | `Ghost-Downloader-3.py` 负责日志、配置、翻译、服务启动和主窗口创建。 |
+| 核心服务 | `CoreService` 管任务队列和 AsyncIO 事件循环，不写具体协议逻辑。 |
+| Feature Pack | 每个协议包负责 URL 匹配、解析和任务实现。插件 API 尚未稳定。 |
+| 浏览器扩展 | 扩展捕获资源，桌面端 `BrowserService` 校验令牌并创建任务。 |
+| UI | `app/view` 只做交互展示，不应该塞协议解析逻辑。 |
+
+## 下一步
+
+<Cards>
+  <Card title="把项目跑起来" href="./setup.mdx" description="安装 Python/Node 依赖，启动桌面端和扩展。" />
+  <Card title="找源码入口" href="./repository-map.mdx" description="按任务类型定位核心文件。" />
+  <Card title="看架构边界" href="../architecture/overview.mdx" description="避免把逻辑写错层。" />
+</Cards>

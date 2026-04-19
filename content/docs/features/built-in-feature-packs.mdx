@@ -1,0 +1,21 @@
+---
+title: 内置功能包
+description: 用一张表定位每个内置 Feature Pack 的职责、依赖和源码入口。
+---
+
+内置功能包按协议和站点能力拆分。定位问题时先确认输入类型，再进入对应源码目录。
+
+| 功能包 | 处理输入 | 关键依赖 | 源码入口 |
+| --- | --- | --- | --- |
+| `http_pack` | HTTP/HTTPS 文件 | `niquests`、Range、代理 | `features/http_pack` |
+| `bittorrent_pack` | Magnet、torrent | `libtorrent`、tracker、DHT | `features/bittorrent_pack` |
+| `ftp_pack` | FTP/FTPS | `aioftp` | `features/ftp_pack` |
+| `m3u8_pack` | M3U8、MPD | `http_pack`、`extract_pack`、`ffmpeg_pack`、N_m3u8DL-RE | `features/m3u8_pack` |
+| `bili_pack` | Bilibili 视频页 | `http_pack`、`ffmpeg_pack`、Cookie | `features/bili_pack` |
+| `github_pack` | GitHub release/raw/download | `http_pack`、代理站点 | `features/github_pack` |
+| `ffmpeg_pack` | 运行时安装、媒体合并 | `http_pack`、`extract_pack`、FFmpeg | `features/ffmpeg_pack` |
+| `extract_pack` | 运行时解包任务 | 本地文件系统、压缩包 | `features/extract_pack` |
+
+<Callout type="warn" title="发布差异">
+仓库里还有 `jack_yao`，但 `deploy.py` 当前把它放在 `FEATURE_PACK_BLACKLIST` 中，不进入正式发布包。
+</Callout>

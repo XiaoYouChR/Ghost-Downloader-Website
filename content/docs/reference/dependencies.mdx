@@ -1,0 +1,20 @@
+---
+title: 依赖速查
+description: 桌面端、协议能力、扩展和构建流程的关键依赖。
+---
+
+| 依赖 | 用途 |
+| --- | --- |
+| PySide6 | Qt 桌面应用框架。 |
+| PyQt-Fluent-Widgets | Fluent 风格组件。 |
+| niquests | HTTP/HTTPS、HTTP3、代理和加速请求能力。 |
+| libtorrent | BitTorrent 协议能力。 |
+| aioftp | FTP/FTPS 异步客户端。 |
+| loguru | 日志记录。 |
+| desktop-notifier | 跨平台桌面通知。 |
+| qrcode | Bilibili 登录等二维码能力。 |
+| winloop / uvloop | 平台事件循环优化。 |
+| Nuitka | 桌面端编译打包。 |
+| React / Vite / TypeScript | 浏览器扩展 UI 和构建。 |
+
+完整依赖以 `pyproject.toml`、`requirements.txt` 和 `browser_extension/app/package.json` 为准。发布脚本还会依赖 Inno Setup、create-dmg、AppImage tooling 和 GitHub Actions 环境。

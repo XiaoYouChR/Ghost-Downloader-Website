@@ -1,40 +1,35 @@
 ---
-title: Ghost Downloader 文档
-description: 用最短路径理解、运行、贡献和发布 Ghost Downloader。
+title: Ghost Downloader 开发者文档
+description: 面向 Issue、Pull Request、Feature Pack 开发和仓库阅读的中文文档。
 ---
 
-这份文档只保留开发者真正会用到的路径：如何跑起来、如何定位源码、任务系统怎么工作、Feature Pack 如何加载、浏览器扩展如何和桌面端通信、如何贡献与发布。
+Ghost Downloader 开发者文档面向四类任务：提交高质量 Issue、准备 Pull Request、开发 Feature Pack、快速理解仓库结构。
 
-<Callout type="idea" title="阅读原则">
-不要从头读完整站。先根据你要完成的任务选入口，需要源码时再顺着页面里的路径跳过去。
+<Callout type="info" title="从任务开始">
+反馈问题先看贡献入口和调试日志；准备改代码先看环境与运行、仓库地图和架构总览。
 </Callout>
 
 <Cards>
-  <Card title="新贡献者" href="./getting-started/overview" description="理解项目定位、安装依赖、从源码启动桌面端。" />
-  <Card title="改核心逻辑" href="./architecture/overview" description="看任务模型、CoreService、Feature Pack 和扩展桥接边界。" />
-  <Card title="改下载能力" href="./features/download-engine" description="定位 HTTP 分块、续传、限速、代理和内置协议包。" />
-  <Card title="参与贡献" href="./contributing/overview" description="Issue、PR、Crowdin 翻译、日志排查和提交流程。" />
+  <Card title="提交 Issue" href="./contributing/overview.mdx" description="准备复现步骤、环境信息、日志和问题范围。" />
+  <Card title="提交 Pull Request" href="./getting-started/setup.mdx" description="搭建环境、运行项目、定位要修改的模块。" />
+  <Card title="开发 Feature Pack" href="./architecture/feature-pack-system.mdx" description="理解功能包加载、依赖、任务和配置边界。" />
+  <Card title="了解仓库" href="./getting-started/repository-map.mdx" description="按开发任务快速找到核心源码入口。" />
 </Cards>
 
-## 开发者最常用入口
+## 常用入口
 
 | 你要做什么 | 去哪里 |
 | --- | --- |
-| 第一次接触项目 | [项目概览](./getting-started/overview) |
-| 本地跑桌面端和扩展 | [环境与运行](./getting-started/setup) |
-| 找源码入口 | [仓库地图](./getting-started/repository-map) |
-| 理解主架构 | [架构总览](./architecture/overview) |
-| 理解任务调度 | [任务系统](./architecture/task-system) |
-| 理解功能包 | [Feature Pack 系统](./architecture/feature-pack-system) |
-| 理解浏览器扩展通信 | [浏览器桥接](./architecture/browser-bridge) |
-| 看内置协议能力 | [内置功能包](./features/built-in-feature-packs) |
-| 打包发布 | [发布流程](./build-and-release/release-flow) |
-| 提 Issue / PR / 翻译 | [贡献入口](./contributing/overview) |
+| 了解项目定位 | [项目概览](./getting-started/overview.mdx) |
+| 本地跑桌面端和扩展 | [环境与运行](./getting-started/setup.mdx) |
+| 找源码入口 | [仓库地图](./getting-started/repository-map.mdx) |
+| 准备 Issue / PR / 翻译 | [贡献入口](./contributing/overview.mdx) |
+| 使用仓库内建工作流 | [GitHub Actions](./contributing/github-actions.mdx) |
+| 理解任务调度和持久化 | [任务系统](./architecture/task-system.mdx) |
+| 开发 Feature Pack | [Feature Pack 系统](./architecture/feature-pack-system.mdx) |
+| 调试浏览器扩展通信 | [浏览器桥接](./architecture/browser-bridge.mdx) |
+| 看内置协议能力 | [内置功能包](./features/built-in-feature-packs.mdx) |
 
-## 哪些内容不会写成文档
-
-<Callout type="warn" title="保持文档克制">
-不会为每个小类、每个 UI 组件或每个配置项写独立页面。除非它能帮助开发者完成具体任务，否则只保留源码入口和排查提示。
+<Callout type="warn" title="Feature Pack API 状态">
+Feature Pack 机制已经用于内置功能包，但外部插件 API 仍未稳定。贡献代码时以仓库当前实现和 PR 讨论为准。
 </Callout>
-
-Feature Pack 文档只描述当前机制和内置包，不承诺外部插件 API 已稳定。

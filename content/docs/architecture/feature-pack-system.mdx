@@ -1,0 +1,51 @@
+---
+title: Feature Pack 系统
+description: 功能包如何被发现、加载、排序和调用。
+---
+
+Feature Pack 是 Ghost Downloader 的能力拆分机制。`app/services/feature_service.py` 会扫描 `features` 目录下包含 `manifest.toml` 的子目录，读取入口文件、依赖关系，再实例化对应的功能包。
+
+<Callout type="warn" title="API 稳定性">
+这里是内部实现说明，不是外部插件 API 文档。`app/feature_pack` 和 `features/*_pack` 仍可能随任务模型变化。
+</Callout>
+
+## 加载路径
+
+| 步骤 | 说明 |
+| --- | --- |
+| 发现 | 查找 `features/<pack>/manifest.toml`。 |
+| 读取清单 | 从 `[pack]` 读取 `entry` 和 `dependencies`。 |
+| 依赖排序 | 根据功能包依赖顺序加载，例如媒体功能可能依赖 FFmpeg。 |
+| 实例化 | 导入入口模块中的 Feature Pack 类。 |
+| 注册 UI | 如果功能包提供设置卡片，加载到设置页。 |
+| URL 匹配 | 解析任务时调用功能包判断是否能处理输入。 |
+
+## 实现检查项
+
+| 检查项 | 落点 |
+| --- | --- |
+| 输入范围 | `canHandle` / payload 创建逻辑。 |
+| 功能包依赖 | `manifest.toml` 的 `dependencies`。 |
+| 任务类型 | `Task` 子类、暂停恢复、持久化字段。 |
+| 用户配置 | `PackConfig`、设置卡片、默认值和校验器。 |
+| 错误提示 | 解析失败、依赖缺失、网络失败时的用户可读信息。 |
+
+## 最小清单示例
+
+```toml
+[pack]
+entry = "pack.py"
+dependencies = ["http_pack"]
+```
+
+功能包目录通常至少包含 `manifest.toml` 和入口文件。复杂包会额外包含 `task.py`、`config.py`、运行时解析工具或 UI 设置卡片。提交 PR 时需要说明支持的输入示例、依赖关系、可暂停性和失败场景。
+
+## 相关入口
+
+| 入口 | 作用 |
+| --- | --- |
+| `app/services/feature_service.py` | 发现和加载功能包。 |
+| `app/feature_pack` | 当前 Feature Pack 基础能力。 |
+| `features/http_pack` | 最适合先读的简单协议包。 |
+| `features/m3u8_pack` | 依赖外部运行时的复杂功能包示例。 |
+| `deploy.py` | 发布时复制功能包，当前排除 `jack_yao`。 |

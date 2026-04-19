@@ -1,0 +1,54 @@
+---
+title: GitHub Actions
+description: 使用仓库内建工作流进行构建验证和翻译同步。
+---
+
+仓库内建工作流位于 `.github/workflows`。普通贡献者通常用它来理解 CI 如何构建项目，仓库协作者可以在 GitHub 页面手动触发 `workflow_dispatch` 工作流。
+
+<Cards>
+  <Card title="Build / Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/build.yml" external description="构建 Windows、macOS、Linux 产物。" />
+  <Card title="Sync Crowdin" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/crowdin.yml" external description="推送或拉取 Crowdin 翻译资源。" />
+</Cards>
+
+## Build / Release
+
+`Build / Release` 支持手动运行。常用输入如下：
+
+| 输入 | 可选值 | 用途 |
+| --- | --- | --- |
+| `build_target` | `windows`、`macos`、`linux`、`all` | 选择构建平台。 |
+| `package_installer` | `true`、`false` | 是否生成安装包。 |
+| `sign_artifact` | `true`、`false` | 是否尝试签名 Windows 产物。 |
+
+<Callout type="warn" title="Fork 仓库注意">
+签名和部分发布步骤依赖仓库 secrets。Fork 中通常没有这些 secrets，手动验证构建时可以把 `sign_artifact` 设为 `false`。
+</Callout>
+
+## Sync Crowdin
+
+`Sync Crowdin` 用于翻译同步，支持两个操作：
+
+| 操作 | 用途 |
+| --- | --- |
+| `push` | 上传源文案和现有翻译到 Crowdin。 |
+| `pull` | 从 Crowdin 拉取翻译，刷新 Qt 资源，并创建翻译 PR。 |
+
+翻译贡献入口是 [Crowdin 项目 ghost-downloader](https://crowdin.com/project/ghost-downloader)。如果只想参与翻译，优先在 Crowdin 上提交，不需要手动运行 workflow。
+
+## 本地复现 CI 的核心命令
+
+桌面端构建：
+
+```powershell
+pip install --timeout=300 -r requirements.txt
+python deploy.py
+```
+
+浏览器扩展检查：
+
+```powershell
+cd browser_extension\app
+npm install
+npm run typecheck
+npm run build
+```

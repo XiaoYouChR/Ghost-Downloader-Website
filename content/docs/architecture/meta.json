@@ -1,0 +1,9 @@
+{
+  "title": "核心架构",
+  "pages": [
+    "overview",
+    "task-system",
+    "feature-pack-system",
+    "browser-bridge"
+  ]
+}

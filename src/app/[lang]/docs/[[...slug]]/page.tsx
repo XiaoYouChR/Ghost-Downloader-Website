@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { Card } from 'fumadocs-ui/components/card';
 import {
   DocsBody,
   DocsDescription,
@@ -9,6 +10,7 @@ import {
   MarkdownCopyButton,
   ViewOptionsPopover,
 } from 'fumadocs-ui/layouts/docs/page';
+import type { ComponentProps } from 'react';
 import { getMDXComponents } from '@/components/mdx';
 import { getPageImage, getPageMarkdownUrl, source } from '@/lib/source';
 import { gitConfig } from '@/lib/shared';
@@ -24,6 +26,12 @@ export default async function Page({ params }: DocsPageProps) {
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page);
+  const RelativeCard = (props: ComponentProps<typeof Card>) => (
+    <Card
+      {...props}
+      href={props.href ? source.resolveHref(props.href, page) : props.href}
+    />
+  );
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
@@ -40,6 +48,7 @@ export default async function Page({ params }: DocsPageProps) {
         <MDX
           components={getMDXComponents({
             a: createRelativeLink(source, page),
+            Card: RelativeCard,
           })}
         />
       </DocsBody>

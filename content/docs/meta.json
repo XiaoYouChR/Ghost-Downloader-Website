@@ -1,0 +1,12 @@
+{
+  "title": "Ghost Downloader",
+  "pages": [
+    "index",
+    "getting-started",
+    "architecture",
+    "features",
+    "contributing",
+    "user-guide",
+    "reference"
+  ]
+}

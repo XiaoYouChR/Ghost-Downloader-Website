@@ -1,0 +1,25 @@
+---
+title: 任务系统
+description: CoreService、Task、TaskStage 与 taskRecorder 如何协作。
+---
+
+任务系统的核心文件只有三个：`app/services/core_service.py`、`app/bases/models.py`、`app/supports/recorder.py`。
+
+| 概念 | 作用 | 开发时注意 |
+| --- | --- | --- |
+| `CoreService` | 后台线程中的 AsyncIO 调度器。 | 不要直接操作 QWidget。 |
+| `Task` | 一个下载或处理任务。 | 新字段要考虑持久化兼容。 |
+| `TaskStage` | 子进度，如 HTTP 分片或媒体处理阶段。 | UI 和扩展会用它计算总进度。 |
+| `taskRecorder` | 保存和恢复历史任务。 | 任务结构变化要保持旧记录可读。 |
+
+## 调度流程
+
+1. UI 或扩展提交 URL。
+2. `CoreService` 调用解析逻辑创建 `Task`。
+3. 任务进入队列，受最大并发数量控制。
+4. 运行中的任务更新 `TaskStage`。
+5. 任务完成、暂停或失败后写回记录器。
+
+<Callout type="info" title="判断改动风险">
+如果你改的是状态枚举、任务序列化、暂停恢复或阶段进度，它会影响 UI、浏览器扩展和历史任务恢复，风险比普通功能包内部改动更高。
+</Callout>

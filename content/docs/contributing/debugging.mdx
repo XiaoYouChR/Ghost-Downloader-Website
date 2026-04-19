@@ -1,0 +1,26 @@
+---
+title: 调试与日志
+description: 最常用的排查入口和日志位置。
+---
+
+桌面端日志写入系统数据目录下的 `GhostDownloader/GhostDownloader.log`。提交 Issue 或排查 PR 回归时，先把问题归类到启动、下载、扩展、持久化或构建。
+
+| 问题 | 先看 |
+| --- | --- |
+| 启动失败 | `GhostDownloader.log`、PySide6/Qt 插件错误。 |
+| HTTP 下载失败 | `features/http_pack/pack.py` 探测逻辑、`task.py` worker 异常。 |
+| BT 没速度 | tracker、DHT、代理、`libtorrent` session 设置。 |
+| M3U8/Bilibili 失败 | headers、Cookie、外部运行时、FFmpeg。 |
+| 扩展断开 | 桌面端扩展开关、端口 `14370`、配对令牌、background 日志。 |
+| 任务恢复异常 | `app/bases/models.py` 序列化和 `app/supports/recorder.py`。 |
+| 构建失败 | `deploy.py`、Nuitka 输出、Feature Pack 复制日志。 |
+
+## 翻译资源
+
+翻译源位于 `app/assets/i18n/gd3.zh_CN.ts`，Crowdin 配置位于 `crowdin.yml`。本地刷新资源：
+
+```powershell
+python sync_i18n_res.py
+```
+
+Crowdin 项目入口：[ghost-downloader](https://crowdin.com/project/ghost-downloader)。

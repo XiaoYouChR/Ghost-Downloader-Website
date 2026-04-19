@@ -1,0 +1,37 @@
+---
+title: 架构总览
+description: Ghost Downloader 的核心边界：UI、服务、任务、功能包和浏览器桥接。
+---
+
+Ghost Downloader 的架构可以用一句话概括：UI 发起意图，`CoreService` 调度任务，`FeatureService` 选择功能包，具体下载逻辑留在 `features/*_pack`，浏览器扩展通过 `BrowserService` 接入。
+
+<Callout type="warn" title="架构边界">
+协议解析属于 Feature Pack，任务调度属于 `CoreService`，界面交互属于 `app/view`，浏览器扩展协议服务当前扩展而非公开远程控制 API。
+</Callout>
+
+## 责任分层
+
+| 层 | 主要源码 | 负责 |
+| --- | --- | --- |
+| 入口 | `Ghost-Downloader-3.py` | 日志、配置、翻译、服务启动、窗口创建。 |
+| UI | `app/view` | 任务列表、设置页、弹窗、托盘。 |
+| 服务 | `app/services` | 任务调度、功能包加载、浏览器桥接。 |
+| 模型 | `app/bases/models.py` | `Task`、`TaskStage`、状态和序列化。 |
+| 功能包 | `features/*_pack` | 协议解析、下载实现、外部运行时接入。 |
+| 扩展 | `browser_extension/app` | 网页资源捕获、扩展 UI、WebSocket 请求。 |
+
+## 核心数据流
+
+1. 用户或扩展提交 URL / payload。
+2. `CoreService` 请求 `FeatureService` 选择可处理的 Feature Pack。
+3. Feature Pack 创建 `Task`。
+4. `CoreService` 按并发限制运行任务。
+5. UI、扩展和 `taskRecorder` 读取任务状态。
+
+## 深入阅读
+
+<Cards>
+  <Card title="任务系统" href="./task-system.mdx" description="任务状态、阶段、调度和持久化。" />
+  <Card title="Feature Pack" href="./feature-pack-system.mdx" description="功能包发现、依赖排序和加载边界。" />
+  <Card title="浏览器桥接" href="./browser-bridge.mdx" description="扩展如何连接桌面端并创建任务。" />
+</Cards>

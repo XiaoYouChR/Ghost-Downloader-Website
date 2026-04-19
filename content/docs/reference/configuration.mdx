@@ -1,0 +1,14 @@
+---
+title: 配置速查
+description: 常用配置项和它们影响的行为。
+---
+
+配置集中在 `app/supports/config.py`。新增配置时要同时考虑默认值、校验器、设置页、翻译和旧配置兼容。
+
+| 范围 | 代表项 | 影响 |
+| --- | --- | --- |
+| 下载 | `downloadFolder`、`maxTaskNum`、`preBlockNum` | 保存目录、任务并发、初始分块。 |
+| 网络 | `proxyServer`、`SSLVerify` | HTTP、FTP、BT、扩展提交任务。 |
+| 性能 | `autoSpeedUp`、`maxReassignSize`、`speedLimitation` | 自动提速、分片重分配、全局限速。 |
+| 浏览器扩展 | `enableBrowserExtension`、`browserExtensionPairToken` | 本地 WebSocket 服务和令牌认证。 |
+| 个性化 | 主题、语言、DPI | UI 展示和本地化。 |

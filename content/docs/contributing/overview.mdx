@@ -1,0 +1,46 @@
+---
+title: 贡献入口
+description: 提 Issue、PR、翻译和文档改进时先从这里开始。
+---
+
+这里整理了最常用的贡献入口。提交 Issue 时请尽量提供可复现信息；提交 Pull Request 前请先确认改动范围和本地验证结果。
+
+<Cards>
+  <Card title="GitHub 仓库" href="https://github.com/XiaoYouChR/Ghost-Downloader-3" external description="源码、Release、Issue 和 Pull Request。" />
+  <Card title="报告 Bug" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=bug_report.yml" external description="复现步骤、环境、日志越完整越好。" />
+  <Card title="提出功能需求" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=feature_request.yml" external description="说明使用场景，而不只是描述按钮。" />
+  <Card title="参与翻译" href="https://crowdin.com/project/ghost-downloader" external description="Crowdin 项目页，README 中的官方翻译入口。" />
+</Cards>
+
+## PR 前检查
+
+| 改动类型 | 必须说明 |
+| --- | --- |
+| 下载逻辑 | 影响哪些协议、是否影响暂停/续传/限速。 |
+| 任务模型 | 是否影响历史任务恢复和浏览器任务快照。 |
+| Feature Pack | 依赖、输入类型、失败提示、设置项。 |
+| 浏览器扩展 | 是否同步修改桌面端桥接协议。 |
+| GitHub Actions | 是否需要修改或手动触发仓库工作流。 |
+| 文档 | 是否删除了过期信息，而不只是新增内容。 |
+
+<Callout type="info" title="提交前建议">
+如果改动会影响下载行为，请在 PR 描述里写明测试过的链接类型、系统平台和是否涉及浏览器扩展。
+</Callout>
+
+## Issue 信息清单
+
+| 信息 | 示例 |
+| --- | --- |
+| 系统与架构 | Windows x64、macOS arm64、Ubuntu x86_64。 |
+| 软件版本 | Ghost Downloader 版本、浏览器扩展版本。 |
+| 链接类型 | HTTP、BT、FTP、M3U8、Bilibili、GitHub。 |
+| 复现步骤 | 从打开软件到出现问题的最短步骤。 |
+| 日志或截图 | `GhostDownloader.log`、扩展 background 报错、任务截图。 |
+
+## PR 描述清单
+
+| 信息 | 示例 |
+| --- | --- |
+| 改动范围 | `features/http_pack`、`app/services/browser_service.py`、扩展 background。 |
+| 验证方式 | 本地启动、扩展 typecheck、指定链接下载、workflow 构建。 |
+| 兼容风险 | 历史任务恢复、配置项、Feature Pack 加载顺序、桥接协议。 |
