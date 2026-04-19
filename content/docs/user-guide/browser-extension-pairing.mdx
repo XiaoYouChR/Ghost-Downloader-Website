@@ -1,0 +1,80 @@
+---
+title: 浏览器扩展配对
+description: 获取配对令牌、连接桌面端，以及连接失败时的排查顺序。
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Cards>
+  <Card title="下载桌面端" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="先安装并打开 Ghost Downloader 桌面端。" />
+  <Card title="Chrome 扩展" href="https://chromewebstore.google.com/detail/ghost-downloader-browser/pinckpkeeajogfgajbicpnengimiblch" external description="Chrome / Chromium 系浏览器。" />
+  <Card title="Edge 扩展" href="https://microsoftedge.microsoft.com/addons/detail/ghost-downloader-browser/odaohmfjjbompdkmfbambadnagplcmce" external description="Microsoft Edge。" />
+  <Card title="Firefox 扩展" href="https://addons.mozilla.org/zh-CN/firefox/addon/ghost-downloader/" external description="Firefox 官方附加组件。" />
+</Cards>
+
+浏览器扩展通过本地 WebSocket 连接桌面端。默认服务地址是 `ws://127.0.0.1:14370`。
+
+## 如何获取配对码
+
+<Steps>
+  <Step>
+    打开 Ghost Downloader 桌面端，进入 `设置 -> 浏览器扩展`。
+  </Step>
+
+  <Step>
+    开启 `启用浏览器扩展`。
+  </Step>
+
+  <Step>
+    在同一页找到 `配对令牌`，点击 `复制令牌`。
+
+    如果你怀疑令牌泄露，或者扩展一直提示令牌无效，可以点击右侧的刷新按钮重新生成。
+  </Step>
+</Steps>
+
+## 如何连接浏览器扩展
+
+<Steps>
+  <Step>
+    打开扩展弹窗，进入 `设置` 页。
+  </Step>
+
+  <Step>
+    保持 `本地服务地址` 为默认值 `ws://127.0.0.1:14370`，除非你确实改过桌面端源码或桥接地址。
+  </Step>
+
+  <Step>
+    把刚才复制的配对令牌粘贴到 `配对令牌` 输入框并保存。
+  </Step>
+
+  <Step>
+    当扩展状态变成 `已连接`，就说明桌面端和浏览器已经配对成功。
+  </Step>
+</Steps>
+
+<Callout type="info" title="重新生成令牌会让旧连接失效">
+桌面端重新生成配对令牌后，扩展里旧的令牌会立刻失效，需要重新粘贴一次。
+</Callout>
+
+## 连接不成功怎么排查
+
+按下面顺序排查：
+
+| 现象 | 先检查什么 |
+| --- | --- |
+| 扩展显示 `待配对` | 还没有在扩展里保存配对令牌。 |
+| 扩展显示 `令牌无效` | 令牌和桌面端不一致；回到桌面端重新复制，必要时重新生成后再粘贴。 |
+| 扩展显示 `未连接` 或 `无法连接到 Ghost Downloader` | 桌面端没有打开，或 `设置 -> 浏览器扩展` 没开启。 |
+| 一直停留在连接中 | 扩展里的服务地址不是 `ws://127.0.0.1:14370`，或者本机安全软件拦截了本地连接。 |
+| 手动保存后仍然断开 | 在扩展设置页点一次 `重新连接`，再观察状态是否切换到 `已连接`。 |
+
+如果上面都确认过了，继续看这四项：
+
+1. 桌面端必须保持运行，最小化到托盘也可以，但不能完全退出。
+2. 桌面端的 `启用浏览器扩展` 必须保持开启。
+3. 扩展里保存的令牌必须和桌面端当前显示的令牌完全一致。
+4. 本机需要允许浏览器访问 `127.0.0.1:14370`，不要让防火墙、代理工具或安全软件拦截本地 WebSocket。
+
+<Callout type="warn" title="下载没有被接管">
+如果扩展已经连上，但浏览器下载没有进入 Ghost Downloader，再确认扩展顶部的 `拦截下载` 开关是否开启。
+</Callout>

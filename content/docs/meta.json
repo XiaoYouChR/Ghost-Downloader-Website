@@ -2,12 +2,12 @@
   "title": "Ghost Downloader",
   "pages": [
     "index",
+    "user-guide",
     "getting-started",
-    "workflows",
+    "contributing",
     "architecture",
     "features",
-    "contributing",
-    "user-guide",
+    "workflows",
     "reference"
   ]
 }

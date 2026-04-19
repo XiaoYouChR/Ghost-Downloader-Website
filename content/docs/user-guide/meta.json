@@ -1,7 +1,9 @@
 {
   "title": "用户指南",
   "pages": [
-    "quick-start",
-    "troubleshooting"
+    "browser-extension-pairing",
+    "platforms-and-downloads",
+    "linux-usage",
+    "configuration-file"
   ]
 }

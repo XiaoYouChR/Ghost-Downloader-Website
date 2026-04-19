@@ -1,0 +1,79 @@
+---
+title: Linux 使用
+description: AUR 怎么安装，.deb / AppImage 怎么使用。
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Ghost Downloader 的 Linux 版本要求 `glibc 2.35+`，提供 Release 包，也提供 AUR 包。
+
+<Cards>
+  <Card title="最新 Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="下载 `.deb` 或 `.AppImage`。" />
+  <Card title="ghost-downloader-bin" href="https://aur.archlinux.org/packages/ghost-downloader-bin" external description="AUR 预编译包，适合大多数 Arch 用户。" />
+  <Card title="ghost-downloader-git" href="https://aur.archlinux.org/packages/ghost-downloader-git" external description="AUR 源码跟踪版，适合想跟随仓库最新提交的用户。" />
+</Cards>
+
+## AUR 源如何安装
+
+### 用 yay / paru
+
+预编译版：
+
+```bash
+yay -S ghost-downloader-bin
+```
+
+或：
+
+```bash
+paru -S ghost-downloader-bin
+```
+
+如果你想跟随仓库最新提交，而不是安装稳定构建，可以改用：
+
+```bash
+yay -S ghost-downloader-git
+```
+
+### 不使用 AUR Helper
+
+```bash
+git clone https://aur.archlinux.org/ghost-downloader-bin.git
+cd ghost-downloader-bin
+makepkg -si
+```
+
+如果你要安装源码跟踪版，把仓库名改成 `ghost-downloader-git` 即可。
+
+## Linux 怎么用
+
+<Steps>
+  <Step>
+    Debian / Ubuntu 系直接下载 `.deb`，然后安装：
+
+    ```bash
+    sudo apt install ./Ghost-Downloader-v*.deb
+    ```
+  </Step>
+
+  <Step>
+    通用发行版可以下载 `.AppImage`，赋予执行权限后直接运行：
+
+    ```bash
+    chmod +x Ghost-Downloader-v*.AppImage
+    ./Ghost-Downloader-v*.AppImage
+    ```
+  </Step>
+
+  <Step>
+    Arch / Manjaro 优先使用 AUR 包，这样更新和卸载都更省心。
+  </Step>
+
+  <Step>
+    第一次打开后，先确认下载目录、代理和浏览器扩展配对是否正常。
+  </Step>
+</Steps>
+
+<Callout type="info" title="选哪个更合适">
+大多数用户优先选 `ghost-downloader-bin`；只有在你明确需要跟踪最新提交时，才选择 `ghost-downloader-git`。
+</Callout>

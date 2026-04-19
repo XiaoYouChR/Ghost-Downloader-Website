@@ -13,9 +13,57 @@ html > body[data-scroll-locked] {
 
 #nd-nav {
   --ghost-nav-float-offset: clamp(0.75rem, 2vw, 1.25rem);
+  --ghost-nav-shell-border: rgba(148, 163, 184, 0.24);
+  --ghost-nav-shell-background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(241, 245, 249, 0.34));
+  --ghost-nav-shell-shadow:
+    0 20px 48px -28px rgba(15, 23, 42, 0.22),
+    0 10px 24px -20px rgba(37, 99, 235, 0.22);
+  --ghost-nav-shell-highlight: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.48),
+    transparent 48%
+  );
+  --ghost-nav-shell-highlight-opacity: 0.85;
+  --ghost-nav-chip-border: transparent;
+  --ghost-nav-chip-background: rgba(255, 255, 255, 0.2);
+  --ghost-nav-chip-hover-border: rgba(148, 163, 184, 0.18);
+  --ghost-nav-chip-hover-background: rgba(255, 255, 255, 0.34);
+  --ghost-nav-chip-active-border: rgba(59, 130, 246, 0.18);
+  --ghost-nav-chip-active-background: rgba(37, 99, 235, 0.12);
+  --ghost-nav-chip-active-color: rgb(37, 99, 235);
+  --ghost-nav-search-border: rgba(148, 163, 184, 0.18);
+  --ghost-nav-search-background: rgba(255, 255, 255, 0.28);
+  --ghost-nav-search-kbd-border: rgba(148, 163, 184, 0.16);
+  --ghost-nav-search-kbd-background: rgba(255, 255, 255, 0.58);
   top: 0;
   height: 0;
   overflow: visible;
+}
+
+.dark #nd-nav {
+  --ghost-nav-shell-border: rgba(148, 163, 184, 0.14);
+  --ghost-nav-shell-background:
+    linear-gradient(135deg, rgba(7, 14, 26, 0.56), rgba(15, 23, 42, 0.26));
+  --ghost-nav-shell-shadow:
+    0 20px 54px -28px rgba(2, 8, 23, 0.7),
+    0 10px 28px -22px rgba(37, 99, 235, 0.18);
+  --ghost-nav-shell-highlight: linear-gradient(
+    180deg,
+    rgba(148, 163, 184, 0.12),
+    transparent 52%
+  );
+  --ghost-nav-shell-highlight-opacity: 1;
+  --ghost-nav-chip-border: rgba(148, 163, 184, 0.08);
+  --ghost-nav-chip-background: rgba(255, 255, 255, 0.035);
+  --ghost-nav-chip-hover-border: rgba(148, 163, 184, 0.12);
+  --ghost-nav-chip-hover-background: rgba(255, 255, 255, 0.065);
+  --ghost-nav-chip-active-background: rgba(37, 99, 235, 0.16);
+  --ghost-nav-chip-active-color: rgb(147, 197, 253);
+  --ghost-nav-search-border: rgba(148, 163, 184, 0.08);
+  --ghost-nav-search-background: rgba(255, 255, 255, 0.035);
+  --ghost-nav-search-kbd-border: rgba(148, 163, 184, 0.12);
+  --ghost-nav-search-kbd-background: rgba(255, 255, 255, 0.08);
 }
 
 #nd-nav > div {
@@ -23,14 +71,10 @@ html > body[data-scroll-locked] {
   width: min(calc(100% - 1.5rem), var(--fd-layout-width, 1200px));
   margin-inline: auto;
   transform: translateY(var(--ghost-nav-float-offset));
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  border: 1px solid var(--ghost-nav-shell-border);
   border-radius: 999px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(241, 245, 249, 0.34))
-    !important;
-  box-shadow:
-    0 20px 48px -28px rgba(15, 23, 42, 0.22),
-    0 10px 24px -20px rgba(37, 99, 235, 0.22);
+  background: var(--ghost-nav-shell-background) !important;
+  box-shadow: var(--ghost-nav-shell-shadow);
   backdrop-filter: blur(22px) saturate(165%);
   -webkit-backdrop-filter: blur(22px) saturate(165%);
   overflow: visible;
@@ -42,9 +86,9 @@ html > body[data-scroll-locked] {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.48), transparent 48%);
+  background: var(--ghost-nav-shell-highlight);
   pointer-events: none;
-  opacity: 0.85;
+  opacity: var(--ghost-nav-shell-highlight-opacity);
 }
 
 #nd-nav > div > * {
@@ -57,10 +101,7 @@ html > body[data-scroll-locked] {
   padding-inline: 0.85rem;
 }
 
-#nd-nav nav > div {
-  gap: 0.5rem;
-}
-
+#nd-nav nav > div,
 #nd-nav nav > div > ul {
   gap: 0.5rem;
 }
@@ -80,16 +121,19 @@ html > body[data-scroll-locked] {
   padding-inline: 0.5rem;
 }
 
-#nd-nav nav > ul a[data-active],
-#nd-nav nav > ul button,
-#nd-nav nav > div > a[data-active],
-#nd-nav nav > div > button,
-#nd-nav nav > div > ul a,
-#nd-nav nav > div > ul button,
-#nd-nav [data-search-full] {
+#nd-nav :is(
+    nav > ul a[data-active],
+    nav > ul button:not([data-theme-switch-trigger]),
+    nav > div > a[data-active],
+    nav > div > button:not([data-theme-switch-trigger]),
+    nav > div > ul a,
+    nav > div > ul button:not([data-theme-switch-trigger]),
+    [data-theme-switch-trigger],
+    [data-search-full]
+  ) {
   border-radius: 999px;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--ghost-nav-chip-border);
+  background: var(--ghost-nav-chip-background);
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
@@ -98,82 +142,36 @@ html > body[data-scroll-locked] {
     transform 160ms ease;
 }
 
-#nd-nav nav > ul a[data-active='true'],
-#nd-nav nav > div > a[data-active='true'] {
-  border-color: rgba(59, 130, 246, 0.18);
-  background: rgba(37, 99, 235, 0.12);
-  color: rgb(37, 99, 235);
+#nd-nav :is(nav > ul a[data-active='true'], nav > div > a[data-active='true']) {
+  border-color: var(--ghost-nav-chip-active-border);
+  background: var(--ghost-nav-chip-active-background);
+  color: var(--ghost-nav-chip-active-color);
   box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.08) inset;
 }
 
-#nd-nav nav > ul a[data-active='false']:hover,
-#nd-nav nav > ul button:hover,
-#nd-nav nav > div > a[data-active='false']:hover,
-#nd-nav nav > div > button:hover,
-#nd-nav nav > div > ul a:hover,
-#nd-nav nav > div > ul button:hover,
-#nd-nav [data-search-full]:hover {
-  border-color: rgba(148, 163, 184, 0.18);
-  background: rgba(255, 255, 255, 0.34);
+#nd-nav :is(
+    nav > ul a[data-active='false']:hover,
+    nav > ul button:not([data-theme-switch-trigger]):hover,
+    nav > div > a[data-active='false']:hover,
+    nav > div > button:not([data-theme-switch-trigger]):hover,
+    nav > div > ul a:hover,
+    nav > div > ul button:not([data-theme-switch-trigger]):hover,
+    [data-theme-switch-trigger]:hover,
+    [data-theme-switch-trigger][data-state='open'],
+    [data-search-full]:hover
+  ) {
+  border-color: var(--ghost-nav-chip-hover-border);
+  background: var(--ghost-nav-chip-hover-background);
 }
 
 #nd-nav [data-search-full] {
-  border-color: rgba(148, 163, 184, 0.18);
-  background: rgba(255, 255, 255, 0.28);
+  border-color: var(--ghost-nav-search-border);
+  background: var(--ghost-nav-search-background);
 }
 
 #nd-nav [data-search-full] kbd {
-  border-color: rgba(148, 163, 184, 0.16);
-  background: rgba(255, 255, 255, 0.58);
-}
-
-.dark #nd-nav > div {
-  border-color: rgba(148, 163, 184, 0.14);
-  background:
-    linear-gradient(135deg, rgba(7, 14, 26, 0.56), rgba(15, 23, 42, 0.26))
-    !important;
-  box-shadow:
-    0 20px 54px -28px rgba(2, 8, 23, 0.7),
-    0 10px 28px -22px rgba(37, 99, 235, 0.18);
-}
-
-.dark #nd-nav > div::before {
-  background: linear-gradient(180deg, rgba(148, 163, 184, 0.12), transparent 52%);
-  opacity: 1;
-}
-
-.dark #nd-nav nav > ul a[data-active],
-.dark #nd-nav nav > ul button,
-.dark #nd-nav nav > div > a[data-active],
-.dark #nd-nav nav > div > button,
-.dark #nd-nav nav > div > ul a,
-.dark #nd-nav nav > div > ul button,
-.dark #nd-nav [data-search-full] {
-  border-color: rgba(148, 163, 184, 0.08);
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.dark #nd-nav nav > ul a[data-active='true'],
-.dark #nd-nav nav > div > a[data-active='true'] {
-  border-color: rgba(59, 130, 246, 0.18);
-  background: rgba(37, 99, 235, 0.16);
-  color: rgb(147, 197, 253);
-}
-
-.dark #nd-nav nav > ul a[data-active='false']:hover,
-.dark #nd-nav nav > ul button:hover,
-.dark #nd-nav nav > div > a[data-active='false']:hover,
-.dark #nd-nav nav > div > button:hover,
-.dark #nd-nav nav > div > ul a:hover,
-.dark #nd-nav nav > div > ul button:hover,
-.dark #nd-nav [data-search-full]:hover {
-  border-color: rgba(148, 163, 184, 0.12);
-  background: rgba(255, 255, 255, 0.065);
-}
-
-.dark #nd-nav [data-search-full] kbd {
-  border-color: rgba(148, 163, 184, 0.12);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--ghost-nav-search-kbd-border);
+  background: var(--ghost-nav-search-kbd-background);
 }
 
 @media (max-width: 640px) {

@@ -1,0 +1,49 @@
+---
+title: 系统要求与下载
+description: 支持的系统、最低版本要求，以及 Windows 7 的下载位置。
+---
+
+<Cards>
+  <Card title="最新稳定版" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="Windows、macOS、Linux 当前最新 Release。" />
+  <Card title="GitHub 仓库首页" href="https://github.com/XiaoYouChR/Ghost-Downloader-3" external description="Windows 7 兼容版本以 README 中的提示为准。" />
+</Cards>
+
+## 支持的系统与最低版本
+
+| 平台 | 最低要求 | 架构 | 下载建议 |
+| --- | --- | --- | --- |
+| Windows | `7 SP1+` | `x86_64` / `arm64` | 常规用户直接下载最新 Release；Windows 7 用户改下方兼容版入口。 |
+| macOS | `13.0+` | `x86_64` / `arm64` | 直接下载最新 Release。 |
+| Linux | `glibc 2.35+` | `x86_64` / `arm64` | 可下载 Release，也可以使用 AUR。 |
+
+<Callout type="warn" title="AVX 指令集要求">
+Qt `6.6+` 已不再支持不带 `AVX` 指令集的 CPU。如果软件打不开，除了系统版本，也要检查 CPU 是否过旧。
+</Callout>
+
+## Windows 7 在哪里下载
+
+Windows 7 用户请通过以下入口确认当前兼容版本：
+
+1. 打开 [GitHub 仓库首页 README](https://github.com/XiaoYouChR/Ghost-Downloader-3)，查找类似下面的提示：
+
+```md
+> [!TIP]
+> If you want to use Ghost-Downloader-3 on Windows 7, please download version `v3.8.0-Windows7`.
+```
+
+2. 打开软件官网的 Windows 下载区域，查看页面当前给出的 Windows 7 兼容版本入口。
+
+<Callout type="info" title="不要只看 latest release">
+Windows 7 兼容包通常不跟随 `latest release` 自动变化，所以应优先看 README 或官网 Windows 下载页当前写明的版本，而不是直接下载最新版本。
+</Callout>
+
+如果你使用的是 Windows 7，请下载 README 或官网下载页明确标出的兼容版本；如果你使用的是 Windows 10 / 11，再直接使用 `latest release` 中的 Windows 包。
+
+## 不知道该下哪个包时
+
+| 你的系统 | 建议 |
+| --- | --- |
+| Windows 10 / 11 | 直接在最新 Release 里下载 Windows 包。 |
+| Windows 7 | 先看 GitHub 仓库首页 README，或官网 Windows 下载区当前标出的兼容版本。 |
+| macOS | 下载与你芯片架构对应的 `arm64` 或 `x86_64` 包。 |
+| Linux | Debian / Ubuntu 优先用 `.deb`，其他发行版可用 `.AppImage`，Arch 系可直接走 AUR。 |

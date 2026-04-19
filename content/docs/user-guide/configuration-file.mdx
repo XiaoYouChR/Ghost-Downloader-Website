@@ -1,0 +1,42 @@
+---
+title: 配置文件位置
+description: Ghost Downloader 的配置文件和日志目录在哪里。
+---
+
+Ghost Downloader 会把配置文件和日志放到系统数据目录下的 `GhostDownloader` 文件夹中。
+
+## 配置文件在哪
+
+主配置文件名固定为：
+
+```text
+UserConfig.json
+```
+
+常见位置如下：
+
+| 平台 | 配置文件路径 |
+| --- | --- |
+| Windows | `%LOCALAPPDATA%\\GhostDownloader\\UserConfig.json` |
+| macOS | `~/Library/Application Support/GhostDownloader/UserConfig.json` |
+| Linux | `~/.local/share/GhostDownloader/UserConfig.json` |
+
+## 日志文件在哪
+
+日志文件和配置文件在同一个目录下，文件名是：
+
+```text
+GhostDownloader.log
+```
+
+也就是通常位于：
+
+| 平台 | 日志路径 |
+| --- | --- |
+| Windows | `%LOCALAPPDATA%\\GhostDownloader\\GhostDownloader.log` |
+| macOS | `~/Library/Application Support/GhostDownloader/GhostDownloader.log` |
+| Linux | `~/.local/share/GhostDownloader/GhostDownloader.log` |
+
+<Callout type="info" title="迁移或备份">
+备份或迁移时，直接复制整个 `GhostDownloader` 文件夹即可，配置文件和日志会一起带走。
+</Callout>

@@ -87,19 +87,26 @@ export function ThemeSwitch({
     allThemeOptions.find((option) => option.key === triggerTheme) ??
     allThemeOptions[2];
   const TriggerIcon = activeOption.icon;
+  const trigger =
+    children ?? <TriggerIcon className="size-5" data-theme-switch-icon="" />;
 
   return (
     <Popover>
-      <PopoverTrigger
-        aria-label={copy.chooseTheme}
-        className={cn(
-          buttonVariants({ variant: 'ghost' }),
-          'gap-1.5 p-1.5 data-[state=open]:bg-fd-accent',
-          className,
-        )}
-      >
-        {children ?? <TriggerIcon className="size-5" />}
-      </PopoverTrigger>
+      <div className={cn('shrink-0', className)} data-theme-switch="">
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label={copy.chooseTheme}
+            className={cn(
+              buttonVariants({ variant: 'ghost' }),
+              'gap-1.5 p-1.5 data-[state=open]:bg-fd-accent',
+            )}
+            data-theme-switch-trigger=""
+          >
+            {trigger}
+          </button>
+        </PopoverTrigger>
+      </div>
       <PopoverContent className="flex flex-col gap-0.5 p-1">
         <p className="p-2 text-xs font-medium text-fd-muted-foreground">
           {copy.chooseTheme}

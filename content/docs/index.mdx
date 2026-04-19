@@ -1,13 +1,22 @@
 ---
-title: Ghost Downloader 开发者文档
-description: 面向 Issue、Pull Request、Feature Pack 开发和仓库阅读的中文文档。
+title: Ghost Downloader 文档
+description: 用户指南与开发者文档。
 ---
 
-Ghost Downloader 开发者文档面向四类任务：提交高质量 Issue、准备 Pull Request、开发 Feature Pack、快速理解仓库结构。
-
-<Callout type="info" title="从任务开始">
-反馈问题先看贡献入口和调试日志；准备改代码先看环境与运行、仓库地图和架构总览。
+<Callout type="info" title="用户指南">
+浏览器扩展配对、系统要求、Linux / AUR 安装方式，以及配置文件位置。
 </Callout>
+
+## 用户指南
+
+<Cards>
+  <Card title="浏览器扩展配对" href="./user-guide/browser-extension-pairing.mdx" description="如何获取配对码、如何连接，以及连接失败时按什么顺序排查。" />
+  <Card title="系统要求与下载" href="./user-guide/platforms-and-downloads.mdx" description="支持哪些系统、最低版本要求，以及 Windows 7 在哪里下载。" />
+  <Card title="Linux 使用" href="./user-guide/linux-usage.mdx" description="AUR 怎么装、.deb / AppImage 怎么用。" />
+  <Card title="配置文件位置" href="./user-guide/configuration-file.mdx" description="各平台配置文件和日志目录在哪里。" />
+</Cards>
+
+## Ghost Downloader 开发者文档
 
 <Cards>
   <Card title="提交 Issue" href="./contributing/overview.mdx" description="准备复现步骤、环境信息、日志和问题范围。" />
@@ -15,23 +24,6 @@ Ghost Downloader 开发者文档面向四类任务：提交高质量 Issue、准
   <Card title="开发 Feature Pack" href="./architecture/feature-pack-system.mdx" description="理解功能包加载、依赖、任务和配置边界。" />
   <Card title="构建验证" href="./workflows/local-build.mdx" description="使用 python deploy.py 和 GitHub Actions 验证改动。" />
 </Cards>
-
-## 常用入口
-
-| 你要做什么 | 去哪里 |
-| --- | --- |
-| 了解项目定位 | [项目概览](./getting-started/overview.mdx) |
-| 本地跑桌面端和扩展 | [环境与运行](./getting-started/setup.mdx) |
-| 找源码入口 | [仓库地图](./getting-started/repository-map.mdx) |
-| 本地构建桌面端 | [本地构建](./workflows/local-build.mdx) |
-| 使用在线工作流 | [GitHub Actions](./workflows/github-actions.mdx) |
-| 准备 Issue / PR / 翻译 | [贡献入口](./contributing/overview.mdx) |
-| 贡献翻译 | [贡献翻译](./contributing/translation.mdx) |
-| 同步 Crowdin 翻译 | [翻译同步](./workflows/translation-sync.mdx) |
-| 理解任务调度和持久化 | [任务系统](./architecture/task-system.mdx) |
-| 开发 Feature Pack | [Feature Pack 系统](./architecture/feature-pack-system.mdx) |
-| 调试浏览器扩展通信 | [浏览器桥接](./architecture/browser-bridge.mdx) |
-| 看内置协议能力 | [内置功能包](./features/built-in-feature-packs.mdx) |
 
 <Callout type="warn" title="Feature Pack API 状态">
 Feature Pack 机制已经用于内置功能包，但外部插件 API 仍未稳定。贡献代码时以仓库当前实现和 PR 讨论为准。
