@@ -61,17 +61,7 @@ const themeLabels = {
     light: 'Light',
     system: 'System',
   },
-} as const satisfies Record<string, Record<ThemeMode, string>>;
-
-function getThemeCopy(
-  locale: string | undefined,
-  text: ReturnType<typeof useI18n>['text'],
-) {
-  return {
-    chooseTheme: text.chooseTheme,
-    ...themeLabels[locale === 'zh' ? 'zh' : 'en'],
-  };
-}
+} as const satisfies Record<'en' | 'zh', Record<ThemeMode, string>>;
 
 export function ThemeSwitch({
   children,
@@ -80,7 +70,10 @@ export function ThemeSwitch({
 }: ThemeSwitchProps) {
   const { mounted, resolvedTheme, setTheme, theme } = useTheme();
   const { locale, text } = useI18n();
-  const copy = getThemeCopy(locale, text);
+  const copy = {
+    chooseTheme: text.chooseTheme,
+    ...themeLabels[locale === 'zh' ? 'zh' : 'en'],
+  };
   const themeOptions =
     mode === 'light-dark'
       ? allThemeOptions.filter((option) => option.key !== 'system')

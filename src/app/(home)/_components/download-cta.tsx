@@ -474,12 +474,6 @@ function DownloadSheet({
   onClose: () => void;
   panel: PlatformOptionPanel | null;
 }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   useEffect(() => {
     if (!panel) {
       return;
@@ -500,7 +494,7 @@ function DownloadSheet({
     };
   }, [onClose, panel]);
 
-  if (!mounted || !panel) {
+  if (!panel) {
     return null;
   }
 

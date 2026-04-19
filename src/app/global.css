@@ -57,6 +57,18 @@ html > body[data-scroll-locked] {
   padding-inline: 0.85rem;
 }
 
+#nd-nav nav > div {
+  gap: 0.5rem;
+}
+
+#nd-nav nav > div > ul {
+  gap: 0.5rem;
+}
+
+#nd-nav nav > div > ul > * {
+  margin-inline: 0 !important;
+}
+
 #nd-nav nav > a:first-of-type {
   display: inline-flex;
   align-items: center;
@@ -81,22 +93,13 @@ html > body[data-scroll-locked] {
 #nd-nav [data-search-full] {
   border-radius: 999px;
   border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.2);
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
     color 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease;
-}
-
-#nd-nav nav > ul a[data-active],
-#nd-nav nav > ul button,
-#nd-nav nav > div > a[data-active],
-#nd-nav nav > div > button,
-#nd-nav nav > div > ul a,
-#nd-nav nav > div > ul button,
-#nd-nav [data-search-full] {
-  background: rgba(255, 255, 255, 0.2);
 }
 
 #nd-nav nav > ul a[data-active='true'],

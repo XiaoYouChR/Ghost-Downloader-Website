@@ -18,21 +18,19 @@ type BrowserFlowProps = {
 
 export function BrowserFlow({ labels }: BrowserFlowProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const leftRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
-  const rightRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+  const extensionRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const storageRef = useRef<HTMLDivElement>(null);
+  const assetsRef = useRef<HTMLDivElement>(null);
+  const tasksRef = useRef<HTMLDivElement>(null);
   const [paths, setPaths] = useState<string[]>([]);
 
   useLayoutEffect(() => {
     let animationFrameId = 0;
     let isAnimating = true;
+    const leftRefs = [extensionRef, mediaRef, tabsRef];
+    const rightRefs = [storageRef, assetsRef, tasksRef];
 
     const calculatePaths = () => {
       if (!containerRef.current) return;
@@ -131,20 +129,20 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
       <div className="flex flex-col gap-12">
         <FloatingIcon
           delay={0}
-          innerRef={leftRefs[0]}
+          innerRef={extensionRef}
           icon={<AppWindow className="text-blue-500" />}
           label={labels.extension}
         />
         <FloatingIcon
           delay={1}
-          innerRef={leftRefs[1]}
+          innerRef={mediaRef}
           className="-translate-x-12"
           icon={<FileVideo className="text-slate-500 dark:text-slate-400" />}
           label={labels.media}
         />
         <FloatingIcon
           delay={2}
-          innerRef={leftRefs[2]}
+          innerRef={tabsRef}
           icon={<Layout className="text-slate-500 dark:text-slate-400" />}
           label={labels.tabs}
         />
@@ -154,14 +152,14 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
         <FloatingIcon
           delay={0.5}
           alignRight
-          innerRef={rightRefs[0]}
+          innerRef={storageRef}
           icon={<HardDrive className="text-slate-700 dark:text-white" />}
           label={labels.storage}
         />
         <FloatingIcon
           delay={1.5}
           alignRight
-          innerRef={rightRefs[1]}
+          innerRef={assetsRef}
           className="translate-x-12"
           icon={<Music className="text-slate-500 dark:text-slate-400" />}
           label={labels.assets}
@@ -169,7 +167,7 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
         <FloatingIcon
           delay={2.5}
           alignRight
-          innerRef={rightRefs[2]}
+          innerRef={tasksRef}
           icon={<Paperclip className="text-slate-500 dark:text-slate-400" />}
           label={labels.tasks}
         />

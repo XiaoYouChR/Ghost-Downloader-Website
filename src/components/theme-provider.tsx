@@ -4,8 +4,8 @@ import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
+  useSyncExternalStore,
   type PropsWithChildren,
 } from 'react';
 import {
@@ -27,10 +27,6 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function getSystemTheme(): ResolvedTheme {
-  return window.matchMedia(THEME_MEDIA_QUERY).matches ? 'dark' : 'light';
-}
-
 export function ThemeProvider({ children }: PropsWithChildren) {
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
@@ -46,17 +42,18 @@ export function ThemeProvider({ children }: PropsWithChildren) {
       ? 'dark'
       : 'light',
   );
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY);
 
     const syncTheme = () => {
-      const nextResolvedTheme = theme === 'system' ? getSystemTheme() : theme;
+      const nextResolvedTheme =
+        theme === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme;
       const root = document.documentElement;
 
       root.classList.toggle('dark', nextResolvedTheme === 'dark');
@@ -79,17 +76,11 @@ export function ThemeProvider({ children }: PropsWithChildren) {
     };
   }, [theme]);
 
-  const value = useMemo<ThemeContextValue>(
-    () => ({
-      mounted,
-      resolvedTheme,
-      setTheme,
-      theme,
-    }),
-    [mounted, resolvedTheme, theme],
+  return (
+    <ThemeContext.Provider value={{ mounted, resolvedTheme, setTheme, theme }}>
+      {children}
+    </ThemeContext.Provider>
   );
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

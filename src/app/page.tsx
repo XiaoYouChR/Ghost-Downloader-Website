@@ -2,32 +2,16 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { i18n } from '@/lib/i18n';
 
-const localeAliases = {
-  'zh-cn': 'zh',
-  'zh-hans': 'zh',
-  'zh': 'zh',
-  'en': 'en',
-} as const;
-
 function resolveLocale(acceptLanguage: string | null) {
-  if (!acceptLanguage) {
-    return i18n.defaultLanguage;
-  }
+  for (const entry of acceptLanguage?.toLowerCase().split(',') ?? []) {
+    const language = entry.split(';')[0]?.trim();
 
-  const languages = acceptLanguage
-    .split(',')
-    .map((entry) => entry.split(';')[0]?.trim().toLowerCase())
-    .filter(Boolean);
-
-  for (const language of languages) {
-    if (language in localeAliases) {
-      return localeAliases[language as keyof typeof localeAliases];
+    if (language?.startsWith('zh')) {
+      return 'zh';
     }
 
-    const baseLanguage = language.split('-')[0];
-
-    if (baseLanguage in localeAliases) {
-      return localeAliases[baseLanguage as keyof typeof localeAliases];
+    if (language?.startsWith('en')) {
+      return 'en';
     }
   }
 
