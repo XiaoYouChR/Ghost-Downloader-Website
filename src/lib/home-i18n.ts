@@ -153,6 +153,18 @@ export type HomeCopy = {
       highlight: string;
     };
     description: string;
+    latest: string;
+    installer: string;
+    portable: string;
+    appleSilicon: string;
+    intel: string;
+    x64: string;
+    arm64: string;
+    viewAllReleases: string;
+    recommended: string;
+    appImage: string;
+    deb: string;
+    tarXz: string;
     downloads: {
       windows: {
         label: string;
@@ -193,7 +205,7 @@ const englishHomeCopy: HomeCopy = {
     description:
       'Ghost Downloader is an invisible, intelligent hub that bridges the chasm between the web and your desktop. Multi-protocol, cross-platform, and purely discreet.',
     primaryCta: 'Download Hub',
-    secondaryCta: 'View Capabilities',
+    secondaryCta: 'View Docs',
     flowLabels: {
       extension: 'Extension',
       media: 'Media',
@@ -342,18 +354,30 @@ const englishHomeCopy: HomeCopy = {
     },
     description:
       'Quiet, multi-platform, and free forever. The modern resource hub for the open web.',
+    latest: 'Latest',
+    installer: 'Installer',
+    portable: 'Portable',
+    appleSilicon: 'Apple Silicon',
+    intel: 'Intel',
+    x64: 'x64',
+    arm64: 'ARM64',
+    viewAllReleases: 'View all releases',
+    recommended: 'Recommended',
+    appImage: 'AppImage',
+    deb: 'Deb',
+    tarXz: 'Tar.xz',
     downloads: {
       windows: {
         label: 'Windows',
-        version: 'v3.2.0',
+        version: 'Exe / Zip',
       },
       macos: {
         label: 'macOS',
-        version: 'Apple / Intel',
+        version: 'Apple Silicon / Intel',
       },
       linux: {
         label: 'Linux',
-        version: 'AppImage / Deb',
+        version: 'AppImage / Deb / Tar.xz',
       },
     },
     alsoAvailableAs: 'Also available as',
@@ -373,7 +397,7 @@ const englishHomeCopy: HomeCopy = {
 };
 
 const homeCopyOverrides = {
-  cn: {
+  zh: {
     hero: {
       badge: '新一代资源调度中枢',
       title: {
@@ -383,7 +407,7 @@ const homeCopyOverrides = {
       description:
         'Ghost Downloader 是一款静默智能的下载中枢，让网页资源直达桌面。多协议、跨平台，无感运行',
       primaryCta: '免费下载',
-      secondaryCta: '探索更多',
+      secondaryCta: '查看文档',
       flowLabels: {
         extension: '扩展',
         media: '媒体',
@@ -528,18 +552,30 @@ const homeCopyOverrides = {
       },
       description:
         '安静、跨平台、永久免费。属于开放网络的现代资源枢纽。',
+      latest: '最新版本',
+      installer: '安装版',
+      portable: '便携版',
+      appleSilicon: 'Apple Silicon',
+      intel: 'Intel',
+      x64: 'x64',
+      arm64: 'ARM64',
+      viewAllReleases: '查看全部版本',
+      recommended: '推荐',
+      appImage: 'AppImage',
+      deb: 'Deb',
+      tarXz: 'Tar.xz',
       downloads: {
         windows: {
           label: 'Windows',
-          version: 'v3.2.0',
+          version: 'Exe / Zip',
         },
         macos: {
           label: 'macOS',
-          version: 'Apple / Intel',
+          version: 'Apple Silicon / Intel',
         },
         linux: {
           label: 'Linux',
-          version: 'AppImage / Deb',
+          version: 'AppImage / Deb / Tar.xz',
         },
       },
       alsoAvailableAs: '同时支持',
@@ -557,7 +593,7 @@ const homeCopyOverrides = {
       },
     },
   },
-} satisfies Partial<Record<'cn', DeepPartial<HomeCopy>>>;
+} satisfies Partial<Record<'zh', DeepPartial<HomeCopy>>>;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -585,8 +621,8 @@ function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
 }
 
 export function getHomeCopy(locale: string): HomeCopy {
-  if (locale === 'cn') {
-    return deepMerge(englishHomeCopy, homeCopyOverrides.cn);
+  if (locale === 'zh') {
+    return deepMerge(englishHomeCopy, homeCopyOverrides.zh);
   }
 
   return englishHomeCopy;

@@ -6,6 +6,6 @@ export const { GET } = createFromSource(source, {
   language: 'english',
   localeMap: {
     en: 'english',
-    cn: 'english',
+    zh: 'english',
   },
 });

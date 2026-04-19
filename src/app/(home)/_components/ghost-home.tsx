@@ -2,6 +2,7 @@
 
 import { Outfit } from 'next/font/google';
 import { cn } from '@/lib/cn';
+import type { DownloadReleaseState } from '@/lib/github-release';
 import type { HomeCopy } from '@/lib/home-i18n';
 import { HeroSection } from './hero-section';
 import { BrowserExtensionShowcase } from './browser-extension-showcase';
@@ -17,21 +18,26 @@ const outfit = Outfit({
 });
 
 type GhostHomePageProps = {
+  downloadRelease: DownloadReleaseState;
   lang: string;
   copy: HomeCopy;
 };
 
-export function GhostHomePage({ lang, copy }: GhostHomePageProps) {
+export function GhostHomePage({
+  downloadRelease,
+  lang,
+  copy,
+}: GhostHomePageProps) {
   return (
     <div
       className={cn(styles.root, outfit.variable)}
       data-lang={lang}
     >
-      <HeroSection copy={copy.hero} />
+      <HeroSection copy={copy.hero} lang={lang} />
       <BrowserExtensionShowcase copy={copy.browserShowcase} />
       <FeaturesSection copy={copy.features} />
       <ProtocolShowcase copy={copy.protocols} />
-      <DownloadCTA lang={lang} copy={copy.download} />
+      <DownloadCTA lang={lang} copy={copy.download} release={downloadRelease} />
     </div>
   );
 }

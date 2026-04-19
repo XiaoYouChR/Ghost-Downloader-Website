@@ -9,7 +9,7 @@ export const i18nUI = defineI18nUI(i18n, {
     displayName: 'English',
     chooseTheme: 'Theme',
   },
-  cn: {
+  zh: {
     displayName: '中文',
     chooseTheme: '主题',
   },

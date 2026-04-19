@@ -1,6 +1,7 @@
 'use client';
 
-import { Check, Monitor, Moon, Sun } from 'lucide-react';
+import type { ComponentPropsWithoutRef } from 'react';
+import { Check, Moon, Sun } from 'lucide-react';
 import { useI18n } from 'fumadocs-ui/contexts/i18n';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import {
@@ -23,16 +24,34 @@ const allThemeOptions = [
     key: 'dark',
   },
   {
-    icon: Monitor,
+    icon: SystemThemeIcon,
     key: 'system',
   },
-] as const satisfies {
-  icon: typeof Sun;
+] as const satisfies Array<{
+  icon: (props: ComponentPropsWithoutRef<'svg'>) => React.ReactNode;
   key: ThemeMode;
-}[];
+}>;
+
+function SystemThemeIcon(props: ComponentPropsWithoutRef<'svg'>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 const themeLabels = {
-  cn: {
+  zh: {
     dark: '深色',
     light: '浅色',
     system: '跟随系统',
@@ -50,7 +69,7 @@ function getThemeCopy(
 ) {
   return {
     chooseTheme: text.chooseTheme,
-    ...themeLabels[locale === 'cn' ? 'cn' : 'en'],
+    ...themeLabels[locale === 'zh' ? 'zh' : 'en'],
   };
 }
 

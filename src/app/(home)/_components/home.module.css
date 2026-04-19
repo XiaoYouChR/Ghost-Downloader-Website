@@ -20,7 +20,7 @@
   font-family: var(--font-ghost-display), "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
-.root[data-lang='cn'] .display {
+.root[data-lang='zh'] .display {
   font-family:
     "PingFang SC",
     "SF Pro Display",
