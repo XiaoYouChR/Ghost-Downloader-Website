@@ -30,7 +30,6 @@ export function baseOptions(locale: string): BaseLayoutProps {
       },
     ],
     nav: {
-      // JSX supported
       title: (
         <>
           <img

@@ -54,11 +54,6 @@ type PlatformOptionPanel = {
   groups: OptionGroup[];
   latestLabel: string | null;
   platform: DownloadPlatform;
-};
-
-type PlatformCardConfig = {
-  platform: DownloadPlatform;
-  subtitle: string;
   title: string;
 };
 
@@ -71,7 +66,7 @@ const platformLogos = {
 export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
   const [activeSheet, setActiveSheet] = useState<PlatformOptionPanel | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const platformCards: PlatformCardConfig[] = [
+  const platformCards = [
     {
       platform: 'windows',
       subtitle: copy.downloads.windows.version,
@@ -87,7 +82,7 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
       subtitle: copy.downloads.linux.version,
       title: copy.downloads.linux.label,
     },
-  ];
+  ] as const;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 640px)');
@@ -252,9 +247,8 @@ function PlatformDownloadCard({
     () => createPlatformPanel(copy, platform, release),
     [copy, platform, release],
   );
-  const hasOptions = panel.groups.length > 0;
 
-  if (!hasOptions) {
+  if (panel.groups.length === 0) {
     return (
       <DownloadCardLink
         href={release.data.releaseUrl}
@@ -326,8 +320,6 @@ function DownloadCardSurface({
   subtitle: string;
   title: string;
 }) {
-  const logo = getPlatformLogo(platform);
-
   return (
     <div
       className={cn(
@@ -339,7 +331,7 @@ function DownloadCardSurface({
       <div className="relative z-10 flex items-center gap-4">
         <div className="rounded-2xl bg-slate-100 p-3 shadow-sm transition-all group-hover:bg-blue-600 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] dark:bg-[#1A2436] dark:shadow-[0_0_15px_rgba(37,99,235,0)]">
           <img
-            src={logo}
+            src={platformLogos[platform]}
             alt={title}
             className="h-6 w-6 transition-all filter group-hover:brightness-0 group-hover:invert dark:invert dark:brightness-200"
             referrerPolicy="no-referrer"
@@ -372,11 +364,17 @@ function DownloadOptionsPanel({
       <div className="border-b border-slate-200/80 bg-slate-50/80 px-5 py-4 dark:border-white/5 dark:bg-white/[0.03]">
         <div className="flex items-center gap-3">
           <div className="rounded-2xl bg-slate-100 p-3 shadow-sm dark:bg-[#1A2436] dark:shadow-[0_0_15px_rgba(37,99,235,0)]">
-            {getPanelIcon(panel.platform)}
+            <img
+              src={platformLogos[panel.platform]}
+              alt=""
+              aria-hidden="true"
+              className="h-5 w-5 dark:invert dark:brightness-200"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <p className="text-sm font-bold text-slate-900 dark:text-white">
-              {getPanelTitle(copy, panel.platform)}
+              {panel.title}
             </p>
             {panel.latestLabel ? (
               <p className="text-[11px] font-semibold text-blue-600 dark:text-blue-300">
@@ -553,6 +551,7 @@ function createPlatformPanel(
       ].filter((group): group is OptionGroup => group !== null),
       latestLabel,
       platform,
+      title: copy.downloads.windows.label,
     };
   }
 
@@ -566,6 +565,7 @@ function createPlatformPanel(
       ].filter((group): group is OptionGroup => group !== null),
       latestLabel,
       platform,
+      title: copy.downloads.macos.label,
     };
   }
 
@@ -584,6 +584,7 @@ function createPlatformPanel(
     ].filter((group): group is OptionGroup => group !== null),
     latestLabel,
     platform,
+    title: copy.downloads.linux.label,
   };
 }
 
@@ -629,32 +630,4 @@ function createOption(
     meta,
     recommended,
   };
-}
-
-function getPlatformLogo(platform: DownloadPlatform) {
-  return platformLogos[platform];
-}
-
-function getPanelIcon(platform: DownloadPlatform) {
-  return (
-    <img
-      src={getPlatformLogo(platform)}
-      alt=""
-      aria-hidden="true"
-      className="h-5 w-5 dark:invert dark:brightness-200"
-      referrerPolicy="no-referrer"
-    />
-  );
-}
-
-function getPanelTitle(copy: HomeCopy['download'], platform: DownloadPlatform) {
-  if (platform === 'windows') {
-    return copy.downloads.windows.label;
-  }
-
-  if (platform === 'macos') {
-    return copy.downloads.macos.label;
-  }
-
-  return copy.downloads.linux.label;
 }

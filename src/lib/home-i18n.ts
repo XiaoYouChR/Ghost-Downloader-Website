@@ -1,7 +1,3 @@
-type DeepPartial<T> = {
-  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
-};
-
 export type HomeCopy = {
   hero: {
     badge: string;
@@ -396,7 +392,8 @@ const englishHomeCopy: HomeCopy = {
   },
 };
 
-const homeCopyOverrides = {
+const homeCopies = {
+  en: englishHomeCopy,
   zh: {
     hero: {
       badge: '新一代资源调度中枢',
@@ -593,37 +590,8 @@ const homeCopyOverrides = {
       },
     },
   },
-} satisfies Partial<Record<'zh', DeepPartial<HomeCopy>>>;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
-  if (override === undefined) return base;
-  if (!isRecord(base) || !isRecord(override)) return override as T;
-
-  const result: Record<string, unknown> = { ...base };
-  const overrideRecord = override as Record<string, unknown>;
-
-  for (const key of Object.keys(overrideRecord)) {
-    const overrideValue = overrideRecord[key];
-    if (overrideValue === undefined) continue;
-
-    const baseValue = result[key];
-    result[key] =
-      isRecord(baseValue) && isRecord(overrideValue)
-        ? deepMerge(baseValue, overrideValue)
-        : overrideValue;
-  }
-
-  return result as T;
-}
+} satisfies Record<'en' | 'zh', HomeCopy>;
 
 export function getHomeCopy(locale: string): HomeCopy {
-  if (locale === 'zh') {
-    return deepMerge(englishHomeCopy, homeCopyOverrides.zh);
-  }
-
-  return englishHomeCopy;
+  return homeCopies[locale === 'zh' ? 'zh' : 'en'];
 }
