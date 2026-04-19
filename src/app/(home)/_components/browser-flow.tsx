@@ -9,9 +9,14 @@ import {
   Paperclip,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
-export function BrowserFlow() {
+type BrowserFlowProps = {
+  labels: HomeCopy['hero']['flowLabels'];
+};
+
+export function BrowserFlow({ labels }: BrowserFlowProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const leftRefs = [
     useRef<HTMLDivElement>(null),
@@ -128,20 +133,20 @@ export function BrowserFlow() {
           delay={0}
           innerRef={leftRefs[0]}
           icon={<AppWindow className="text-blue-500" />}
-          label="Extension"
+          label={labels.extension}
         />
         <FloatingIcon
           delay={1}
           innerRef={leftRefs[1]}
           className="-translate-x-12"
           icon={<FileVideo className="text-slate-500 dark:text-slate-400" />}
-          label="Media"
+          label={labels.media}
         />
         <FloatingIcon
           delay={2}
           innerRef={leftRefs[2]}
           icon={<Layout className="text-slate-500 dark:text-slate-400" />}
-          label="Tabs"
+          label={labels.tabs}
         />
       </div>
 
@@ -151,7 +156,7 @@ export function BrowserFlow() {
           alignRight
           innerRef={rightRefs[0]}
           icon={<HardDrive className="text-slate-700 dark:text-white" />}
-          label="Storage"
+          label={labels.storage}
         />
         <FloatingIcon
           delay={1.5}
@@ -159,14 +164,14 @@ export function BrowserFlow() {
           innerRef={rightRefs[1]}
           className="translate-x-12"
           icon={<Music className="text-slate-500 dark:text-slate-400" />}
-          label="Assets"
+          label={labels.assets}
         />
         <FloatingIcon
           delay={2.5}
           alignRight
           innerRef={rightRefs[2]}
           icon={<Paperclip className="text-slate-500 dark:text-slate-400" />}
-          label="Tasks"
+          label={labels.tasks}
         />
       </div>
     </div>

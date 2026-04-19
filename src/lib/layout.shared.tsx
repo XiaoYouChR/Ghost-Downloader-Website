@@ -1,8 +1,21 @@
+import { defineI18nUI } from 'fumadocs-ui/i18n';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import { ThemeSwitch } from '@/components/theme-switch';
+import { i18n } from './i18n';
 import { appName, gitConfig } from './shared';
 
-export function baseOptions(): BaseLayoutProps {
+export const i18nUI = defineI18nUI(i18n, {
+  en: {
+    displayName: 'English',
+  },
+  cn: {
+    displayName: '中文',
+  },
+});
+
+export function baseOptions(locale: string): BaseLayoutProps {
   return {
+    i18n: true,
     nav: {
       // JSX supported
       title: (
@@ -16,6 +29,10 @@ export function baseOptions(): BaseLayoutProps {
           <span>{appName}</span>
         </>
       ),
+      url: `/${locale}`,
+    },
+    slots: {
+      themeSwitch: ThemeSwitch,
     },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
   };

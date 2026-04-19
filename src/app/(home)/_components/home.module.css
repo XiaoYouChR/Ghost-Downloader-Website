@@ -20,6 +20,24 @@
   font-family: var(--font-ghost-display), "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+.root[data-lang='cn'] .display {
+  font-family:
+    "PingFang SC",
+    "SF Pro Display",
+    "Hiragino Sans GB",
+    "MiSans",
+    "HarmonyOS Sans SC",
+    "Source Han Sans SC",
+    "Noto Sans CJK SC",
+    "Microsoft YaHei UI",
+    "Microsoft YaHei",
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
 .heroSection {
   min-height: calc(100svh - 3.5rem);
   padding-top: clamp(5.5rem, 9vw, 7rem);

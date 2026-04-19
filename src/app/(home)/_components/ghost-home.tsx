@@ -2,6 +2,7 @@
 
 import { Outfit } from 'next/font/google';
 import { cn } from '@/lib/cn';
+import type { HomeCopy } from '@/lib/home-i18n';
 import { HeroSection } from './hero-section';
 import { BrowserExtensionShowcase } from './browser-extension-showcase';
 import { FeaturesSection } from './features-section';
@@ -15,14 +16,22 @@ const outfit = Outfit({
   weight: ['400', '500', '600', '700', '800'],
 });
 
-export function GhostHomePage() {
+type GhostHomePageProps = {
+  lang: string;
+  copy: HomeCopy;
+};
+
+export function GhostHomePage({ lang, copy }: GhostHomePageProps) {
   return (
-    <div className={cn(styles.root, outfit.variable)}>
-      <HeroSection />
-      <BrowserExtensionShowcase />
-      <FeaturesSection />
-      <ProtocolShowcase />
-      <DownloadCTA />
+    <div
+      className={cn(styles.root, outfit.variable)}
+      data-lang={lang}
+    >
+      <HeroSection copy={copy.hero} />
+      <BrowserExtensionShowcase copy={copy.browserShowcase} />
+      <FeaturesSection copy={copy.features} />
+      <ProtocolShowcase copy={copy.protocols} />
+      <DownloadCTA lang={lang} copy={copy.download} />
     </div>
   );
 }

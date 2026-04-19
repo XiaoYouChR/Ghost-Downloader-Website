@@ -18,9 +18,14 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
-export function ProtocolShowcase() {
+type ProtocolShowcaseProps = {
+  copy: HomeCopy['protocols'];
+};
+
+export function ProtocolShowcase({ copy }: ProtocolShowcaseProps) {
   return (
     <section
       id="protocols"
@@ -32,7 +37,7 @@ export function ProtocolShowcase() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400">
                 <Cpu size={10} />
-                Desktop Core
+                {copy.badge}
               </div>
               <h2
                 className={cn(
@@ -40,13 +45,11 @@ export function ProtocolShowcase() {
                   'text-4xl leading-tight font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl'
                 )}
               >
-                A Native experience, <br />
-                <span className="text-blue-600 dark:text-blue-500">Perfectly at home.</span>
+                {copy.title.line1} <br />
+                <span className="text-blue-600 dark:text-blue-500">{copy.title.highlight}</span>
               </h2>
               <p className="max-w-lg text-lg leading-relaxed font-medium text-slate-600 opacity-90 dark:text-slate-400 dark:opacity-80">
-                Ghost Downloader isn&apos;t just a background service. It&apos;s a
-                high-performance desktop hub designed for clarity and absolute
-                performance.
+                {copy.description}
               </p>
             </div>
 
@@ -67,24 +70,39 @@ export function ProtocolShowcase() {
                   <div>
                     <div className="mb-1 flex items-center gap-2">
                       <h4 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">
-                        Multi-Thread Engine
+                        {copy.coreCard.title}
                       </h4>
                       <span className="flex h-fit items-center rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[8px] leading-none font-bold uppercase tracking-widest text-blue-600 dark:border-blue-500/20 dark:bg-blue-500/20 dark:text-blue-400">
-                        Core
+                        {copy.coreCard.badge}
                       </span>
                     </div>
                     <p className="max-w-[200px] text-xs leading-normal text-slate-500 dark:text-slate-400">
-                      Dynamic thread allocation for up to 32 parallel chunks per
-                      resource.
+                      {copy.coreCard.description}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <CapabilityTile icon={<HardDrive size={16} />} title="Smart Write" badge="H-Disk" />
-              <CapabilityTile icon={<Fingerprint size={16} />} title="Identity" badge="SSL" />
-              <CapabilityTile icon={<ListChecks size={16} />} title="Scheduler" badge="Tasks" />
-              <CapabilityTile icon={<LinkIcon size={16} />} title="Remote" badge="API" />
+              <CapabilityTile
+                icon={<HardDrive size={16} />}
+                title={copy.capabilities.smartWrite.title}
+                badge={copy.capabilities.smartWrite.badge}
+              />
+              <CapabilityTile
+                icon={<Fingerprint size={16} />}
+                title={copy.capabilities.identity.title}
+                badge={copy.capabilities.identity.badge}
+              />
+              <CapabilityTile
+                icon={<ListChecks size={16} />}
+                title={copy.capabilities.scheduler.title}
+                badge={copy.capabilities.scheduler.badge}
+              />
+              <CapabilityTile
+                icon={<LinkIcon size={16} />}
+                title={copy.capabilities.remote.title}
+                badge={copy.capabilities.remote.badge}
+              />
             </div>
           </div>
 
@@ -92,39 +110,39 @@ export function ProtocolShowcase() {
             <TaskRow
               name="WindowsManager-v2.3.5.exe"
               type="exe"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-blue-600"
             />
             <TaskRow
               name="FlClash-0.8.90-windows-amd64-setup.exe"
               type="exe"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/10"
               iconInnerColor="text-blue-600 dark:text-blue-400"
             />
             <TaskRow
               name="WebPShop_0_4_3_Win_x64.8bi"
               type="plugin"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-slate-200 dark:bg-slate-900"
               iconInnerColor="text-slate-700 dark:text-white"
             />
             <TaskRow
               name="eudic_win.zip"
               type="zip"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-blue-600"
             />
             <TaskRow
               name="Win10_22H2_English_x64v1.iso"
               type="iso"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-red-500/90"
             />
             <TaskRow
               name="EasyCLI-v0.1.32-windows-x64.zip"
               type="zip"
-              status="Task Completed"
+              status={copy.taskCompleted}
               iconColor="bg-blue-600"
             />
           </div>

@@ -8,10 +8,12 @@ import {
   Radar,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
 const features = [
   {
+    id: 'sniffer',
     title: 'The Sniffer',
     desc: 'Intelligent resource detection across all active tabs, identifying HLS, DASH, and dynamic streams.',
     icon: Radar,
@@ -20,6 +22,7 @@ const features = [
     span: 'col-span-1 md:col-span-2',
   },
   {
+    id: 'bilibiliEngine',
     title: 'Bilibili Engine',
     desc: 'Direct video & audio parsing.',
     icon: PlayCircle,
@@ -28,6 +31,7 @@ const features = [
     span: 'col-span-1 md:col-span-1',
   },
   {
+    id: 'hlsDash',
     title: 'HLS / DASH / m3u8',
     desc: 'Live stream segment parallelization.',
     icon: Network,
@@ -36,6 +40,7 @@ const features = [
     span: 'col-span-1 md:col-span-1',
   },
   {
+    id: 'httpSmartWrite',
     title: 'HTTP Smart Write',
     desc: 'Direct-to-disk chunk writing to save memory and SSD lifespan.',
     icon: HardDrive,
@@ -44,6 +49,7 @@ const features = [
     span: 'col-span-1 md:col-span-2',
   },
   {
+    id: 'ftpFtps',
     title: 'FTP / FTPS',
     desc: 'Secure legacy file transfers.',
     icon: CloudDownload,
@@ -52,6 +58,7 @@ const features = [
     span: 'col-span-1 md:col-span-1',
   },
   {
+    id: 'githubAccel',
     title: 'GitHub Accel',
     desc: 'Bypass regional blockades for release downloads.',
     icon: GitBranch,
@@ -59,15 +66,27 @@ const features = [
     theme: 'light',
     span: 'col-span-1 md:col-span-2',
   },
-] as const;
+] as const satisfies ReadonlyArray<{
+  id: keyof HomeCopy['features']['items'];
+  title: string;
+  desc: string;
+  icon: typeof Radar;
+  iconColor: string;
+  theme: 'dark' | 'light';
+  span: string;
+}>;
 
-export function FeaturesSection() {
+type FeaturesSectionProps = {
+  copy: HomeCopy['features'];
+};
+
+export function FeaturesSection({ copy }: FeaturesSectionProps) {
   return (
     <section id="features" className="mx-auto max-w-7xl px-6 py-32">
       <div className="mb-24 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400">
           <Radar size={10} />
-          Engineered for Perfection
+          {copy.badge}
         </div>
         <p
           className={cn(
@@ -75,14 +94,15 @@ export function FeaturesSection() {
             'text-4xl leading-tight font-bold text-slate-900 dark:text-white md:text-5xl'
           )}
         >
-          Invisible Infrastructure. <br />
-          <span className="text-blue-600 dark:text-blue-500">Visible Performance.</span>
+          {copy.title.line1} <br />
+          <span className="text-blue-600 dark:text-blue-500">{copy.title.highlight}</span>
         </p>
       </div>
 
       <div className="grid auto-rows-[220px] grid-cols-1 gap-6 md:grid-cols-3">
         {features.map((feature, index) => {
           const Icon = feature.icon;
+          const itemCopy = copy.items[feature.id];
 
           return (
             <motion.div
@@ -127,7 +147,7 @@ export function FeaturesSection() {
                     feature.theme === 'dark' && 'text-white'
                   )}
                 >
-                  {feature.title}
+                  {itemCopy.title}
                 </h3>
                 <p
                   className={cn(
@@ -135,7 +155,7 @@ export function FeaturesSection() {
                     feature.theme === 'dark' && 'text-slate-400'
                   )}
                 >
-                  {feature.desc}
+                  {itemCopy.description}
                 </p>
               </div>
             </motion.div>

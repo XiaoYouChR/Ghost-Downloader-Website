@@ -1,11 +1,17 @@
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
+import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
 const projectUrl = 'https://github.com/XiaoYouChR/Ghost-Downloader-3';
 const releasesUrl = `${projectUrl}/releases`;
 
-export function DownloadCTA() {
+type DownloadCTAProps = {
+  lang: string;
+  copy: HomeCopy['download'];
+};
+
+export function DownloadCTA({ lang, copy }: DownloadCTAProps) {
   return (
     <section
       id="downloads"
@@ -24,35 +30,49 @@ export function DownloadCTA() {
             'mb-8 text-5xl font-bold tracking-tight text-slate-900 dark:text-white md:text-7xl'
           )}
         >
-          Perfect Capture. <br />
-          Purely Discreet.
+          {copy.title.line1} <br />
+          {copy.title.highlight}
         </h2>
         <p className="mx-auto mb-12 max-w-2xl text-xl text-slate-500 dark:text-slate-400">
-          Quiet, multi-platform, and free forever. The modern resource hub for the
-          open web.
+          {copy.description}
         </p>
 
         <div className="flex flex-col justify-center gap-6 sm:flex-row">
-          <DownloadButton os="Windows" version="v3.2.0" />
-          <DownloadButton os="macOS" version="Apple / Intel" />
-          <DownloadButton os="Linux" version="AppImage / Deb" />
+          <DownloadButton
+            platform="windows"
+            os={copy.downloads.windows.label}
+            version={copy.downloads.windows.version}
+          />
+          <DownloadButton
+            platform="macos"
+            os={copy.downloads.macos.label}
+            version={copy.downloads.macos.version}
+          />
+          <DownloadButton
+            platform="linux"
+            os={copy.downloads.linux.label}
+            version={copy.downloads.linux.version}
+          />
         </div>
 
         <div className="mt-20 flex flex-col items-center gap-8 border-t border-slate-200 pt-12 dark:border-white/5">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-600">
-            Also available as
+            {copy.alsoAvailableAs}
           </p>
           <div className="flex flex-wrap justify-center gap-10 md:gap-16">
             <BrowserLink
-              name="Chrome"
+              name={copy.browsers.chrome}
+              addonSuffix={copy.browsers.addonSuffix}
               icon="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlechrome.svg"
             />
             <BrowserLink
-              name="Edge"
+              name={copy.browsers.edge}
+              addonSuffix={copy.browsers.addonSuffix}
               icon="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoftedge.svg"
             />
             <BrowserLink
-              name="Firefox"
+              name={copy.browsers.firefox}
+              addonSuffix={copy.browsers.addonSuffix}
               icon="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/firefoxbrowser.svg"
             />
           </div>
@@ -60,25 +80,33 @@ export function DownloadCTA() {
       </div>
 
       <footer className="absolute right-0 bottom-12 left-0 flex flex-wrap justify-center gap-x-12 gap-y-3 px-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
-        <span>© 2026 Ghost Downloader</span>
+        <span>{copy.footer.copyright}</span>
         <a
           href={projectUrl}
           target="_blank"
           rel="noreferrer"
           className="transition-colors hover:text-blue-500"
         >
-          GitHub Source
+          {copy.footer.githubSource}
         </a>
-        <Link href="/docs" className="transition-colors hover:text-blue-500">
-          Documentation
+        <Link href={`/${lang}/docs`} className="transition-colors hover:text-blue-500">
+          {copy.footer.documentation}
         </Link>
-        <span>Privacy</span>
+        <span>{copy.footer.privacy}</span>
       </footer>
     </section>
   );
 }
 
-function BrowserLink({ name, icon }: { name: string; icon: string }) {
+function BrowserLink({
+  name,
+  addonSuffix,
+  icon,
+}: {
+  name: string;
+  addonSuffix: string;
+  icon: string;
+}) {
   return (
     <a href="#extension" className="group flex items-center gap-3">
       <img
@@ -88,17 +116,25 @@ function BrowserLink({ name, icon }: { name: string; icon: string }) {
         referrerPolicy="no-referrer"
       />
       <span className="text-sm font-bold text-slate-400 transition-colors group-hover:text-slate-800 dark:text-white/40 dark:group-hover:text-white">
-        {name} Add-on
+        {name} {addonSuffix}
       </span>
     </a>
   );
 }
 
-function DownloadButton({ os, version }: { os: string; version: string }) {
+function DownloadButton({
+  platform,
+  os,
+  version,
+}: {
+  platform: 'windows' | 'macos' | 'linux';
+  os: string;
+  version: string;
+}) {
   const logo =
-    os === 'Windows'
+    platform === 'windows'
       ? 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/windows.svg'
-      : os === 'macOS'
+      : platform === 'macos'
         ? 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg'
         : 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg';
 
