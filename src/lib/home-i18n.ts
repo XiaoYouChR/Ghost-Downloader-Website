@@ -388,10 +388,10 @@ const englishHomeCopy: HomeCopy = {
       addonSuffix: 'Add-on',
     },
     footer: {
-      copyright: '© 2026 Ghost Downloader',
-      githubSource: 'GitHub Source',
+      copyright: '© 2026 晓游. All Rights Reserved.',
+      githubSource: 'Source',
       documentation: 'Documentation',
-      privacy: 'Privacy',
+      privacy: '湘ICP备2026012876号-1',
     },
   },
 };
@@ -586,10 +586,10 @@ const homeCopyOverrides = {
         addonSuffix: '扩展',
       },
       footer: {
-        copyright: '© 2026 Ghost Downloader',
-        githubSource: 'GitHub 源码',
+        copyright: '© 2026 晓游. All Rights Reserved.',
+        githubSource: '源码',
         documentation: '文档',
-        privacy: '隐私政策',
+        privacy: '湘ICP备2026012876号-1',
       },
     },
   },

@@ -24,6 +24,7 @@ import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
 const projectUrl = 'https://github.com/XiaoYouChR/Ghost-Downloader-3';
+const beianUrl = 'https://beian.miit.gov.cn/';
 const browserAddonUrls = {
   chrome: 'https://chromewebstore.google.com/detail/ghost-downloader-browser/pinckpkeeajogfgajbicpnengimiblch',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/ghost-downloader-browser/odaohmfjjbompdkmfbambadnagplcmce',
@@ -180,7 +181,14 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
         <Link href={`/${lang}/docs`} className="transition-colors hover:text-blue-500">
           {copy.footer.documentation}
         </Link>
-        <span>{copy.footer.privacy}</span>
+        <a
+          href={beianUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-colors hover:text-blue-500"
+        >
+          {copy.footer.privacy}
+        </a>
       </footer>
 
       <DownloadSheet
