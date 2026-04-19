@@ -1,0 +1,8 @@
+{
+  "title": "Workflows",
+  "pages": [
+    "local-build",
+    "github-actions",
+    "translation-sync"
+  ]
+}

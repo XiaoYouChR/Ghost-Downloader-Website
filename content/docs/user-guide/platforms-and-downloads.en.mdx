@@ -1,0 +1,49 @@
+---
+title: Platforms and Downloads
+description: Supported platforms, minimum versions, and where Windows 7 users should download from.
+---
+
+<Cards>
+  <Card title="Latest Stable Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="Current Windows, macOS, and Linux release assets." />
+  <Card title="GitHub Repository" href="https://github.com/XiaoYouChR/Ghost-Downloader-3" external description="Windows 7 compatibility information is announced in the README." />
+</Cards>
+
+## Supported Platforms and Minimum Versions
+
+| Platform | Minimum Requirement | Architectures | Download Advice |
+| --- | --- | --- | --- |
+| Windows | `7 SP1+` | `x86_64` / `arm64` | Most users should download from the latest release. Windows 7 users should follow the compatibility instructions below. |
+| macOS | `13.0+` | `x86_64` / `arm64` | Download from the latest release. |
+| Linux | `glibc 2.35+` | `x86_64` / `arm64` | You can use the latest release packages or install from AUR. |
+
+<Callout type="warn" title="AVX Requirement">
+Qt `6.6+` no longer supports CPUs without the `AVX` instruction set. If the app does not start, check both your OS version and CPU generation.
+</Callout>
+
+## Where to Download for Windows 7
+
+Windows 7 users should confirm the current compatible version from one of these official entry points:
+
+1. Open the [GitHub repository README](https://github.com/XiaoYouChR/Ghost-Downloader-3) and look for a note like this:
+
+```md
+> [!TIP]
+> If you want to use Ghost-Downloader-3 on Windows 7, please download version `v3.8.0-Windows7`.
+```
+
+2. Open the Windows download section on the official website and check the currently listed Windows 7 compatible build.
+
+<Callout type="info" title="Do Not Rely on latest release Alone">
+Windows 7 compatible packages do not necessarily track the latest release tag. Use the version explicitly listed in the README or on the website's Windows download section.
+</Callout>
+
+If you are on Windows 7, download the compatibility build explicitly listed by the README or website. If you are on Windows 10 or 11, use the regular Windows package from `latest release`.
+
+## Not Sure Which Package to Pick?
+
+| Your System | Recommendation |
+| --- | --- |
+| Windows 10 / 11 | Download the regular Windows package from the latest release. |
+| Windows 7 | Check the current compatible version from the repository README or the website's Windows download section. |
+| macOS | Download the package matching your chip architecture: `arm64` or `x86_64`. |
+| Linux | Prefer `.deb` on Debian / Ubuntu, `.AppImage` on other distributions, or AUR on Arch-based systems. |

@@ -1,0 +1,21 @@
+---
+title: Built-in Feature Packs
+description: Use one table to locate the purpose, dependencies, and source entry point of each built-in Feature Pack.
+---
+
+Built-in packs are split by protocol and site capability. When locating a problem, confirm the input type first, then jump into the matching source directory.
+
+| Pack | Handles | Key Dependencies | Source Entry |
+| --- | --- | --- | --- |
+| `http_pack` | HTTP / HTTPS files | `niquests`, Range, proxy support | `features/http_pack` |
+| `bittorrent_pack` | Magnet links, `.torrent` files | `libtorrent`, trackers, DHT | `features/bittorrent_pack` |
+| `ftp_pack` | FTP / FTPS | `aioftp` | `features/ftp_pack` |
+| `m3u8_pack` | M3U8, MPD | `http_pack`, `extract_pack`, `ffmpeg_pack`, N_m3u8DL-RE | `features/m3u8_pack` |
+| `bili_pack` | Bilibili video pages | `http_pack`, `ffmpeg_pack`, cookies | `features/bili_pack` |
+| `github_pack` | GitHub release / raw / download links | `http_pack`, mirror sites | `features/github_pack` |
+| `ffmpeg_pack` | Runtime installation and media merging | `http_pack`, `extract_pack`, FFmpeg | `features/ffmpeg_pack` |
+| `extract_pack` | Runtime extraction tasks | Local file system, archives | `features/extract_pack` |
+
+<Callout type="warn" title="Release Difference">
+The repository still contains `jack_yao`, but `deploy.py` currently keeps it in `FEATURE_PACK_BLACKLIST`, so it is not shipped in official release packages.
+</Callout>

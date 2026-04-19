@@ -1,0 +1,37 @@
+---
+title: Translation Sync
+description: Use the Sync Crowdin workflow to pull translations back into the repository and open translation PRs.
+---
+
+Translation contributions should normally happen in the [ghost-downloader Crowdin project](https://crowdin.com/project/ghost-downloader). The repository's `Sync Crowdin` workflow is used to sync those translations back into source control.
+
+<Cards>
+  <Card title="Contribute Translation" href="../contributing/translation.mdx" description="See the normal translation contribution path." />
+  <Card title="Sync Crowdin" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/crowdin.yml" external description="Open the GitHub Actions workflow." />
+</Cards>
+
+## Workflow Inputs
+
+| Input | Purpose |
+| --- | --- |
+| `push` | Upload source strings and existing translations to Crowdin. |
+| `pull` | Pull translations from Crowdin, refresh Qt resources, and open a translation PR. |
+
+## What `pull` Updates
+
+| File | Description |
+| --- | --- |
+| `app/assets/i18n/*.ts` | Qt translation source files. |
+| `app/assets/i18n/*.qm` | Compiled Qt translation resources. |
+| `app/assets/resources.py` | Bundled application resource file. |
+| `README.md` / `README_zh.md` | Crowdin contributor lists. |
+
+## Local Refresh Command
+
+```powershell
+python sync_i18n_res.py
+```
+
+<Callout type="info" title="For Translators">
+If you only contribute translations, you do not need to run `Sync Crowdin`. Submit translations in Crowdin and let maintainers or collaborators handle the sync workflow.
+</Callout>

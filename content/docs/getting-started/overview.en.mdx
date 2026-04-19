@@ -1,0 +1,28 @@
+---
+title: Project Overview
+description: Understand what Ghost Downloader is, how it is organized, and where to start.
+---
+
+Ghost Downloader is a cross-platform desktop downloader. For contributors, four facts matter first: the desktop app is built with PySide6, task scheduling runs on an AsyncIO background loop, download capabilities are extended through Feature Packs, and the browser extension forwards web resources to the desktop app through a local WebSocket bridge.
+
+<Callout type="info" title="Suggested Reading Order">
+For a first contribution, start with `Ghost-Downloader-3.py`, `app/services/core_service.py`, `app/services/feature_service.py`, and the target `features/*_pack`.
+</Callout>
+
+## Module Boundaries
+
+| Module | Responsibility |
+| --- | --- |
+| App entry | `Ghost-Downloader-3.py` handles logging, config loading, translation, service startup, and main window creation. |
+| Core service | `CoreService` owns the task queue and AsyncIO event loop. Keep protocol-specific logic out of it. |
+| Feature Pack | Each protocol pack handles URL matching, parsing, and task implementation. The plugin API is still unstable. |
+| Browser extension | The extension captures resources, and the desktop `BrowserService` validates the token and creates tasks. |
+| UI | `app/view` is for interaction and presentation. Protocol parsing should not live there. |
+
+## Next Steps
+
+<Cards>
+  <Card title="Run the Project" href="./setup.mdx" description="Install Python and Node dependencies, then start the desktop app and extension." />
+  <Card title="Find the Right Source Files" href="./repository-map.mdx" description="Locate core files by task type." />
+  <Card title="Understand Architecture Boundaries" href="../architecture/overview.mdx" description="Avoid placing logic in the wrong layer." />
+</Cards>

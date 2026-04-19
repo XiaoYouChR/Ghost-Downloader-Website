@@ -1,0 +1,25 @@
+---
+title: Task System
+description: How CoreService, Task, TaskStage, and taskRecorder work together.
+---
+
+The task system revolves around three files: `app/services/core_service.py`, `app/bases/models.py`, and `app/supports/recorder.py`.
+
+| Concept | Role | What to Watch When Changing It |
+| --- | --- | --- |
+| `CoreService` | AsyncIO scheduler running in a background thread. | Do not operate on QWidget directly from it. |
+| `Task` | A download or processing task. | New fields must stay compatible with persistence. |
+| `TaskStage` | A sub-progress unit, such as an HTTP chunk or media-processing stage. | The UI and extension use it to compute total progress. |
+| `taskRecorder` | Persists and restores task history. | Structural changes must keep old records readable. |
+
+## Scheduling Flow
+
+1. The UI or extension submits a URL.
+2. `CoreService` runs parsing logic and creates a `Task`.
+3. The task enters the queue and is controlled by the maximum concurrency limit.
+4. Running tasks update `TaskStage`.
+5. Completion, pause, or failure is written back to the recorder.
+
+<Callout type="info" title="When a Change Is Risky">
+If you change state enums, task serialization, pause/resume behavior, or stage progress, that affects the UI, the browser extension, and historical task recovery. The risk is higher than a normal internal Feature Pack change.
+</Callout>

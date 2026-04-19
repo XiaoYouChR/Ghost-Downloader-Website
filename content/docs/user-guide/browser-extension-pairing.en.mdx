@@ -1,0 +1,80 @@
+---
+title: Browser Extension Pairing
+description: Get the pairing token, connect the desktop app, and troubleshoot failed connections.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Cards>
+  <Card title="Download Desktop App" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="Install and launch Ghost Downloader first." />
+  <Card title="Chrome Extension" href="https://chromewebstore.google.com/detail/ghost-downloader-browser/pinckpkeeajogfgajbicpnengimiblch" external description="For Chrome and Chromium-based browsers." />
+  <Card title="Edge Extension" href="https://microsoftedge.microsoft.com/addons/detail/ghost-downloader-browser/odaohmfjjbompdkmfbambadnagplcmce" external description="For Microsoft Edge." />
+  <Card title="Firefox Add-on" href="https://addons.mozilla.org/zh-CN/firefox/addon/ghost-downloader/" external description="Official Firefox add-on page." />
+</Cards>
+
+The browser extension connects to the desktop app through a local WebSocket service. The default service address is `ws://127.0.0.1:14370`.
+
+## Get the Pairing Token
+
+<Steps>
+  <Step>
+    Open the Ghost Downloader desktop app and go to `Settings -> Browser Extension`.
+  </Step>
+
+  <Step>
+    Turn on `Enable Browser Extension`.
+  </Step>
+
+  <Step>
+    Find `Pairing Token` on the same page and click `Copy Token`.
+
+    If you think the token has been exposed, or the extension keeps saying the token is invalid, regenerate it with the refresh button on the right.
+  </Step>
+</Steps>
+
+## Connect the Extension
+
+<Steps>
+  <Step>
+    Open the extension popup and go to the `Settings` page.
+  </Step>
+
+  <Step>
+    Keep `Local Service URL` as `ws://127.0.0.1:14370` unless you have intentionally changed the bridge address in source code.
+  </Step>
+
+  <Step>
+    Paste the copied pairing token into the `Pairing Token` field and save it.
+  </Step>
+
+  <Step>
+    When the extension status changes to `Connected`, pairing is complete.
+  </Step>
+</Steps>
+
+<Callout type="info" title="Regenerating the Token Disconnects Existing Sessions">
+When the desktop app regenerates the pairing token, the old token stored in the extension stops working immediately. Paste the new token again.
+</Callout>
+
+## Troubleshoot Connection Failures
+
+Check the following in order:
+
+| Symptom | Check this first |
+| --- | --- |
+| The extension shows `Waiting for Pairing` | No token has been saved in the extension yet. |
+| The extension shows `Invalid Token` | The extension token does not match the desktop app. Copy it again, or regenerate it and save the new one. |
+| The extension shows `Disconnected` or `Unable to connect to Ghost Downloader` | The desktop app is not running, or `Enable Browser Extension` is turned off. |
+| The status keeps spinning on connecting | The service URL is not `ws://127.0.0.1:14370`, or local connections are blocked by security software. |
+| It disconnects again right after saving | Click `Reconnect` on the extension settings page and check whether the status changes to `Connected`. |
+
+If the problem still remains, verify these four items:
+
+1. The desktop app must stay running. Minimizing to tray is fine, but fully exiting is not.
+2. `Enable Browser Extension` must remain enabled in the desktop app settings.
+3. The saved token in the extension must exactly match the token currently shown by the desktop app.
+4. Your machine must allow browser access to `127.0.0.1:14370`. Do not let firewalls, proxy tools, or security software block the local WebSocket.
+
+<Callout type="warn" title="Downloads Are Not Being Captured">
+If the extension is already connected but browser downloads are not being handed over, check whether `Intercept Downloads` is enabled at the top of the extension UI.
+</Callout>

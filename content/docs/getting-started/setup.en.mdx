@@ -1,0 +1,52 @@
+---
+title: Setup and Run
+description: Install dependencies, start the desktop app, and build the browser extension.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Steps>
+  <Step>
+    Install desktop dependencies.
+
+    ```powershell
+    cd C:\Users\XiaoYouChR\PycharmProjects\Ghost-Downloader-3
+    pip install --timeout=300 -r requirements.txt
+    ```
+  </Step>
+
+  <Step>
+    Start the desktop app from source.
+
+    ```powershell
+    python Ghost-Downloader-3.py
+    ```
+  </Step>
+
+  <Step>
+    If you are changing the browser extension, install and build it too.
+
+    ```powershell
+    cd browser_extension\app
+    npm install
+    npm run typecheck
+    npm run build
+    ```
+  </Step>
+</Steps>
+
+## What Happens on Startup
+
+The entry file loads `UserConfig.json`, starts `coreService`, creates `MainWindow`, loads `features/*_pack`, and restores memorized tasks through `taskRecorder`. For a silent startup without the splash screen:
+
+```powershell
+python Ghost-Downloader-3.py --silence
+```
+
+## Common Blockers
+
+| Symptom | Check First |
+| --- | --- |
+| UI does not launch | PySide6, Qt plugins, graphics environment, and log files. |
+| Feature Packs are missing | `features/<pack>/manifest.toml`, dependencies, and pack loading logs. |
+| Extension cannot connect | Desktop extension switch, `ws://127.0.0.1:14370`, and the pairing token. |

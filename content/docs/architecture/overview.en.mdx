@@ -1,0 +1,37 @@
+---
+title: Architecture Overview
+description: "The main boundaries in Ghost Downloader: UI, services, tasks, Feature Packs, and the browser bridge."
+---
+
+Ghost Downloader's architecture can be summarized in one sentence: the UI raises intent, `CoreService` schedules work, `FeatureService` selects the right capability, protocol logic stays inside `features/*_pack`, and the browser extension connects through `BrowserService`.
+
+<Callout type="warn" title="Architecture Boundaries">
+Protocol parsing belongs to Feature Packs, task scheduling belongs to `CoreService`, UI interaction belongs to `app/view`, and the browser bridge is an extension-facing local service rather than a public remote-control API.
+</Callout>
+
+## Layers and Responsibilities
+
+| Layer | Main Source | Responsibility |
+| --- | --- | --- |
+| Entry | `Ghost-Downloader-3.py` | Logging, config loading, translation, service startup, window creation. |
+| UI | `app/view` | Task list, settings page, dialogs, tray integration. |
+| Services | `app/services` | Task scheduling, Feature Pack loading, browser bridge. |
+| Models | `app/bases/models.py` | `Task`, `TaskStage`, state, and serialization. |
+| Feature Packs | `features/*_pack` | Protocol parsing, download execution, external runtime integration. |
+| Extension | `browser_extension/app` | Resource capture, extension UI, WebSocket requests. |
+
+## Core Data Flow
+
+1. A user action or browser extension submits a URL or payload.
+2. `CoreService` asks `FeatureService` to choose a Feature Pack that can handle it.
+3. The chosen Feature Pack creates a `Task`.
+4. `CoreService` runs the task under concurrency limits.
+5. The UI, extension, and `taskRecorder` consume task state updates.
+
+## Read More
+
+<Cards>
+  <Card title="Task System" href="./task-system.mdx" description="Task states, stages, scheduling, and persistence." />
+  <Card title="Feature Pack System" href="./feature-pack-system.mdx" description="Pack discovery, dependency ordering, and loading boundaries." />
+  <Card title="Browser Bridge" href="./browser-bridge.mdx" description="How the extension connects to the desktop app and creates tasks." />
+</Cards>

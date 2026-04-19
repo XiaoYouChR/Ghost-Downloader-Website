@@ -1,0 +1,30 @@
+---
+title: Ghost Downloader Docs
+description: User guides and developer documentation.
+---
+
+<Callout type="info" title="User Guide">
+Browser extension pairing, system requirements, Linux / AUR installation, and configuration file locations.
+</Callout>
+
+## User Guide
+
+<Cards>
+  <Card title="Browser Extension Pairing" href="./user-guide/browser-extension-pairing.mdx" description="How to get the pairing token, connect the extension, and troubleshoot connection failures." />
+  <Card title="Platforms and Downloads" href="./user-guide/platforms-and-downloads.mdx" description="Supported systems, minimum versions, and where Windows 7 users should download from." />
+  <Card title="Using on Linux" href="./user-guide/linux-usage.mdx" description="How to install from AUR and how to use the Linux packages." />
+  <Card title="Configuration File Location" href="./user-guide/configuration-file.mdx" description="Where configuration files and logs are stored on each platform." />
+</Cards>
+
+## Ghost Downloader Developer Docs
+
+<Cards>
+  <Card title="Submit an Issue" href="./contributing/overview.mdx" description="Prepare repro steps, environment details, logs, and a clear problem scope." />
+  <Card title="Open a Pull Request" href="./getting-started/setup.mdx" description="Set up the environment, run the project locally, and locate the module you need to change." />
+  <Card title="Develop a Feature Pack" href="./architecture/feature-pack-system.mdx" description="Understand pack loading, dependencies, task boundaries, and configuration boundaries." />
+  <Card title="Build Verification" href="./workflows/local-build.mdx" description="Validate changes with python deploy.py and GitHub Actions." />
+</Cards>
+
+<Callout type="warn" title="Feature Pack API Status">
+Feature Packs are already used for built-in capabilities, but the external plugin API is still not stable. Treat the current implementation and PR discussion as the source of truth.
+</Callout>

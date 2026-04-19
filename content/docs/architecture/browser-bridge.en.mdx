@@ -1,0 +1,35 @@
+---
+title: Browser Bridge
+description: Debugging entry points for the WebSocket bridge between the browser extension and the desktop app.
+---
+
+The browser extension connects to `ws://127.0.0.1:14370` by default. The desktop implementation lives in `app/services/browser_service.py`, and the extension implementation lives in `browser_extension/app/src/background/desktop-bridge.ts`.
+
+## Handshake Flow
+
+1. The extension reads the service URL and pairing token.
+2. It sends `hello` with `protocolVersion` and `token`.
+3. The desktop app validates the protocol version and token.
+4. If validation succeeds, the desktop app returns `hello_ack` with capability information.
+5. The extension sends `subscribe_tasks` to receive task snapshots.
+
+## Message Types
+
+| Type | Purpose |
+| --- | --- |
+| `create_task` | Create a desktop task from a captured web resource. |
+| `task_snapshot` | Push a task list snapshot from the desktop app to the extension. |
+| `task_action` | Pause, delete, redownload, open a file, or open a folder. |
+| `error` | Report protocol errors, auth failures, or request failures. |
+
+<Callout type="warn" title="Protocol Boundary">
+This bridge protocol exists for the browser extension. It is not a public remote-control API. Use the desktop and extension source code as the source of truth while debugging.
+</Callout>
+
+## Debugging Entry Points
+
+| Location | Purpose |
+| --- | --- |
+| `app/services/browser_service.py` | Desktop WebSocket service, token validation, task creation, and task actions. |
+| `browser_extension/app/src/background/desktop-bridge.ts` | Extension-side connection, reconnect logic, request queue, and task snapshot subscription. |
+| `browser_extension/app/src/shared/constants.ts` | Default service URL, extension version, and help content. |

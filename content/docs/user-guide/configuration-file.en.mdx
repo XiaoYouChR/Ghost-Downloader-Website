@@ -1,0 +1,42 @@
+---
+title: Configuration File Location
+description: Where Ghost Downloader stores its configuration files and logs.
+---
+
+Ghost Downloader stores its configuration files and logs inside the `GhostDownloader` directory under your system data path.
+
+## Configuration File
+
+The main configuration file is:
+
+```text
+UserConfig.json
+```
+
+Typical locations:
+
+| Platform | Configuration File Path |
+| --- | --- |
+| Windows | `%LOCALAPPDATA%\\GhostDownloader\\UserConfig.json` |
+| macOS | `~/Library/Application Support/GhostDownloader/UserConfig.json` |
+| Linux | `~/.local/share/GhostDownloader/UserConfig.json` |
+
+## Log File
+
+The log file is stored in the same directory:
+
+```text
+GhostDownloader.log
+```
+
+Typical locations:
+
+| Platform | Log File Path |
+| --- | --- |
+| Windows | `%LOCALAPPDATA%\\GhostDownloader\\GhostDownloader.log` |
+| macOS | `~/Library/Application Support/GhostDownloader/GhostDownloader.log` |
+| Linux | `~/.local/share/GhostDownloader/GhostDownloader.log` |
+
+<Callout type="info" title="Backup or Migration">
+To back up or migrate your settings, copy the entire `GhostDownloader` folder. That preserves both the configuration file and the logs.
+</Callout>

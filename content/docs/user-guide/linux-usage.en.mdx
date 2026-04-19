@@ -1,0 +1,79 @@
+---
+title: Using on Linux
+description: How to install from AUR and how to use the Linux packages.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Ghost Downloader on Linux requires `glibc 2.35+`. You can install it from the release page or from AUR.
+
+<Cards>
+  <Card title="Latest Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest" external description="Download `.deb` or `.AppImage` packages." />
+  <Card title="ghost-downloader-bin" href="https://aur.archlinux.org/packages/ghost-downloader-bin" external description="Prebuilt AUR package for most Arch users." />
+  <Card title="ghost-downloader-git" href="https://aur.archlinux.org/packages/ghost-downloader-git" external description="AUR package that tracks the latest repository commits." />
+</Cards>
+
+## Install from AUR
+
+### Using yay / paru
+
+Prebuilt package:
+
+```bash
+yay -S ghost-downloader-bin
+```
+
+or:
+
+```bash
+paru -S ghost-downloader-bin
+```
+
+If you want the package that tracks the latest repository commits instead of the stable build:
+
+```bash
+yay -S ghost-downloader-git
+```
+
+### Without an AUR helper
+
+```bash
+git clone https://aur.archlinux.org/ghost-downloader-bin.git
+cd ghost-downloader-bin
+makepkg -si
+```
+
+For the rolling source-based package, replace the repository name with `ghost-downloader-git`.
+
+## Use the Linux Packages
+
+<Steps>
+  <Step>
+    On Debian / Ubuntu, download the `.deb` package and install it:
+
+    ```bash
+    sudo apt install ./Ghost-Downloader-v*.deb
+    ```
+  </Step>
+
+  <Step>
+    On other distributions, you can use the `.AppImage` package:
+
+    ```bash
+    chmod +x Ghost-Downloader-v*.AppImage
+    ./Ghost-Downloader-v*.AppImage
+    ```
+  </Step>
+
+  <Step>
+    On Arch / Manjaro, AUR packages are usually the easiest option for updates and removal.
+  </Step>
+
+  <Step>
+    After the first launch, confirm that your download directory, proxy settings, and browser extension pairing are configured as expected.
+  </Step>
+</Steps>
+
+<Callout type="info" title="Which AUR Package Should I Use?">
+Most users should choose `ghost-downloader-bin`. Choose `ghost-downloader-git` only if you explicitly want to follow the latest repository commits.
+</Callout>

@@ -1,0 +1,53 @@
+---
+title: Contribute Translation
+description: Use Crowdin to add or improve Ghost Downloader translations.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Cards>
+  <Card title="Open Crowdin Project" href="https://crowdin.com/project/ghost-downloader" external description="Official Ghost Downloader translation workspace." />
+  <Card title="View Translation Sync Workflow" href="../workflows/translation-sync.mdx" description="See how Sync Crowdin pulls translations and opens PRs." />
+</Cards>
+
+## Translation Steps
+
+<Steps>
+  <Step>
+    Open the [ghost-downloader Crowdin project](https://crowdin.com/project/ghost-downloader) and sign in with your Crowdin account.
+  </Step>
+
+  <Step>
+    Choose the target language you want to contribute to, such as English, Japanese, Russian, Traditional Chinese, or Hong Kong Chinese.
+  </Step>
+
+  <Step>
+    Open untranslated or review-needed strings and submit translations or improvements.
+  </Step>
+
+  <Step>
+    Wait for maintainers to pull the translations back through the `Sync Crowdin` workflow. The repository will then receive a translation PR.
+  </Step>
+</Steps>
+
+<Callout type="info" title="No Code Required">
+Most translation contributions should be done directly in Crowdin. You do not need to fork the repository or edit `.ts` / `.qm` files manually.
+</Callout>
+
+## Translation Files in the Repository
+
+| File | Purpose |
+| --- | --- |
+| `crowdin.yml` | Crowdin project sync configuration. |
+| `app/assets/i18n/gd3.zh_CN.ts` | Simplified Chinese source strings. |
+| `app/assets/i18n/gd3.*.ts` | Qt translation source files for target languages. |
+| `app/assets/i18n/gd3.*.qm` | Compiled Qt translation resources. |
+| `sync_i18n_res.py` | Refreshes Qt translation resources and bundled app assets. |
+
+## Refresh Translation Resources Locally
+
+When maintaining a translation-related PR, run this in the repository root:
+
+```powershell
+python sync_i18n_res.py
+```

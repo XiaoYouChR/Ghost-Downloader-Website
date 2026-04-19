@@ -1,0 +1,67 @@
+---
+title: Local Build
+description: Validate changes locally with python deploy.py and the extension build commands.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Use a local build before opening a PR to confirm that the desktop app can still be packaged by Nuitka, Feature Packs are copied into the output, and the browser extension passes typecheck and build.
+
+<Cards>
+  <Card title="Online Build" href="./github-actions.mdx" description="Use GitHub Actions when you cannot reproduce a multi-platform environment locally." />
+  <Card title="Repository Map" href="../getting-started/repository-map.mdx" description="Find deploy.py, workflow files, and extension sources quickly." />
+</Cards>
+
+## Desktop Build
+
+<Steps>
+  <Step>
+    Install Python dependencies.
+
+    ```powershell
+    pip install --timeout=300 -r requirements.txt
+    ```
+  </Step>
+
+  <Step>
+    Run the build script from the repository root.
+
+    ```powershell
+    python deploy.py
+    ```
+  </Step>
+
+  <Step>
+    Inspect the output directory.
+
+    | Platform | Main Output |
+    | --- | --- |
+    | Windows / Linux | `dist/Ghost-Downloader-3.dist` |
+    | macOS | `dist/Ghost-Downloader-3.app` |
+  </Step>
+</Steps>
+
+## What deploy.py Does
+
+| Stage | Description |
+| --- | --- |
+| Generate Nuitka arguments | Chooses icons, Qt plugins, and platform-specific parameters for Windows, macOS, and Linux. |
+| Compile entry point | Uses `Ghost-Downloader-3.py` as the desktop app entry. |
+| Include dependencies | Bundles extra packages such as `urllib3`, `qrcode`, `libtorrent`, and `aioftp`. |
+| Copy Feature Packs | Copies packs that contain `manifest.toml` into the build output. |
+| Apply blacklist | `jack_yao` is currently listed in `FEATURE_PACK_BLACKLIST`. |
+
+<Callout type="warn" title="A Local Build Is Not a Full Release">
+`python deploy.py` only generates desktop build outputs and copies Feature Packs. Installers, signing, DMGs, `.deb`, `.AppImage`, and other platform-specific artifacts are completed by later GitHub Actions steps.
+</Callout>
+
+## Browser Extension Build
+
+```powershell
+cd browser_extension\app
+npm install
+npm run typecheck
+npm run build
+```
+
+When you change the bridge protocol, review both `app/services/browser_service.py` and `browser_extension/app/src/background/desktop-bridge.ts`.

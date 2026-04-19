@@ -1,0 +1,53 @@
+---
+title: Contribution Entry
+description: Start here before opening issues, pull requests, translation contributions, or doc fixes.
+---
+
+This page collects the most common contribution entry points. For issues, provide reproducible information whenever possible. For pull requests, confirm scope and local verification before submitting.
+
+<Cards>
+  <Card title="GitHub Repository" href="https://github.com/XiaoYouChR/Ghost-Downloader-3" external description="Source code, releases, issues, and pull requests." />
+  <Card title="Report a Bug" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=bug_report.yml" external description="The more complete your repro steps, environment details, and logs are, the better." />
+  <Card title="Request a Feature" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=feature_request.yml" external description="Describe the workflow and user problem, not just a button idea." />
+  <Card title="Contribute Translation" href="./translation.mdx" description="Open the Crowdin translation workspace and review the sync path." />
+</Cards>
+
+## PR Checklist
+
+| Change Type | Must Explain |
+| --- | --- |
+| Download logic | Which protocols are affected, and whether pause / resume / speed limits are affected. |
+| Task model | Whether historical task recovery and browser task snapshots are affected. |
+| Feature Pack | Dependencies, input types, failure messages, and settings. |
+| Browser extension | Whether the desktop bridge protocol also changed. |
+| Build and workflows | Whether `python deploy.py` or GitHub Actions was used or needs to be used. |
+| Documentation | Whether outdated information was removed instead of only adding new text. |
+
+<Callout type="info" title="Recommended Before Submission">
+If a change affects download behavior, describe the tested link types, operating systems, and whether the browser extension was involved.
+</Callout>
+
+## Issue Information Checklist
+
+| Information | Example |
+| --- | --- |
+| System and architecture | Windows x64, macOS arm64, Ubuntu x86_64. |
+| App version | Ghost Downloader version and browser extension version. |
+| Link type | HTTP, BT, FTP, M3U8, Bilibili, GitHub. |
+| Repro steps | The shortest path from app launch to the problem. |
+| Logs or screenshots | `GhostDownloader.log`, extension background errors, task screenshots. |
+
+## PR Description Checklist
+
+| Information | Example |
+| --- | --- |
+| Scope | `features/http_pack`, `app/services/browser_service.py`, extension background code. |
+| Verification | Local startup, extension typecheck, specific download links, workflow builds. |
+| Compatibility risks | Historical task recovery, config items, Feature Pack loading order, bridge protocol. |
+
+## Build Verification Entry Points
+
+<Cards>
+  <Card title="Local Build" href="../workflows/local-build.mdx" description="Use python deploy.py to validate the desktop build." />
+  <Card title="GitHub Actions" href="../workflows/github-actions.mdx" description="Use the online workflows to build cross-platform artifacts." />
+</Cards>

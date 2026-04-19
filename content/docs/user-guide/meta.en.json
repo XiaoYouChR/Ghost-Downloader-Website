@@ -1,0 +1,9 @@
+{
+  "title": "User Guide",
+  "pages": [
+    "browser-extension-pairing",
+    "platforms-and-downloads",
+    "linux-usage",
+    "configuration-file"
+  ]
+}

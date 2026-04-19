@@ -1,0 +1,41 @@
+---
+title: GitHub Actions
+description: Use the repository workflows to build desktop artifacts and validate cross-platform results online.
+---
+
+GitHub Actions workflows live in `.github/workflows`. Collaborators can manually trigger `workflow_dispatch` on the Actions page, and contributors can read these files to understand how CI builds the project.
+
+<Cards>
+  <Card title="Build / Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/build.yml" external description="Build Windows, macOS, and Linux artifacts." />
+  <Card title="Local Build" href="./local-build.mdx" description="Reproduce the core packaging path first with python deploy.py." />
+</Cards>
+
+## Build / Release Inputs
+
+| Input | Allowed Values | Purpose |
+| --- | --- | --- |
+| `build_target` | `windows`, `macos`, `linux`, `all` | Select target platforms. |
+| `package_installer` | `true`, `false` | Decide whether installers or platform packages should be produced. |
+| `sign_artifact` | `true`, `false` | Decide whether Windows artifacts should be signed. |
+
+## Output Artifacts
+
+| Platform | Main Artifacts |
+| --- | --- |
+| Windows | Portable `.zip` and `Setup.exe`. |
+| macOS | `.dmg`. |
+| Linux | `.deb`, `.AppImage`, `.tar.xz`. |
+
+<Callout type="warn" title="Fork Repository Warning">
+Signing and some release steps depend on repository secrets. Forks usually do not have those secrets, so use `sign_artifact = false` when validating builds from a fork.
+</Callout>
+
+## How to Report Workflow Results in a PR
+
+| Situation | Recommended Note |
+| --- | --- |
+| Docs-only change | Mention whether the docs site build passed. |
+| Desktop code change | Mention whether local startup and `python deploy.py` passed. |
+| Feature Pack change | Mention tested input links, required dependencies, and build copy results. |
+| Extension change | Mention `npm run typecheck`, `npm run build`, and desktop bridge test results. |
+| Workflow change | Mention manual trigger inputs, target platform, and fallback steps on failure. |
