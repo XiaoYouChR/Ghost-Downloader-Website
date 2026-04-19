@@ -7,9 +7,11 @@ import { appName, gitConfig } from './shared';
 export const i18nUI = defineI18nUI(i18n, {
   en: {
     displayName: 'English',
+    chooseTheme: 'Theme',
   },
   cn: {
     displayName: '中文',
+    chooseTheme: '主题',
   },
 });
 
