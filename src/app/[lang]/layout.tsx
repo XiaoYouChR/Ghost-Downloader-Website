@@ -6,24 +6,25 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { i18n } from '@/lib/i18n';
 import { i18nUI } from '@/lib/layout.shared';
+import { getLocaleLayoutMetadata } from '@/lib/site-metadata';
 import '../global.css';
 
 const inter = Inter({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  icons: {
-    icon: '/images/logo.png',
-    shortcut: '/images/logo.png',
-    apple: '/images/logo.png',
-  },
-};
-
 type LocaleLayoutProps = {
   children: ReactNode;
   params: Promise<{ lang: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: LocaleLayoutProps): Promise<Metadata> {
+  const { lang } = await params;
+
+  return getLocaleLayoutMetadata(lang);
+}
 
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({

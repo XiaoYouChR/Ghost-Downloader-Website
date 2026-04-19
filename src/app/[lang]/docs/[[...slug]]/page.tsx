@@ -14,6 +14,7 @@ import type { ComponentProps } from 'react';
 import { getMDXComponents } from '@/components/mdx';
 import { getPageImage, getPageMarkdownUrl, source } from '@/lib/source';
 import { gitConfig } from '@/lib/shared';
+import { getDocsPageMetadata, getDocsPagePath } from '@/lib/site-metadata';
 
 type DocsPageProps = {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -67,11 +68,11 @@ export async function generateMetadata({
   const page = source.getPage(slug, lang);
   if (!page) notFound();
 
-  return {
+  return getDocsPageMetadata({
+    description: page.data.description ?? page.data.title,
+    imagePath: getPageImage(page).url,
+    locale: lang,
+    pathname: getDocsPagePath(slug),
     title: page.data.title,
-    description: page.data.description,
-    openGraph: {
-      images: getPageImage(page).url,
-    },
-  };
+  });
 }
