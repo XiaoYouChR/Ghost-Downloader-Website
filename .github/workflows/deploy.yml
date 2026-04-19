@@ -1,0 +1,155 @@
+name: Build and Deploy Ghost Downloader Website
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Show versions
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Prepare deploy bundle
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+          cp -R .next public content data deploy/
+          cp package.json pnpm-lock.yaml next.config.mjs source.config.ts proxy.ts deploy/
+          if [ -d .source ]; then cp -R .source deploy/.source; fi
+          rm -rf deploy/.next/cache
+
+      - name: Verify deploy bundle
+        run: |
+          test -f deploy/.next/BUILD_ID
+          test -d deploy/public
+          test -f deploy/package.json
+          test -f deploy/pnpm-lock.yaml
+
+      - name: Upload deploy artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghost-downloader-website
+          path: deploy/
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    name: Deploy to 1Panel
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+    environment: production
+    env:
+      DEPLOY_RESTART_COMMAND: ${{ secrets.DEPLOY_RESTART_COMMAND }}
+
+    steps:
+      - name: Download deploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ghost-downloader-website
+          path: ./deploy
+
+      - name: Prepare SSH
+        shell: bash
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.DEPLOY_PORT }}" -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -p "${{ secrets.DEPLOY_PORT }}" \
+              -o BatchMode=yes \
+              -o StrictHostKeyChecking=yes \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              "echo connected"
+
+      - name: Ensure target directory exists
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -p "${{ secrets.DEPLOY_PORT }}" \
+              -o StrictHostKeyChecking=yes \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              "mkdir -p '${{ secrets.DEPLOY_PATH }}'"
+
+      - name: Deploy with rsync
+        run: |
+          rsync -az --delete \
+            --omit-dir-times \
+            --no-perms \
+            --no-owner \
+            --no-group \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=yes" \
+            ./deploy/ \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+
+      - name: Install production dependencies
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -p "${{ secrets.DEPLOY_PORT }}" \
+              -o StrictHostKeyChecking=yes \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              "cd '${{ secrets.DEPLOY_PATH }}' && if command -v corepack >/dev/null 2>&1; then corepack enable; fi && pnpm install --prod --frozen-lockfile --ignore-scripts"
+
+      - name: Restart service
+        if: ${{ env.DEPLOY_RESTART_COMMAND != '' }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -p "${{ secrets.DEPLOY_PORT }}" \
+              -o StrictHostKeyChecking=yes \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              "cd '${{ secrets.DEPLOY_PATH }}' && $DEPLOY_RESTART_COMMAND"
+
+      - name: Verify deployed build
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -p "${{ secrets.DEPLOY_PORT }}" \
+              -o StrictHostKeyChecking=yes \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              "test -f '${{ secrets.DEPLOY_PATH }}/.next/BUILD_ID'"
