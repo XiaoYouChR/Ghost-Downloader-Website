@@ -321,7 +321,7 @@ const englishHomeCopy: HomeCopy = {
       title: 'Multi-Thread Engine',
       badge: 'Core',
       description:
-        'Dynamic thread allocation for up to 32 parallel chunks per resource.',
+        'Dynamic thread allocation for up to 256 parallel chunks per resource.',
     },
     capabilities: {
       smartWrite: {
@@ -520,7 +520,7 @@ const homeCopies = {
       coreCard: {
         title: '多线程引擎',
         badge: '核心',
-        description: '智能动态线程调度，单资源最高 32 并发分块。',
+        description: '智能动态线程调度，单资源最高 256 并发分块。',
       },
       capabilities: {
         smartWrite: {

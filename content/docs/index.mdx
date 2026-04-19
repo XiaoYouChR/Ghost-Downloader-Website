@@ -3,9 +3,7 @@ title: Ghost Downloader 文档
 description: 用户指南与开发者文档。
 ---
 
-<Callout type="info" title="用户指南">
-浏览器扩展配对、系统要求、Linux / AUR 安装方式，以及配置文件位置。
-</Callout>
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 ## 支持项目
 
@@ -17,7 +15,7 @@ description: 用户指南与开发者文档。
   <Card title="前往捐赠页面" href="./support/donate.mdx" description="查看支付宝与微信收款码，支持 Ghost Downloader 持续开发。" />
 </Cards>
 
-## 用户指南
+## 快速入口
 
 <Cards>
   <Card title="浏览器扩展配对" href="./user-guide/browser-extension-pairing.mdx" description="如何获取配对码、如何连接，以及连接失败时按什么顺序排查。" />
@@ -26,10 +24,11 @@ description: 用户指南与开发者文档。
   <Card title="配置文件位置" href="./user-guide/configuration-file.mdx" description="各平台配置文件和日志目录在哪里。" />
 </Cards>
 
-## Ghost Downloader 开发者文档
+## 参与贡献
 
 <Cards>
   <Card title="提交 Issue" href="./contributing/overview.mdx" description="准备复现步骤、环境信息、日志和问题范围。" />
+  <Card title="贡献翻译（Crowdin）" href="./contributing/translation.mdx" description="查看翻译流程，并前往 Crowdin 参与 Ghost Downloader 本地化。" />
   <Card title="提交 Pull Request" href="./getting-started/setup.mdx" description="搭建环境、运行项目、定位要修改的模块。" />
   <Card title="开发 Feature Pack" href="./architecture/feature-pack-system.mdx" description="理解功能包加载、依赖、任务和配置边界。" />
   <Card title="构建验证" href="./workflows/local-build.mdx" description="使用 python deploy.py 和 GitHub Actions 验证改动。" />
@@ -38,3 +37,68 @@ description: 用户指南与开发者文档。
 <Callout type="warn" title="Feature Pack API 状态">
 Feature Pack 机制已经用于内置功能包，但外部插件 API 仍未稳定。贡献代码时以仓库当前实现和 PR 讨论为准。
 </Callout>
+
+## 为什么不是...？
+
+<Callout type="info" title="怎么读这张表">
+按 2026-04 的官方公开资料与一组本地 32 线程测速整理。
+`✅` = 明确支持 / 官方主打
+`⚠️` = 有相关能力，但不是核心形态，或整体链路更弱
+`❌` = 官方未主打或不支持
+</Callout>
+
+<Tabs items={["选型速查", "32 线程测速"]}>
+  <Tab>
+
+和常见下载器相比，Ghost Downloader 赢的不只是“能下文件”，而是把 `发现资源 -> 接管任务 -> 按协议处理 -> 落到桌面` 这一整条链路做完整了。
+
+| 功能 | Ghost Downloader | Internet Download Manager | Neat Download Manager | Gopeed | Motrix | Free Download Manager |
+| --- | --- | --- | --- | --- | --- | --- |
+| HTTP / HTTPS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| BitTorrent / Magnet | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| 免费可用 | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| 开源透明 | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| 浏览器接管下载 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| 浏览器 -> 桌面端深度联动 | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
+| 资源嗅探 / 媒体发现 | ✅ | ⚠️ | ⚠️ | ❌ | ❌ | ⚠️ |
+| HLS / m3u8 / DASH 工作流 | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
+| 平台特化能力（Bilibili / GitHub Release 等） | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| 内建可扩展机制 | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+
+结论很简单：
+
+如果你只需要一个“传统下载器”，上面大多数工具都能完成任务。
+
+如果你要的是“在浏览器里发现资源，然后无缝交给桌面端继续跑”，Ghost Downloader 明显更像一套完整工作流，而不是一个单点下载器。
+
+如果你经常碰到流媒体、站点特化下载、Bilibili 资源、GitHub Release、大量浏览器侧资源整理，Ghost Downloader 的优势会比表格里看起来还更明显。
+
+  </Tab>
+  <Tab>
+
+统一测试线程数：`32`
+
+测试样本：`QQ_9.9.29_260401_x64_01.exe`、`Win10_22H2_Chinese_Simplified_x64v1.iso`
+
+| 工具 | 小文件用时 | 大文件用时 | 这组数据里的表现 |
+| --- | --- | --- | --- |
+| Ghost Downloader | `00:00:05.530` | `00:02:48.384` | 两组均最快 |
+| Internet Download Manager | `00:00:08.030` | `00:03:03.419` | 大文件第二 |
+| Neat Download Manager | `00:00:05.560` | `00:03:24.991` | 小文件非常接近 Ghost，长文件明显落后 |
+| Gopeed | `00:00:05.890` | `00:03:07.646` | 综合处于第二梯队 |
+| Motrix | `00:00:06.050` | `00:03:40.540` | 小文件可用，长文件更保守 |
+| Free Download Manager | `00:00:05.820` | `00:04:17.277` | 小文件不慢，但这组长文件测试最慢 |
+
+这组测速更支持这样的结论：Ghost Downloader 的“多线程下载能力”本身已经站得住，而它真正拉开差距的地方，是浏览器扩展联动、流媒体解析和 Feature Pack 体系。
+
+  </Tab>
+</Tabs>
+
+资料来源：
+
+- [Ghost Downloader 仓库 README](https://github.com/XiaoYouChR/Ghost-Downloader-3)
+- [Internet Download Manager 官方功能页](https://support.internetdownloadmanager.com/)
+- [Neat Download Manager 官网](https://neatdownloadmanager.com/index.php/en/)
+- [Gopeed 官方文档](https://gopeed.com/docs)
+- [Motrix 官方功能页](https://motrix.app/features)
+- [Free Download Manager 官网](https://www.freedownloadmanager.org/)

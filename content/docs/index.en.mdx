@@ -3,9 +3,7 @@ title: Ghost Downloader Docs
 description: User guides and developer documentation.
 ---
 
-<Callout type="info" title="User Guide">
-Browser extension pairing, system requirements, Linux / AUR installation, and configuration file locations.
-</Callout>
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 ## Support the Project
 
@@ -17,7 +15,7 @@ If Ghost Downloader has been helpful to you, you can support ongoing development
   <Card title="Open Donation Page" href="./support/donate.mdx" description="View the Alipay and WeChat donation QR codes and support continued development." />
 </Cards>
 
-## User Guide
+## Quick Start
 
 <Cards>
   <Card title="Browser Extension Pairing" href="./user-guide/browser-extension-pairing.mdx" description="How to get the pairing token, connect the extension, and troubleshoot connection failures." />
@@ -26,10 +24,11 @@ If Ghost Downloader has been helpful to you, you can support ongoing development
   <Card title="Configuration File Location" href="./user-guide/configuration-file.mdx" description="Where configuration files and logs are stored on each platform." />
 </Cards>
 
-## Ghost Downloader Developer Docs
+## Contribute
 
 <Cards>
   <Card title="Submit an Issue" href="./contributing/overview.mdx" description="Prepare repro steps, environment details, logs, and a clear problem scope." />
+  <Card title="Contribute Translations" href="./contributing/translation.mdx" description="See the translation flow and join the Ghost Downloader Crowdin project." />
   <Card title="Open a Pull Request" href="./getting-started/setup.mdx" description="Set up the environment, run the project locally, and locate the module you need to change." />
   <Card title="Develop a Feature Pack" href="./architecture/feature-pack-system.mdx" description="Understand pack loading, dependencies, task boundaries, and configuration boundaries." />
   <Card title="Build Verification" href="./workflows/local-build.mdx" description="Validate changes with python deploy.py and GitHub Actions." />
@@ -38,3 +37,68 @@ If Ghost Downloader has been helpful to you, you can support ongoing development
 <Callout type="warn" title="Feature Pack API Status">
 Feature Packs are already used for built-in capabilities, but the external plugin API is still not stable. Treat the current implementation and PR discussion as the source of truth.
 </Callout>
+
+## Why not...?
+
+<Callout type="info" title="How to read this">
+This section is based on public product information available as of 2026-04 plus one local 32-thread download test.
+`✅` = clearly supported / officially positioned
+`⚠️` = related capability exists, but the product shape is weaker or less central
+`❌` = not officially positioned or not supported
+</Callout>
+
+<Tabs items={["Positioning", "32-thread test"]}>
+  <Tab>
+
+Compared with mainstream download managers, Ghost Downloader is not just trying to be another file downloader. Its edge is turning `resource discovery -> task takeover -> protocol-specific handling -> desktop execution` into one continuous workflow.
+
+| Capability | Ghost Downloader | Internet Download Manager | Neat Download Manager | Gopeed | Motrix | Free Download Manager |
+| --- | --- | --- | --- | --- | --- | --- |
+| HTTP / HTTPS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| BitTorrent / Magnet | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Free to use | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Open source / transparent | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| Browser download takeover | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Deep browser-to-desktop handoff | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
+| Resource sniffing / media discovery | ✅ | ⚠️ | ⚠️ | ❌ | ❌ | ⚠️ |
+| HLS / m3u8 / DASH workflow | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
+| Platform-specific capabilities (Bilibili / GitHub Releases, etc.) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Built-in extensibility model | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+
+The takeaway is straightforward:
+
+If all you need is a traditional download manager, most tools in this list can do the job.
+
+If you want to discover resources in the browser and hand them off cleanly to a desktop workflow, Ghost Downloader is operating as a more complete system rather than a single-point downloader.
+
+If your workflow regularly involves streaming media, site-specific handling, Bilibili assets, GitHub Releases, or browser-side resource collection, Ghost Downloader's practical advantage is stronger than the table alone suggests.
+
+  </Tab>
+  <Tab>
+
+Thread count used for the test: `32`
+
+Test files: `QQ_9.9.29_260401_x64_01.exe`, `Win10_22H2_Chinese_Simplified_x64v1.iso`
+
+| Tool | Small file time | Large file time | Reading this result |
+| --- | --- | --- | --- |
+| Ghost Downloader | `00:00:05.530` | `00:02:48.384` | Fastest in both samples |
+| Internet Download Manager | `00:00:08.030` | `00:03:03.419` | Second on the large file |
+| Neat Download Manager | `00:00:05.560` | `00:03:24.991` | Very close to Ghost on the small file, but clearly behind on the large file |
+| Gopeed | `00:00:05.890` | `00:03:07.646` | Solid second-tier overall |
+| Motrix | `00:00:06.050` | `00:03:40.540` | Fine on the small file, more conservative on the large one |
+| Free Download Manager | `00:00:05.820` | `00:04:17.277` | Not slow on the small file, but the slowest on the large sample here |
+
+This test supports a more grounded takeaway: Ghost Downloader's multithreaded performance already holds up on its own, and its bigger differentiation comes from browser coordination, streaming workflows, and the Feature Pack system.
+
+  </Tab>
+</Tabs>
+
+Sources:
+
+- [Ghost Downloader README](https://github.com/XiaoYouChR/Ghost-Downloader-3)
+- [Internet Download Manager official features page](https://support.internetdownloadmanager.com/)
+- [Neat Download Manager official site](https://neatdownloadmanager.com/index.php/en/)
+- [Gopeed documentation](https://gopeed.com/docs)
+- [Motrix features page](https://motrix.app/features)
+- [Free Download Manager official site](https://www.freedownloadmanager.org/)
