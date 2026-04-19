@@ -57,7 +57,8 @@ jobs:
         run: |
           rm -rf deploy
           mkdir -p deploy
-          cp -R .next public content data deploy/
+          cp -R .next public content deploy/
+          if [ -d data ]; then cp -R data deploy/data; fi
           cp package.json pnpm-lock.yaml next.config.mjs source.config.ts proxy.ts deploy/
           if [ -d .source ]; then cp -R .source deploy/.source; fi
           rm -rf deploy/.next/cache
