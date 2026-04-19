@@ -1,0 +1,8 @@
+{
+  "title": "构建与工作流",
+  "pages": [
+    "local-build",
+    "github-actions",
+    "translation-sync"
+  ]
+}

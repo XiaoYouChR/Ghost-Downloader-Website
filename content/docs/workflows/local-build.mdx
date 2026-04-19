@@ -1,0 +1,67 @@
+---
+title: 本地构建
+description: 使用 python deploy.py 和扩展构建命令在本地验证改动。
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+本地构建用于在提交 PR 前验证桌面端能被 Nuitka 打包，Feature Pack 能被复制到输出目录，浏览器扩展能通过类型检查和构建。
+
+<Cards>
+  <Card title="在线构建" href="./github-actions.mdx" description="无法本地复现多平台环境时，使用 GitHub Actions。" />
+  <Card title="仓库地图" href="../getting-started/repository-map.mdx" description="查看 deploy.py、workflow 和扩展源码位置。" />
+</Cards>
+
+## 桌面端构建
+
+<Steps>
+  <Step>
+    安装 Python 依赖。
+
+    ```powershell
+    pip install --timeout=300 -r requirements.txt
+    ```
+  </Step>
+
+  <Step>
+    在仓库根目录运行构建脚本。
+
+    ```powershell
+    python deploy.py
+    ```
+  </Step>
+
+  <Step>
+    检查输出目录。
+
+    | 平台 | 主要输出 |
+    | --- | --- |
+    | Windows / Linux | `dist/Ghost-Downloader-3.dist` |
+    | macOS | `dist/Ghost-Downloader-3.app` |
+  </Step>
+</Steps>
+
+## deploy.py 做了什么
+
+| 阶段 | 说明 |
+| --- | --- |
+| 生成 Nuitka 参数 | 根据 Windows、macOS、Linux 选择图标、Qt 插件和平台参数。 |
+| 编译入口 | 以 `Ghost-Downloader-3.py` 作为桌面端入口。 |
+| 包含依赖 | 额外包含 `urllib3`、`qrcode`、`libtorrent`、`aioftp` 等包。 |
+| 复制 Feature Pack | 将带 `manifest.toml` 的功能包复制到构建产物。 |
+| 排除黑名单 | `jack_yao` 当前在 `FEATURE_PACK_BLACKLIST` 中。 |
+
+<Callout type="warn" title="本地构建不是完整发布">
+`python deploy.py` 只负责生成桌面端构建产物和复制 Feature Pack。安装器、签名、DMG、deb、AppImage 等平台产物由 GitHub Actions 中的后续步骤完成。
+</Callout>
+
+## 浏览器扩展构建
+
+```powershell
+cd browser_extension\app
+npm install
+npm run typecheck
+npm run build
+```
+
+修改扩展桥接协议时，需要同时检查 `app/services/browser_service.py` 和 `browser_extension/app/src/background/desktop-bridge.ts`。

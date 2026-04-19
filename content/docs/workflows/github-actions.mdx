@@ -1,0 +1,41 @@
+---
+title: GitHub Actions
+description: 使用仓库在线工作流构建桌面端产物和验证跨平台结果。
+---
+
+GitHub Actions 工作流位于 `.github/workflows`。协作者可以在仓库的 Actions 页面手动触发 `workflow_dispatch`，普通贡献者可以用这些文件理解 CI 如何构建项目。
+
+<Cards>
+  <Card title="Build / Release" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/build.yml" external description="构建 Windows、macOS、Linux 产物。" />
+  <Card title="本地构建" href="./local-build.mdx" description="先用 python deploy.py 复现核心构建步骤。" />
+</Cards>
+
+## Build / Release 输入项
+
+| 输入 | 可选值 | 用途 |
+| --- | --- | --- |
+| `build_target` | `windows`、`macos`、`linux`、`all` | 选择构建平台。 |
+| `package_installer` | `true`、`false` | 是否生成安装器或平台安装包。 |
+| `sign_artifact` | `true`、`false` | 是否尝试签名 Windows 产物。 |
+
+## 输出产物
+
+| 平台 | 主要产物 |
+| --- | --- |
+| Windows | `.zip` 便携包、`Setup.exe` 安装器。 |
+| macOS | `.dmg`。 |
+| Linux | `.deb`、`.AppImage`、`.tar.xz`。 |
+
+<Callout type="warn" title="Fork 仓库注意">
+签名和部分发布步骤依赖仓库 secrets。Fork 中通常没有这些 secrets，手动验证构建时可以把 `sign_artifact` 设为 `false`。
+</Callout>
+
+## PR 中如何说明工作流结果
+
+| 情况 | 建议说明 |
+| --- | --- |
+| 只改文档 | 说明文档站构建是否通过。 |
+| 改桌面端代码 | 说明本地启动和 `python deploy.py` 是否通过。 |
+| 改 Feature Pack | 说明测试过的输入链接、依赖包和构建复制结果。 |
+| 改扩展 | 说明 `npm run typecheck`、`npm run build` 和桌面桥接测试结果。 |
+| 改 workflow | 说明手动触发参数、目标平台和失败回退方式。 |

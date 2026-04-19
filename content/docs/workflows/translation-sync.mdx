@@ -1,0 +1,37 @@
+---
+title: 翻译同步
+description: 使用 Sync Crowdin 工作流同步翻译资源并生成翻译 PR。
+---
+
+翻译贡献优先在 [Crowdin 项目 ghost-downloader](https://crowdin.com/project/ghost-downloader) 完成。仓库中的 `Sync Crowdin` 工作流用于把 Crowdin 上的内容同步回源码。
+
+<Cards>
+  <Card title="贡献翻译" href="../contributing/translation.mdx" description="查看普通翻译贡献步骤。" />
+  <Card title="Sync Crowdin" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/actions/workflows/crowdin.yml" external description="打开 GitHub Actions 工作流。" />
+</Cards>
+
+## workflow 输入项
+
+| 输入 | 用途 |
+| --- | --- |
+| `push` | 上传源文案和现有翻译到 Crowdin。 |
+| `pull` | 从 Crowdin 拉取翻译，刷新 Qt 资源，并创建翻译 PR。 |
+
+## pull 会更新什么
+
+| 文件 | 说明 |
+| --- | --- |
+| `app/assets/i18n/*.ts` | Qt 翻译源文件。 |
+| `app/assets/i18n/*.qm` | Qt 编译翻译资源。 |
+| `app/assets/resources.py` | 应用资源文件。 |
+| `README.md` / `README_zh.md` | Crowdin 贡献者列表。 |
+
+## 本地刷新命令
+
+```powershell
+python sync_i18n_res.py
+```
+
+<Callout type="info" title="普通翻译贡献">
+只参与翻译时不需要运行 `Sync Crowdin`。在 Crowdin 提交译文即可，后续同步由维护者或协作者处理。
+</Callout>

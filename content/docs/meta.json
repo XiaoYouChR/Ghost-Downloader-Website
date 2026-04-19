@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "getting-started",
+    "workflows",
     "architecture",
     "features",
     "contributing",
