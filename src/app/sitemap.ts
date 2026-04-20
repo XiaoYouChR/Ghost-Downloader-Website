@@ -17,7 +17,6 @@ function createSitemapEntry(locale: string, pathname: string): SitemapEntry {
     alternates: {
       languages: getLanguageAlternates(pathname),
     },
-    lastModified: new Date(),
     url: getAbsoluteUrl(getLocalizedPath(locale, pathname)),
   };
 }

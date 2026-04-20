@@ -11,7 +11,6 @@ type LocaleSeoConfig = {
   homeDescription: string;
   homeSubtitle: string;
   keywords: string[];
-  languageTag: string;
   openGraphLocale: string;
 };
 
@@ -21,7 +20,12 @@ const iconMetadata = {
   shortcut: '/images/logo.png',
 } as const;
 
-const shareImagePath = '/images/logo.png';
+const shareImage = {
+  alt: `${appName} share image`,
+  height: 600,
+  url: getAbsoluteUrl('/images/banner.png'),
+  width: 1200,
+};
 
 const localeSeoConfigs: Record<SiteLocale, LocaleSeoConfig> = {
   en: {
@@ -39,7 +43,6 @@ const localeSeoConfigs: Record<SiteLocale, LocaleSeoConfig> = {
       'GitHub release downloader',
       'cross-platform downloader',
     ],
-    languageTag: 'en-US',
     openGraphLocale: 'en_US',
   },
   zh: {
@@ -57,13 +60,12 @@ const localeSeoConfigs: Record<SiteLocale, LocaleSeoConfig> = {
       'GitHub Release 下载',
       '跨平台下载器',
     ],
-    languageTag: 'zh-CN',
     openGraphLocale: 'zh_CN',
   },
 };
 
 function withTrailingSlash(pathname: string) {
-  if (pathname.length === 0 || pathname === '/') {
+  if (!pathname || pathname === '/') {
     return '/';
   }
 
@@ -78,12 +80,6 @@ function normalizeLocale(locale: string): SiteLocale {
 
 function getSeoConfig(locale: string) {
   return localeSeoConfigs[normalizeLocale(locale)];
-}
-
-function getAlternateOpenGraphLocales(locale: string) {
-  return Object.values(localeSeoConfigs)
-    .map((config) => config.openGraphLocale)
-    .filter((value) => value !== getSeoConfig(locale).openGraphLocale);
 }
 
 export function getLocalizedPath(locale: string, pathname = '/') {
@@ -109,82 +105,87 @@ export function getLanguageAlternates(pathname = '/') {
 }
 
 export function getDocsPagePath(slug?: string[]) {
-  if (!slug || slug.length === 0) {
-    return '/docs/';
-  }
-
-  return `/docs/${slug.join('/')}/`;
+  return !slug || slug.length === 0 ? '/docs/' : `/docs/${slug.join('/')}/`;
 }
 
-export function getLocaleLayoutMetadata(locale: string): Metadata {
+function createPageMetadata({
+  description,
+  image = shareImage,
+  locale,
+  pathname = '/',
+  title,
+  type = 'website',
+}: {
+  description: string;
+  image?: string | typeof shareImage;
+  locale: string;
+  pathname?: string;
+  title: string;
+  type?: 'article' | 'website';
+}): Pick<Metadata, 'alternates' | 'description' | 'openGraph' | 'twitter'> {
   const config = getSeoConfig(locale);
-  const canonical = getAbsoluteUrl(getLocalizedPath(locale));
-  const shareImage = getAbsoluteUrl(shareImagePath);
+  const canonical = getAbsoluteUrl(getLocalizedPath(locale, pathname));
 
   return {
     alternates: {
       canonical,
-      languages: getLanguageAlternates(),
+      languages: getLanguageAlternates(pathname),
     },
-    applicationName: appName,
-    description: config.defaultDescription,
-    icons: iconMetadata,
-    keywords: config.keywords,
-    metadataBase: siteUrlObject,
+    description,
     openGraph: {
-      alternateLocale: getAlternateOpenGraphLocales(locale),
-      description: config.defaultDescription,
-      images: [shareImage],
+      alternateLocale: Object.values(localeSeoConfigs)
+        .map(({ openGraphLocale }) => openGraphLocale)
+        .filter((value) => value !== config.openGraphLocale),
+      description,
+      images: [image],
       locale: config.openGraphLocale,
       siteName: appName,
-      title: appName,
-      type: 'website',
+      title,
+      type,
       url: canonical,
-    },
-    title: {
-      default: appName,
-      template: `%s | ${appName}`,
     },
     twitter: {
       card: 'summary_large_image',
+      description,
+      images: [image],
+      title,
+    },
+  };
+}
+
+export function getLocaleLayoutMetadata(locale: string): Metadata {
+  const config = getSeoConfig(locale);
+
+  return {
+    ...createPageMetadata({
       description: config.defaultDescription,
-      images: [shareImage],
+      locale,
       title: appName,
+    }),
+    applicationName: appName,
+    icons: iconMetadata,
+    keywords: config.keywords,
+    metadataBase: siteUrlObject,
+    title: {
+      default: appName,
+      template: `%s | ${appName}`,
     },
   };
 }
 
 export function getHomePageMetadata(locale: string): Metadata {
   const config = getSeoConfig(locale);
-  const canonical = getAbsoluteUrl(getLocalizedPath(locale));
   const title = `${appName} | ${config.homeSubtitle}`;
-  const shareImage = getAbsoluteUrl(shareImagePath);
 
   return {
-    alternates: {
-      canonical,
-      languages: getLanguageAlternates(),
-    },
-    description: config.homeDescription,
-    keywords: config.keywords,
-    openGraph: {
-      alternateLocale: getAlternateOpenGraphLocales(locale),
+    ...createPageMetadata({
       description: config.homeDescription,
-      images: [shareImage],
-      locale: config.openGraphLocale,
-      siteName: appName,
+      locale,
       title,
-      type: 'website',
-      url: canonical,
-    },
+    }),
+    keywords: config.keywords,
     title: {
       absolute: title,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      description: config.homeDescription,
-      images: [shareImage],
-      title,
     },
   };
 }
@@ -203,32 +204,17 @@ export function getDocsPageMetadata({
   title: string;
 }): Metadata {
   const config = getSeoConfig(locale);
-  const canonical = getAbsoluteUrl(getLocalizedPath(locale, pathname));
-  const image = getAbsoluteUrl(imagePath);
   const resolvedDescription = description ?? config.defaultDescription;
 
   return {
-    alternates: {
-      canonical,
-      languages: getLanguageAlternates(pathname),
-    },
-    description: resolvedDescription,
-    openGraph: {
-      alternateLocale: getAlternateOpenGraphLocales(locale),
+    ...createPageMetadata({
       description: resolvedDescription,
-      images: [image],
-      locale: config.openGraphLocale,
-      siteName: appName,
+      image: getAbsoluteUrl(imagePath),
+      locale,
+      pathname,
       title,
       type: 'article',
-      url: canonical,
-    },
+    }),
     title,
-    twitter: {
-      card: 'summary_large_image',
-      description: resolvedDescription,
-      images: [image],
-      title,
-    },
   };
 }
