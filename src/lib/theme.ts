@@ -9,7 +9,3 @@ export type ResolvedTheme = Exclude<ThemeMode, 'system'>;
 export function isThemeMode(value: string | null): value is ThemeMode {
   return value === 'light' || value === 'dark' || value === 'system';
 }
-
-export function isResolvedTheme(value: string | null): value is ResolvedTheme {
-  return value === 'light' || value === 'dark';
-}

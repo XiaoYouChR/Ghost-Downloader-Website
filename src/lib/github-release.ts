@@ -45,19 +45,21 @@ export type DownloadReleaseState = {
   isFallback: boolean;
 };
 
-const emptyReleaseData: DownloadReleaseData = {
-  latestVersion: null,
-  linux: {
-    arm64: {},
-    x64: {},
-  },
-  macos: {},
-  releaseUrl: releasesUrl,
-  windows: {
-    exe: {},
-    zip: {},
-  },
-};
+function createReleaseData(latestVersion: string | null = null): DownloadReleaseData {
+  return {
+    latestVersion,
+    linux: {
+      arm64: {},
+      x64: {},
+    },
+    macos: {},
+    releaseUrl: releasesUrl,
+    windows: {
+      exe: {},
+      zip: {},
+    },
+  };
+}
 
 function createAsset(asset: ReleaseAsset): DownloadAsset | null {
   if (!asset.name || !asset.browser_download_url) {
@@ -83,19 +85,7 @@ function getArchitecture(name: string): DownloadArchitecture | null {
 }
 
 function parseLatestRelease(payload: LatestReleaseResponse): DownloadReleaseData {
-  const data: DownloadReleaseData = {
-    latestVersion: payload.tag_name ?? null,
-    linux: {
-      arm64: {},
-      x64: {},
-    },
-    macos: {},
-    releaseUrl: releasesUrl,
-    windows: {
-      exe: {},
-      zip: {},
-    },
-  };
+  const data = createReleaseData(payload.tag_name ?? null);
 
   for (const asset of payload.assets ?? []) {
     if (!asset.name) {
@@ -182,7 +172,7 @@ export async function getLatestDownloadRelease(): Promise<DownloadReleaseState> 
     };
   } catch {
     return {
-      data: emptyReleaseData,
+      data: createReleaseData(),
       hasAnyPlatformAsset: false,
       isFallback: true,
     };

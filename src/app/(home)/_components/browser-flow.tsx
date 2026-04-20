@@ -28,7 +28,7 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
 
   useLayoutEffect(() => {
     let animationFrameId = 0;
-    let isAnimating = true;
+    let timeoutId = 0;
     const leftRefs = [extensionRef, mediaRef, tabsRef];
     const rightRefs = [storageRef, assetsRef, tasksRef];
 
@@ -54,37 +54,48 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
         })
         .filter(Boolean);
 
-      setPaths(newPaths);
+      setPaths((currentPaths) =>
+        currentPaths.length === newPaths.length &&
+        currentPaths.every((path, index) => path === newPaths[index])
+          ? currentPaths
+          : newPaths,
+      );
     };
 
+    const schedulePathCalculation = () => {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(calculatePaths);
+    };
+
+    const handleLoad = () => calculatePaths();
+
     calculatePaths();
-    window.addEventListener('resize', calculatePaths);
+    schedulePathCalculation();
+    timeoutId = window.setTimeout(calculatePaths, 250);
+    window.addEventListener('resize', schedulePathCalculation);
+    window.addEventListener('load', handleLoad);
+    document.fonts?.ready.then(calculatePaths).catch(() => {});
 
     const observer =
       typeof ResizeObserver === 'undefined'
         ? undefined
-        : new ResizeObserver(calculatePaths);
+        : new ResizeObserver(schedulePathCalculation);
 
-    if (observer && containerRef.current) {
-      observer.observe(containerRef.current);
+    for (const element of [
+      containerRef.current,
+      ...leftRefs.map((ref) => ref.current),
+      ...rightRefs.map((ref) => ref.current),
+    ]) {
+      if (observer && element) {
+        observer.observe(element);
+      }
     }
 
-    const startTime = Date.now();
-    const updateLoop = () => {
-      if (!isAnimating) return;
-
-      calculatePaths();
-      if (Date.now() - startTime < 4500) {
-        animationFrameId = requestAnimationFrame(updateLoop);
-      }
-    };
-
-    updateLoop();
-
     return () => {
-      isAnimating = false;
+      clearTimeout(timeoutId);
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', calculatePaths);
+      window.removeEventListener('resize', schedulePathCalculation);
+      window.removeEventListener('load', handleLoad);
       observer?.disconnect();
     };
   }, []);
@@ -115,13 +126,13 @@ export function BrowserFlow({ labels }: BrowserFlowProps) {
               strokeDasharray="4 6"
               opacity="0.5"
             />
-            <motion.circle
+            <circle
               r="3"
               fill="#93c5fd"
               filter="url(#ghost-home-flow-glow)"
             >
               <animateMotion path={path} dur={`${3 + index}s`} repeatCount="indefinite" />
-            </motion.circle>
+            </circle>
           </g>
         ))}
       </svg>

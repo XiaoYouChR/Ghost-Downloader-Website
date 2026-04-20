@@ -38,6 +38,23 @@
   letter-spacing: -0.045em;
 }
 
+.mascotFloat {
+  animation: ghost-mascot-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.mascotEye {
+  display: block;
+  animation: ghost-mascot-blink 7s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.mascotShadow {
+  animation: ghost-mascot-shadow 6s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
 .heroSection {
   min-height: calc(100svh - 3.5rem);
   padding-top: clamp(5.5rem, 9vw, 7rem);
@@ -187,4 +204,47 @@
 
 :global(.dark) .starryTexture {
   opacity: 0.1;
+}
+
+@keyframes ghost-mascot-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+
+  66% {
+    transform: translateY(-20px) rotate(-2deg);
+  }
+}
+
+@keyframes ghost-mascot-blink {
+  0%,
+  90%,
+  92%,
+  98%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  93%,
+  97% {
+    transform: scaleY(0.08) translateY(0.5px);
+  }
+}
+
+@keyframes ghost-mascot-shadow {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
 }

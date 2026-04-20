@@ -53,7 +53,7 @@ export function BrowserExtensionShowcase({
 
   useLayoutEffect(() => {
     let animationFrameId = 0;
-    let isAnimating = true;
+    let timeoutId = 0;
 
     const calculatePaths = () => {
       if (!previewAreaRef.current || !panelRef.current) return;
@@ -136,16 +136,36 @@ export function BrowserExtensionShowcase({
         })
         .filter((value): value is ConnectionPath => value !== null);
 
-      setConnectionPaths(newPaths);
+      setConnectionPaths((currentPaths) =>
+        currentPaths.length === newPaths.length &&
+        currentPaths.every(
+          (path, index) =>
+            path.id === newPaths[index]?.id &&
+            path.path === newPaths[index]?.path,
+        )
+          ? currentPaths
+          : newPaths,
+      );
     };
 
+    const schedulePathCalculation = () => {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(calculatePaths);
+    };
+
+    const handleLoad = () => calculatePaths();
+
     calculatePaths();
-    window.addEventListener('resize', calculatePaths);
+    schedulePathCalculation();
+    timeoutId = window.setTimeout(calculatePaths, 250);
+    window.addEventListener('resize', schedulePathCalculation);
+    window.addEventListener('load', handleLoad);
+    document.fonts?.ready.then(calculatePaths).catch(() => {});
 
     const observer =
       typeof ResizeObserver === 'undefined'
         ? undefined
-        : new ResizeObserver(calculatePaths);
+        : new ResizeObserver(schedulePathCalculation);
 
     for (const element of [
       previewAreaRef.current,
@@ -159,22 +179,11 @@ export function BrowserExtensionShowcase({
       }
     }
 
-    const startTime = Date.now();
-    const updateLoop = () => {
-      if (!isAnimating) return;
-
-      calculatePaths();
-      if (Date.now() - startTime < 4500) {
-        animationFrameId = requestAnimationFrame(updateLoop);
-      }
-    };
-
-    updateLoop();
-
     return () => {
-      isAnimating = false;
+      clearTimeout(timeoutId);
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', calculatePaths);
+      window.removeEventListener('resize', schedulePathCalculation);
+      window.removeEventListener('load', handleLoad);
       observer?.disconnect();
     };
   }, []);
@@ -451,7 +460,7 @@ export function BrowserExtensionShowcase({
                   strokeDasharray="4 6"
                   opacity="0.3"
                 />
-                <motion.circle
+                <circle
                   r="2.75"
                   fill="#93c5fd"
                   filter="url(#ghost-extension-link-glow)"
@@ -461,7 +470,7 @@ export function BrowserExtensionShowcase({
                     dur={`${3.4 + index * 0.45}s`}
                     repeatCount="indefinite"
                   />
-                </motion.circle>
+                </circle>
               </g>
             ))}
           </svg>

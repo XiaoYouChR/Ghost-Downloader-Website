@@ -3,19 +3,9 @@
 import { useEffect } from 'react';
 
 function resolveLocale(languages: readonly string[]) {
-  for (const language of languages) {
-    const normalized = language.toLowerCase();
-
-    if (normalized.startsWith('zh')) {
-      return 'zh';
-    }
-
-    if (normalized.startsWith('en')) {
-      return 'en';
-    }
-  }
-
-  return 'en';
+  return languages.some((language) => language.toLowerCase().startsWith('zh'))
+    ? 'zh'
+    : 'en';
 }
 
 export function RootLocaleRedirect() {

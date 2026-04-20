@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUpRight, Download, X } from 'lucide-react';
 import {
@@ -234,6 +234,9 @@ function BrowserLink({
         src={icon}
         alt={name}
         className="h-5 w-5 opacity-40 transition-all filter group-hover:opacity-100 dark:invert dark:brightness-200"
+        decoding="async"
+        fetchPriority="low"
+        loading="lazy"
         referrerPolicy="no-referrer"
       />
       <span className="text-sm font-bold text-slate-400 transition-colors group-hover:text-slate-800 dark:text-white/40 dark:group-hover:text-white">
@@ -262,15 +265,16 @@ function PlatformDownloadCard({
   subtitle: string;
   title: string;
 }) {
-  const target = useMemo(
-    () => createPlatformTarget(copy, lang, platform, release),
-    [copy, lang, platform, release],
-  );
+  const target = createPlatformTarget(copy, lang, platform, release);
+  const fallbackHref =
+    target.href ?? (!target.panel || target.panel.groups.length === 0
+      ? release.data.releaseUrl
+      : null);
 
-  if (target.href) {
+  if (fallbackHref) {
     return (
       <DownloadCardLink
-        href={target.href}
+        href={fallbackHref}
         platform={platform}
         subtitle={subtitle}
         title={title}
@@ -278,18 +282,7 @@ function PlatformDownloadCard({
     );
   }
 
-  if (!target.panel || target.panel.groups.length === 0) {
-    return (
-      <DownloadCardLink
-        href={release.data.releaseUrl}
-        platform={platform}
-        subtitle={subtitle}
-        title={title}
-      />
-    );
-  }
-
-  const panel = target.panel;
+  const panel = target.panel!;
 
   if (isMobile) {
     return (
@@ -366,6 +359,9 @@ function DownloadCardSurface({
             src={platformLogos[platform]}
             alt={title}
             className="h-6 w-6 transition-all filter group-hover:brightness-0 group-hover:invert dark:invert dark:brightness-200"
+            decoding="async"
+            fetchPriority="low"
+            loading="lazy"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -401,6 +397,9 @@ function DownloadOptionsPanel({
               alt=""
               aria-hidden="true"
               className="h-5 w-5 dark:invert dark:brightness-200"
+              decoding="async"
+              fetchPriority="low"
+              loading="lazy"
               referrerPolicy="no-referrer"
             />
           </div>
