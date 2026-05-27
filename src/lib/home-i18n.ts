@@ -187,6 +187,7 @@ export type HomeCopy = {
       githubSource: string;
       documentation: string;
       privacy: string;
+      publicSecurity: string;
     };
   };
 };
@@ -388,6 +389,7 @@ const englishHomeCopy: HomeCopy = {
       githubSource: 'Source',
       documentation: 'Documentation',
       privacy: '湘ICP备2026012876号-1',
+      publicSecurity: '湘公网安备43072402000246号',
     },
   },
 };
@@ -587,6 +589,7 @@ const homeCopies = {
         githubSource: '源码',
         documentation: '文档',
         privacy: '湘ICP备2026012876号-1',
+        publicSecurity: '湘公网安备43072402000246号',
       },
     },
   },

@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUpRight, Download, X } from 'lucide-react';
@@ -23,8 +22,9 @@ import { cn } from '@/lib/cn';
 import type { HomeCopy } from '@/lib/home-i18n';
 import styles from './home.module.css';
 
-const projectUrl = 'https://github.com/XiaoYouChR/Ghost-Downloader-3';
 const beianUrl = 'https://beian.miit.gov.cn/';
+const publicSecurityBeianUrl =
+  'https://beian.mps.gov.cn/#/query/webSearch?code=43072402000246';
 const browserAddonUrls = {
   chrome: 'https://chromewebstore.google.com/detail/ghost-downloader-browser/pinckpkeeajogfgajbicpnengimiblch',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/ghost-downloader-browser/odaohmfjjbompdkmfbambadnagplcmce',
@@ -180,19 +180,8 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
         </div>
       </div>
 
-      <footer className="absolute right-0 bottom-12 left-0 flex flex-wrap justify-center gap-x-12 gap-y-3 px-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
+      <footer className="absolute right-0 bottom-12 left-0 flex flex-wrap items-center justify-center gap-x-12 gap-y-3 px-6 text-xs font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
         <span>{copy.footer.copyright}</span>
-        <a
-          href={projectUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="transition-colors hover:text-blue-500"
-        >
-          {copy.footer.githubSource}
-        </a>
-        <Link href={`/${lang}/docs/`} className="transition-colors hover:text-blue-500">
-          {copy.footer.documentation}
-        </Link>
         <a
           href={beianUrl}
           target="_blank"
@@ -200,6 +189,21 @@ export function DownloadCTA({ copy, lang, release }: DownloadCTAProps) {
           className="transition-colors hover:text-blue-500"
         >
           {copy.footer.privacy}
+        </a>
+        <a
+          href={publicSecurityBeianUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 transition-colors hover:text-blue-500"
+        >
+          <img
+            src="/images/beian-icon.png"
+            alt=""
+            className="inline-block h-4 w-auto shrink-0"
+            decoding="async"
+            loading="lazy"
+          />
+          {copy.footer.publicSecurity}
         </a>
       </footer>
 
