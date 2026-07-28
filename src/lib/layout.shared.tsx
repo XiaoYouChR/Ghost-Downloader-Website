@@ -4,6 +4,7 @@ import { PenLineIcon } from 'lucide-react';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { i18n } from './i18n';
 import { appName, gitConfig } from './shared';
+import { getLocalizedPath } from './site-metadata';
 
 export const i18nUI = defineI18nUI(i18n, {
   en: {
@@ -41,7 +42,7 @@ export function baseOptions(locale: string): BaseLayoutProps {
           <span>{appName}</span>
         </>
       ),
-      url: `/${locale}/`,
+      url: getLocalizedPath(locale, '/'),
     },
     slots: {
       themeSwitch: ThemeSwitch,

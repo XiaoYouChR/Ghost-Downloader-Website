@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import { LocaleBanner } from '@/components/locale-banner';
 import { ThemeProvider } from '@/components/theme-provider';
 import { i18n } from '@/lib/i18n';
 import { i18nUI } from '@/lib/layout.shared';
@@ -53,6 +54,7 @@ export default async function LocaleLayout({
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
           <RootProvider theme={{ enabled: false }} i18n={i18nUI.provider(lang)}>
+            {lang === i18n.defaultLanguage && <LocaleBanner />}
             {children}
           </RootProvider>
         </ThemeProvider>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { i18n } from './i18n';
 import { appName } from './shared';
 
 export const siteUrl = 'https://gd.xychr.com';
@@ -86,6 +87,10 @@ export function getLocalizedPath(locale: string, pathname = '/') {
   const normalizedPath = withTrailingSlash(pathname);
   const normalizedLocale = normalizeLocale(locale);
 
+  if (normalizedLocale === i18n.defaultLanguage) {
+    return normalizedPath;
+  }
+
   if (normalizedPath === '/') {
     return `/${normalizedLocale}/`;
   }
@@ -99,6 +104,7 @@ export function getAbsoluteUrl(pathname: string) {
 
 export function getLanguageAlternates(pathname = '/') {
   return {
+    'x-default': getAbsoluteUrl(getLocalizedPath(i18n.defaultLanguage, pathname)),
     'en-US': getAbsoluteUrl(getLocalizedPath('en', pathname)),
     'zh-CN': getAbsoluteUrl(getLocalizedPath('zh', pathname)),
   };

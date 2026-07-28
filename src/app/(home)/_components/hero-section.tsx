@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { cn } from '@/lib/cn';
 import type { HomeCopy } from '@/lib/home-i18n';
+import { getLocalizedPath } from '@/lib/site-metadata';
 import { BrowserFlow } from './browser-flow';
 import { GhostMascot } from './ghost-mascot';
 import styles from './home.module.css';
@@ -61,7 +62,7 @@ export function HeroSection({ copy, lang }: HeroSectionProps) {
             {copy.primaryCta}
           </a>
           <a
-            href={`/${lang}/docs/`}
+            href={getLocalizedPath(lang, '/docs/')}
             className={cn(
               styles.surfaceCard,
               'rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-white/10 dark:bg-[#111827] dark:text-slate-300 dark:hover:bg-[#151D2C]'
