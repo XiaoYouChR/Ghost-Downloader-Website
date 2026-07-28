@@ -57,6 +57,7 @@ jobs:
         run: |
           rm -rf deploy
           cp -R out deploy
+          cp deploy/en/index.html deploy/index.html
 
       - name: Verify deploy bundle
         run: |
