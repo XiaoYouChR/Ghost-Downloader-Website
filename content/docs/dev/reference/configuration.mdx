@@ -1,0 +1,14 @@
+---
+title: Configuration Quick Reference
+description: Common configuration items and the behavior they affect.
+---
+
+Configuration is centralized in `app/supports/config.py`. When adding a new item, consider defaults, validators, settings-page wiring, translation, and backward compatibility of older config files.
+
+| Scope | Representative Items | What They Affect |
+| --- | --- | --- |
+| Download | `downloadFolder`, `maxTaskNum`, `preBlockNum` | Save directory, task concurrency, initial chunk count. |
+| Network | `proxyServer`, `SSLVerify` | HTTP, FTP, BT, and extension-submitted tasks. |
+| Performance | `autoSpeedUp`, `maxReassignSize`, `speedLimitation` | Auto acceleration, chunk reallocation, global speed limits. |
+| Browser extension | `enableBrowserExtension`, `browserExtensionPairToken` | Local WebSocket service and token authentication. |
+| Personalization | Theme, language, DPI | UI presentation and localization. |

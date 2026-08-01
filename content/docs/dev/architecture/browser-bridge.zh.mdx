@@ -1,0 +1,35 @@
+---
+title: 浏览器桥接
+description: 浏览器扩展与桌面端 WebSocket 协议的调试入口。
+---
+
+浏览器扩展默认连接 `ws://127.0.0.1:14370`。桌面端实现位于 `app/services/browser_service.py`，扩展端实现位于 `browser_extension/app/src/background/desktop-bridge.ts`。
+
+## 握手流程
+
+1. 扩展读取服务地址和配对令牌。
+2. 发送 `hello`，包含 `protocolVersion` 和 `token`。
+3. 桌面端校验协议版本和令牌。
+4. 通过后返回 `hello_ack` 和能力列表。
+5. 扩展发送 `subscribe_tasks` 订阅任务快照。
+
+## 消息类型
+
+| 类型 | 用途 |
+| --- | --- |
+| `create_task` | 从网页资源创建桌面端任务。 |
+| `task_snapshot` | 桌面端向扩展推送任务列表。 |
+| `task_action` | 暂停、删除、重下、打开文件或目录。 |
+| `error` | 协议错误、认证失败或请求失败。 |
+
+<Callout type="warn" title="协议边界">
+这套桥接协议服务当前扩展，不是公开远程控制 API。开发和调试时请以桌面端与扩展端源码为准。
+</Callout>
+
+## 调试入口
+
+| 位置 | 作用 |
+| --- | --- |
+| `app/services/browser_service.py` | 桌面端 WebSocket 服务、令牌校验、任务创建和任务操作。 |
+| `browser_extension/app/src/background/desktop-bridge.ts` | 扩展端连接、重连、请求队列和任务快照订阅。 |
+| `browser_extension/app/src/shared/constants.ts` | 默认服务地址、扩展版本和帮助文案。 |

@@ -1,0 +1,44 @@
+---
+title: Ghost Downloader Docs
+description: User guides and developer documentation for Ghost Downloader.
+---
+
+<Callout type="info" title="Support the Project">
+Ghost Downloader is free and open source. Your [donation](./donate) directly funds development, testing, and maintenance.
+</Callout>
+
+<Cards>
+  <Card title="User Guide" href="./user" description="Installation, browser extension, download features, and troubleshooting." />
+  <Card title="Developer" href="./dev" description="Environment setup, architecture, and contributing." />
+  <Card title="Test Results" href="./benchmark" description="Speed, takeover, and media sniffing data (2026-07-30)." />
+  <Card title="Contribute Translation" href="./dev/contributing/translation" description="Help translate Ghost Downloader on Crowdin." />
+</Cards>
+
+## Something not working?
+
+<Cards>
+  <Card title="FAQ" href="./user/faq" description="Extension not connecting, downloads failing or corrupt, app won't start, and other common fixes." />
+</Cards>
+
+## Feature comparison
+
+`✅` supported · `⚠️` partial · `❌` not supported
+
+| | GD | IDM | NDM | Gopeed | Motrix | FDM |
+| --- | --- | --- | --- | --- | --- | --- |
+| HTTP / HTTPS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| BitTorrent / Magnet | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| Free | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Open source | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| Browser download takeover | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Deep browser–desktop handoff | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
+| Media sniffing | ✅ | ✅ | ⚠️ | ❌ | ❌ | ⚠️ |
+| HLS / m3u8 / DASH | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
+| Site-specific handling | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Extensibility (plugins) | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+
+Most download managers cover the basics well. Ghost Downloader's edge is the full pipeline from resource discovery in the browser through protocol-specific handling to desktop execution — not just the download itself.
+
+For download speed and media sniffing test data, see [Test Results](./benchmark).
+
+Sources: [Ghost Downloader](https://github.com/XiaoYouChR/Ghost-Downloader-3), [IDM](https://support.internetdownloadmanager.com/), [NDM](https://neatdownloadmanager.com/index.php/en/), [Gopeed](https://gopeed.com/docs), [Motrix](https://motrix.app/features), [FDM](https://www.freedownloadmanager.org/).

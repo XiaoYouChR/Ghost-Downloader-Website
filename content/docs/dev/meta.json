@@ -1,0 +1,13 @@
+{
+  "title": "Developer",
+  "description": "Contributing to Ghost Downloader",
+  "icon": "Code",
+  "pages": [
+    "getting-started",
+    "contributing",
+    "architecture",
+    "features",
+    "workflows",
+    "reference"
+  ]
+}

@@ -1,0 +1,103 @@
+---
+title: 安装与系统要求
+description: 各平台最低版本、架构、安装包格式，以及安装版与便携版的区别。
+---
+
+## 系统要求
+
+| 平台 | 最低版本 | 架构 |
+|---|---|---|
+| Windows | 10+ | x86_64, arm64 |
+| macOS | 13.0+ | x86_64, arm64 |
+| Linux | glibc 2.35+ | x86_64, arm64 |
+| Android | 10+ | arm64-v8a |
+
+### 没有 AVX 指令集的 CPU
+
+Ghost Downloader 基于 Qt 6.6+，而 Qt 从 6.6 起不再支持没有 AVX 指令集的 CPU。如果你的 CPU 不支持 AVX（常见于 2011 年以前的处理器），应用会在启动时直接崩溃，不会给出任何有用的错误提示。
+
+确认方法：Windows 上用 [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html) 查看指令集列表；Linux 上运行 `grep avx /proc/cpuinfo`，有输出就说明支持。
+
+没有 AVX 的机器无法运行当前版本，没有变通方案。
+
+### Windows 7
+
+当前版本不支持 Windows 7。历史上曾发布过兼容 Windows 7 的归档版本，可以在 [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) 页面搜索带 `win7` 标签的旧版本。归档版本不再维护，不会收到功能更新或安全修复。
+
+## 安装包格式
+
+<Tabs groupId="os" items={["Windows", "macOS", "Linux", "Android"]}>
+
+<Tab value="Windows">
+
+每次发布提供两种包：
+
+| 文件 | 说明 |
+|---|---|
+| `*-Setup.exe` | Inno Setup 安装包。写入 Program Files，创建开始菜单和可选的桌面快捷方式，卸载时自动清理注册表和数据目录。按当前用户权限安装，不需要管理员。 |
+| `*.zip` | 便携包。解压到任意位置直接运行，不写注册表。 |
+
+x86_64 和 arm64 各有独立的安装包，下载时注意选择与系统架构匹配的版本。
+
+### 安装版与便携版
+
+安装版把数据（任务记录、设置、日志）存储在系统的用户数据目录（`%LocalAppData%\GhostDownloader`）。
+
+便携版的数据存储取决于可执行文件旁边是否存在 `GhostDownloader` 目录：如果存在，数据就写在那里（Portable 模式）；如果不存在，行为与安装版相同，写入系统用户数据目录。首次使用便携包时，手动在 `.exe` 同级目录下创建一个空的 `GhostDownloader` 文件夹即可激活 Portable 模式。
+
+两种模式可以在运行中切换：设置 → 数据存储模式，点击「切换到 Portable 模式」或「切换到用户模式」。切换时数据会被复制到新位置，程序随后退出，需要手动重新打开。
+
+什么时候用便携版：
+
+- 把 Ghost Downloader 放在 U 盘或移动硬盘上随身携带
+- 系统权限受限，无法运行安装程序
+- 需要在同一台机器上运行多个互不干扰的实例
+- 安装版遇到无法解决的问题时，便携版是最快的排除手段
+
+</Tab>
+
+<Tab value="macOS">
+
+发布格式为 `.dmg`，x86_64 和 arm64 各一个。
+
+Ghost Downloader 没有经过 Apple 公证。首次打开时 macOS Gatekeeper 会阻止运行，报错「已损坏，无法打开」或「来自身份不明的开发者」。
+
+DMG 内附带了一个名为「修复软件损坏」的脚本。将 Ghost Downloader.app 拖入 /Applications 后，双击该脚本，输入开机密码，它会执行：
+
+```bash
+sudo spctl --master-disable
+sudo xattr -rd com.apple.quarantine /Applications/Ghost\ Downloader.app
+```
+
+执行完毕后即可正常打开。如果你不想运行脚本，也可以手动在终端执行上面两条命令。
+
+</Tab>
+
+<Tab value="Linux">
+
+每次发布提供三种包，x86_64 和 arm64 各一份：
+
+| 格式 | 说明 |
+|---|---|
+| `.deb` | 安装到 `/opt/Ghost-Downloader-3`，在 `/usr/bin/ghost-downloader` 创建符号链接，注册桌面入口。 |
+| `.AppImage` | 单文件可执行，需要系统安装 FUSE。如果系统没有 FUSE（比如某些容器环境或 WSL），用 `--appimage-extract-and-run` 参数启动。 |
+| `.tar.xz` | 原始构建产物的打包，解压后直接运行 `Ghost-Downloader-3.bin`。适合自行管理安装位置的用户。 |
+
+### Arch Linux (AUR)
+
+社区维护的 AUR 包：
+
+- [`ghost-downloader-bin`](https://aur.archlinux.org/packages/ghost-downloader-bin) -- 预编译二进制
+- [`ghost-downloader-git`](https://aur.archlinux.org/packages/ghost-downloader-git) -- 从源码构建
+
+维护者：[@zxp19821005](https://github.com/zxp19821005)。这些包由社区维护，与 Ghost Downloader 官方无关。
+
+</Tab>
+
+<Tab value="Android">
+
+发布格式为 `.apk`，仅提供 arm64-v8a 架构。不支持 x86 模拟器或 32 位设备。
+
+</Tab>
+
+</Tabs>

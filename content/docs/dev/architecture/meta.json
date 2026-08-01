@@ -1,0 +1,9 @@
+{
+  "title": "Architecture",
+  "pages": [
+    "overview",
+    "browser-bridge",
+    "feature-pack-system",
+    "task-system"
+  ]
+}

@@ -1,0 +1,84 @@
+---
+title: Where Config and Logs Live
+description: Locate Ghost Downloader's config and log files on each platform for troubleshooting or filing an issue.
+---
+
+All persistent data (settings, task records, logs) is stored in a single **data directory**.
+
+## Data Directory Location
+
+There are two storage modes. You can view and switch the current mode under Application → Data Storage Mode.
+
+### User Mode (default)
+
+<Tabs groupId="os">
+<Tab value="Windows">
+
+```
+C:\Users\<username>\AppData\Local\GhostDownloader
+```
+
+</Tab>
+<Tab value="macOS">
+
+```
+~/Library/Application Support/GhostDownloader
+```
+
+</Tab>
+<Tab value="Linux">
+
+```
+~/.local/share/GhostDownloader
+```
+
+</Tab>
+<Tab value="Android">
+
+Internal app storage, path assigned by the system and not directly accessible.
+
+</Tab>
+</Tabs>
+
+### Portable Mode
+
+The data directory sits in a `GhostDownloader/` folder next to the executable. Useful for USB drives or keeping system directories clean.
+
+When switching modes, data is copied to the new location and the program exits. You need to reopen it manually. The original data directory is not deleted automatically (switching from Portable to User Mode renames the old directory to `.bak`).
+
+## Directory Structure
+
+<Files>
+  <Folder name="GhostDownloader" defaultOpen>
+    <File name="UserConfig.json" />
+    <File name="GhostDownloader.log" />
+    <File name="GhostDownloader.log.1" />
+    <File name="tasks.jsonl" />
+    <Folder name="browser_extension" />
+    <Folder name="FFmpeg" />
+    <Folder name="YtDlp" />
+  </Folder>
+</Files>
+
+| File | Contents |
+|---|---|
+| `UserConfig.json` | All settings. Plain JSON, editable by hand (close the program first). |
+| `GhostDownloader.log` | Current run log. Max 512 KB per file, rotated on overflow, 5 historical files retained (`.log.1` through `.log.5`). |
+| `tasks.jsonl` | Task records, one JSON object per line. Every task visible in the task list comes from this file. |
+| `browser_extension/` | Unpacked browser extension files from the one-click install. |
+| `FFmpeg/`, `YtDlp/` | Binary Runtimes downloaded by FeaturePacks. |
+
+## Attaching Logs to an Issue
+
+Including the log file when filing an issue on the [feedback page](/docs/dev/contributing/overview) dramatically cuts diagnosis time.
+
+Two ways to open the log:
+
+- Settings → About → Provide Feedback → View Logs opens the file manager at `GhostDownloader.log`.
+- Navigate to the data directory listed above and find `GhostDownloader.log` manually.
+
+<Callout type="warn">
+Logs may contain your download URLs and file names. Review them before attaching and redact any private content.
+</Callout>
+
+If the problem happens during startup (the window never appears), the current log may be empty. Check `.log.1` (the previous run's log) instead.

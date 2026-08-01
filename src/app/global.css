@@ -1,0 +1,472 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@source '../../node_modules/fumadocs-ui/dist/**/*.js';
+
+/* ---------------------------------------------------------------------------
+   Ghost Downloader brand tokens
+
+   Neutrals carry a slight cool bias so they relate to the spectral accent
+   rather than reading as generic grey. The accent is the only saturated hue
+   on the site — everything else stays quiet so it can carry weight.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --gd-ground: #f6f7f5;
+  --gd-surface: #ffffff;
+  --gd-raised: #eceeec;
+  --gd-border: #e0e3e1;
+  --gd-border-strong: #cfd4d3;
+  --gd-text: #111315;
+  --gd-text-muted: #5b6167;
+  --gd-text-faint: #888e95;
+  --gd-accent: #1d4ed8;
+  --gd-accent-hover: #1e40af;
+  --gd-accent-contrast: #ffffff;
+  --gd-accent-wash: #e8eeff;
+  --gd-glow: rgba(29, 78, 216, 0.14);
+  /* Connection field. Light renders as graphite hairlines on paper — closer to
+     engraving than to a glow, which is the whole reason it can exist in a light
+     theme at all. */
+  --gd-field-line: rgba(17, 19, 21, 0.22);
+  /* Kept quieter than the field: the hairline exists to keep the silhouette
+     certain where the field fades, not to outline it. */
+  --gd-contour: rgba(29, 78, 216, 0.26);
+  /* A pulse still held up by the blockade: clearly darker than the field it
+     travels through, or it reads as a line flickering rather than an object
+     moving — but neutral, because it has not got through yet. */
+  --gd-pulse-dim: rgba(17, 19, 21, 0.5);
+}
+
+.dark {
+  --gd-ground: #0a0b0d;
+  --gd-surface: #121417;
+  --gd-raised: #191c20;
+  --gd-border: #24282d;
+  --gd-border-strong: #333940;
+  --gd-text: #edeef0;
+  --gd-text-muted: #9ba1a8;
+  --gd-text-faint: #6b7178;
+  --gd-accent: #93b4ff;
+  --gd-accent-hover: #a8c4ff;
+  --gd-accent-contrast: #0a1628;
+  --gd-accent-wash: #141e33;
+  --gd-glow: rgba(147, 180, 255, 0.16);
+  --gd-field-line: rgba(237, 238, 240, 0.22);
+  --gd-contour: rgba(147, 180, 255, 0.28);
+  --gd-pulse-dim: rgba(237, 238, 240, 0.45);
+}
+
+@theme inline {
+  --color-ground: var(--gd-ground);
+  --color-surface: var(--gd-surface);
+  --color-raised: var(--gd-raised);
+  --color-edge: var(--gd-border);
+  --color-edge-strong: var(--gd-border-strong);
+  --color-ink: var(--gd-text);
+  --color-ink-muted: var(--gd-text-muted);
+  --color-ink-faint: var(--gd-text-faint);
+  --color-accent: var(--gd-accent);
+  --color-accent-hover: var(--gd-accent-hover);
+  --color-accent-contrast: var(--gd-accent-contrast);
+  --color-accent-wash: var(--gd-accent-wash);
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* CJK text needs a fallback stack — Archivo has no Han coverage. */
+:lang(zh) {
+  --font-display:
+    var(--font-archivo), 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC',
+    ui-sans-serif, sans-serif;
+  --font-sans:
+    var(--font-archivo), 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC',
+    ui-sans-serif, sans-serif;
+}
+
+/* Han glyphs are full-width, so a `ch`-based measure tuned for English runs
+   roughly twice as narrow in Chinese. Headlines get room to breathe, and
+   the tight Latin tracking is relaxed since Han needs none of it. */
+:lang(zh) .gd-headline {
+  max-width: 26ch;
+  letter-spacing: -0.01em;
+}
+
+/* The Chinese tagline is ten full-width glyphs. At the Latin size it wraps 5/5,
+   which splits 需要 from 的下载器 — a break Chinese has no way to move, since
+   there are no spaces for a balancer to work with. A slightly smaller size puts
+   it on one line instead, which reads more decisively anyway. */
+:lang(zh) .gd-hero .gd-headline {
+  font-size: clamp(1.875rem, 3.5vw, 3.25rem);
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+/* ---------------------------------------------------------------------------
+   Connection field
+
+   One number sets the whole composition. The ghost centres itself — `center`
+   needs no knowledge of the section's height, which is exactly what the earlier
+   top-anchored version lacked: it drifted further off-centre the taller the
+   viewport got.
+   --------------------------------------------------------------------------- */
+
+.gd-hero {
+  /* Bounded by height, not width. The silhouette is near-square, so what clips
+     it is the section — width never needed a limit, and on a phone the ghost is
+     *supposed* to outgrow the viewport, leaving the head-and-shoulder arc in the
+     top corners and the scalloped feet below the buttons. One rule covers every
+     screen: at 390px the ghost still runs 130px wider than the viewport, while
+     on a short desktop window it shrinks so the feet never get cut off. */
+  --gd-ghost-size: min(780px, 82svh);
+  /* The silhouette is not centred inside its own 24-unit box: 2 units of air
+     above the head, 3 below the feet. Centring the box therefore leaves the
+     ghost sitting high, so everything nudges down by half that difference —
+     (0.5 − 11.5/24) = 0.0208. Derived from the path, not a taste knob. */
+  --gd-ghost-nudge: calc(var(--gd-ghost-size) * 0.0208);
+}
+
+/* Centred, then pushed down clear of the eyes. The `50%` resolves against the
+   copy's *own* height, so this cancels the centring exactly whatever the copy
+   weighs — English wrapping to two lines and Chinese to one land identically.
+   `translate` keeps the element in flow, so the section still sizes to it. */
+.gd-hero__copy {
+  translate: 0
+    calc(50% - var(--gd-ghost-size) * 0.104 + var(--gd-ghost-nudge) + 2.5rem);
+}
+
+.gd-field__lines {
+  color: var(--gd-field-line);
+}
+
+/* Columns are stroked paths, not rectangles — a vertical line is one `v`
+   command per segment instead of four coordinates, which is the difference
+   between a 90 KB page and a 500 KB one. `preserveAspectRatio: none` scales a
+   vertical stroke's width by X only, so it stays a hairline at any viewport. */
+.gd-field__lines path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: butt;
+}
+
+.gd-col--accent {
+  color: var(--gd-accent);
+  opacity: 0.6;
+}
+
+/* Subtract the ghost from the field. `exclude` leaves `1 - ghost`, and the
+   mask asset's `evenodd` eyes are holes within that hole, so the lines inside
+   them survive at full strength. */
+.gd-field--hero {
+  -webkit-mask-image: linear-gradient(#000, #000), url('/brand/ghost-mask.svg');
+  mask-image: linear-gradient(#000, #000), url('/brand/ghost-mask.svg');
+  -webkit-mask-size: 100% 100%, var(--gd-ghost-size) auto;
+  mask-size: 100% 100%, var(--gd-ghost-size) auto;
+  -webkit-mask-position: 0 0, center calc(50% + var(--gd-ghost-nudge));
+  mask-position: 0 0, center calc(50% + var(--gd-ghost-nudge));
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.gd-contour {
+  left: 50%;
+  top: 50%;
+  width: var(--gd-ghost-size);
+  aspect-ratio: 1;
+  translate: -50% calc(-50% + var(--gd-ghost-nudge));
+  color: var(--gd-contour);
+}
+
+/* ---------------------------------------------------------------------------
+   Entrance — three acts, 1.35s, and the copy sits out every one of them.
+
+   The chain is performed in time, not merely laid out in space:
+
+     0    → 0.50s   the blockade builds, and fails to close over a ghost-shaped
+                    hole. Near-linear, because a wall is not organic.
+     0.42 → 0.92s   the outline draws itself. The hole gets a name.
+     0.80 → 1.35s   below it the chunks grow, and only then does drift start.
+
+   Scoped to `.gd-field--hero`: the `trail` reprises sit below the fold, so
+   running their entrance on page load animates something nobody will ever see.
+   --------------------------------------------------------------------------- */
+
+.gd-col {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+/* `backwards` holds a column collapsed through its own delay. */
+.gd-field--hero .gd-col {
+  animation: gd-grow 0.5s var(--gd-stagger, 0s) cubic-bezier(0.32, 0.14, 0.34, 1)
+    backwards;
+}
+
+.gd-field--hero .gd-field__speed .gd-col {
+  animation-duration: 0.55s;
+  animation-delay: calc(0.8s + var(--gd-stagger, 0s));
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes gd-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* Act two — the hole gets a name, traced in one continuous pass.
+
+   78 is `GHOST_PATH.getTotalLength()` in its own 24-unit viewBox (77.02, rounded
+   up: over-dashing is invisible, under-dashing leaves the outline permanently
+   broken). The path carries `pathLength="1"` so this could have been a plain
+   `1`, but Chrome computes the dash pattern against the real length anyway when
+   the stroke is `non-scaling-stroke` — which renders as ~77 separate 30px
+   dashes that never close up. Re-measure if GHOST_PATH ever changes.
+
+   Base state is the finished frame, so switching the animation off leaves a
+   fully drawn outline rather than an invisible one. */
+.gd-contour__path {
+  stroke-dasharray: 78;
+  animation: gd-draw 0.5s 0.42s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+@keyframes gd-draw {
+  from {
+    stroke-dashoffset: 78;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+/* One cycle translates by exactly one segment period, so the pattern lands back
+   on itself and the loop has no seam. Rates differ per column on purpose. */
+.gd-drift {
+  animation: gd-drift linear infinite;
+}
+
+.gd-field--hero .gd-drift {
+  animation-delay: 1.3s;
+}
+
+@keyframes gd-drift {
+  to {
+    transform: translateY(var(--gd-period));
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Live connections.
+
+   One event, three phases, matching the field it crosses: a dim point creeps
+   0 → 16 units while the blockade still has hold of it, breaks through where
+   the field changes character, and covers the remaining 96 units in less time
+   than the first 16 took. Roughly a sixfold change of pace — the contrast is
+   what sells it, not the absolute speed.
+
+   The parent carries position; the children only cross-fade against each other.
+   Both read timing off inherited custom properties, so the colour change and
+   the acceleration are the same instant by construction.
+   --------------------------------------------------------------------------- */
+
+.gd-pulse {
+  transform-box: view-box;
+  animation: gd-pulse-travel var(--gd-pulse-dur) var(--gd-pulse-delay) infinite
+    backwards;
+}
+
+.gd-pulse__held,
+.gd-pulse__through {
+  animation-duration: var(--gd-pulse-dur);
+  animation-delay: var(--gd-pulse-delay);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: backwards;
+}
+
+.gd-pulse__held {
+  animation-name: gd-pulse-held;
+}
+
+.gd-pulse__through {
+  animation-name: gd-pulse-through;
+}
+
+/* Percentages of a ~26s cycle. The breakthrough is pinned to 30 units — the
+   middle of the crossfade (0.25–0.35) — so the pulse changes character exactly
+   where the field does.
+
+     0 → 30%   30 units of crawl. ~234px in ~8s, about 30px/s: held up.
+     30 → 38%  100 units of run. ~780px in ~2s, about 350px/s: through and gone.
+
+   A 12× change of pace. The remaining 62% is dwell. */
+@keyframes gd-pulse-travel {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: linear;
+  }
+  30% {
+    transform: translateY(30px);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1);
+  }
+  38% {
+    transform: translateY(130px);
+  }
+  100% {
+    transform: translateY(130px);
+  }
+}
+
+@keyframes gd-pulse-held {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  2%,
+  27% {
+    opacity: 1;
+  }
+  31% {
+    opacity: 0;
+  }
+}
+
+@keyframes gd-pulse-through {
+  0%,
+  27%,
+  38%,
+  100% {
+    opacity: 0;
+  }
+  31%,
+  36% {
+    opacity: 1;
+  }
+}
+
+/* Decoration jumps to its final frame. The pulse has no meaningful final frame
+   — a thing defined by travelling — so it simply does not exist here. */
+@media (prefers-reduced-motion: reduce) {
+  .gd-field--hero .gd-col,
+  .gd-drift,
+  .gd-contour__path {
+    animation: none;
+  }
+
+  /* Hiding the group is not enough — Chrome keeps ticking keyframes on an SVG
+     subtree it is not painting. Stop them, then hide. */
+  .gd-pulse,
+  .gd-pulse__held,
+  .gd-pulse__through {
+    animation: none;
+  }
+
+  .gd-field__pulse {
+    display: none;
+  }
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+#nd-nav {
+  --ghost-nav-float-offset: clamp(0.75rem, 2vw, 1.25rem);
+  --ghost-nav-shell-border: rgba(148, 163, 184, 0.24);
+  --ghost-nav-shell-background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(241, 245, 249, 0.34));
+  --ghost-nav-shell-shadow:
+    0 20px 48px -28px rgba(15, 23, 42, 0.22),
+    0 10px 24px -20px rgba(37, 99, 235, 0.22);
+  --ghost-nav-shell-highlight: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.48),
+    transparent 48%
+  );
+  --ghost-nav-shell-highlight-opacity: 0.85;
+  --ghost-nav-chip-border: transparent;
+  --ghost-nav-chip-background: rgba(255, 255, 255, 0.2);
+  --ghost-nav-chip-hover-border: rgba(148, 163, 184, 0.18);
+  --ghost-nav-chip-hover-background: rgba(255, 255, 255, 0.34);
+  top: 0;
+  height: 0;
+  overflow: visible;
+}
+
+.dark #nd-nav {
+  --ghost-nav-shell-border: rgba(148, 163, 184, 0.14);
+  --ghost-nav-shell-background:
+    linear-gradient(135deg, rgba(7, 14, 26, 0.56), rgba(15, 23, 42, 0.26));
+  --ghost-nav-shell-shadow:
+    0 20px 54px -28px rgba(2, 8, 23, 0.7),
+    0 10px 28px -22px rgba(37, 99, 235, 0.18);
+  --ghost-nav-shell-highlight: linear-gradient(
+    180deg,
+    rgba(148, 163, 184, 0.12),
+    transparent 52%
+  );
+  --ghost-nav-shell-highlight-opacity: 1;
+  --ghost-nav-chip-border: rgba(148, 163, 184, 0.08);
+  --ghost-nav-chip-background: rgba(255, 255, 255, 0.035);
+  --ghost-nav-chip-hover-border: rgba(148, 163, 184, 0.12);
+  --ghost-nav-chip-hover-background: rgba(255, 255, 255, 0.065);
+}
+
+#nd-nav > div {
+  position: relative;
+  width: min(calc(100% - 1.5rem), var(--fd-layout-width, 1200px));
+  margin-inline: auto;
+  transform: translateY(var(--ghost-nav-float-offset));
+  border: 1px solid var(--ghost-nav-shell-border);
+  border-radius: 16px;
+  background: var(--ghost-nav-shell-background) !important;
+  box-shadow: var(--ghost-nav-shell-shadow);
+  /* The frost is `backdrop-blur-[22px] backdrop-saturate-[1.65]` on the shell
+     in `SiteHeader`, not here: written as a declaration in this file the CSS
+     pipeline strips it — the served rule arrives with no `backdrop-filter` at
+     all, prefixed or otherwise, while an inline style of the same value takes
+     effect. Tailwind's utility survives, so the utility is what we use. */
+  overflow: visible;
+  isolation: isolate;
+}
+
+#nd-nav > div::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ghost-nav-shell-highlight);
+  pointer-events: none;
+  opacity: var(--ghost-nav-shell-highlight-opacity);
+}
+
+#nd-nav > div > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Everything from here up styles the floating shell, which is ours. What used
+   to follow — a chip selector chain, a `display` override on fumadocs' own
+   `max-lg:hidden` / `lg:hidden` utilities, and a cap on Radix's nav-menu
+   viewport — is gone: the bar's markup now lives in `SiteHeader`, so those are
+   ordinary classes on ordinary elements instead of ID-specificity fights with
+   a library's internals. See `docs/adr/0002-*`. */
+
+@media (max-width: 640px) {
+  #nd-nav {
+    --ghost-nav-float-offset: 0.6rem;
+  }
+
+  #nd-nav > div {
+    width: calc(100% - 0.9rem);
+  }
+}

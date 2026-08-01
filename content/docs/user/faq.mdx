@@ -1,0 +1,96 @@
+---
+title: FAQ
+description: Common problems and quick fixes.
+---
+
+## Browser Extension
+
+<Accordions>
+<Accordion title='"Protocol version mismatch"'>
+Desktop app and extension are different versions. Update both to the latest. If the store extension hasn't updated yet, go to Settings → Browser Extension → Install to Chromium Browser → **One-Click Install**.
+</Accordion>
+
+<Accordion title='"Invalid pairing token"'>
+Click **Auto Pair** in the extension popup. The desktop app will show a pairing request — click **Allow**.
+</Accordion>
+
+<Accordion title="Extension shows disconnected, but the app is running">
+1. Check that Settings → Browser Extension → **Enable Browser Extension** is on.
+2. If the port is occupied, change it in Settings → Browser Extension → **Service Port** and restart the app.
+3. Windows / Linux: make sure Settings → Browser Extension → **Allow browser extension to wake** is on.
+</Accordion>
+
+<Accordion title="Clicked Auto Pair but nothing happened on the desktop">
+The dialog may be behind other windows — check the taskbar. If it still doesn't show, the port may not match: check Settings → Browser Extension → **Service Port**.
+</Accordion>
+
+<Accordion title="Firefox downloads the file twice">
+Firefox extensions can't cancel a download before it starts. The browser saves one copy, Ghost Downloader saves another. Delete the browser's copy after downloading.
+</Accordion>
+
+<Accordion title="Android can't take over browser downloads">
+Most Android browsers don't support extensions. Copy the link and paste it into Ghost Downloader, or use the system share menu.
+</Accordion>
+</Accordions>
+
+## Downloads
+
+<Accordions>
+<Accordion title="File downloaded but won't open / checksum fails">
+Too many threads triggered anti-bot protection. Go to Settings → Download → **Pre-allocated Threads**, lower it to 8 or less. Turn off **Auto Speed Boost**. Re-download the file.
+</Accordion>
+
+<Accordion title="Download stuck near the end, speed drops to zero">
+Pause the task and resume it. If it keeps happening, raise Settings → Download → **Minimum Reallocation Size** to 2048 KB or higher.
+</Accordion>
+
+<Accordion title="Download fails with a server error">
+Right-click the task → **Edit Task Options**. Check if the URL has expired or needs specific headers (cookie, referer). For 503 / Cloudflare errors, try switching Settings → Download → **Client Profile** to a different fingerprint.
+</Accordion>
+
+<Accordion title="SSL handshake failure / certificate error">
+Go to Settings → Download → **Verify SSL Certificate** and turn it off (it's off by default). If it's already off, the issue is likely the TLS fingerprint — try switching **Client Profile**.
+</Accordion>
+</Accordions>
+
+## Install and Startup
+
+<Accordions>
+<Accordion title="Windows: Smart App Control blocks installation or launch">
+Use the portable version (.zip) from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases). If it's still blocked, turn off Smart App Control: Windows Settings → Privacy & Security → App & Browser Control → Smart App Control → **Off**.
+
+<Callout type="warn">
+Smart App Control cannot be re-enabled once turned off without resetting Windows.
+</Callout>
+</Accordion>
+
+<Accordion title='macOS: "Ghost Downloader is damaged"'>
+Open Terminal and run:
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/Ghost\ Downloader.app
+```
+
+Or double-click the "Fix Damaged App" script inside the DMG.
+</Accordion>
+
+<Accordion title='Linux (Arch/KDE): buttons like "Install Extension" do nothing'>
+The `ghost-downloader-bin` package bundles its own Qt, which conflicts with the system version. Switch to:
+
+```bash
+paru -S ghost-downloader-git
+```
+</Accordion>
+
+<Accordion title="In-app update fails / shows an error dialog">
+Download the latest version directly from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) and install over the current version. This also applies when Android's "Check for Updates" does nothing.
+</Accordion>
+</Accordions>
+
+## Runtimes
+
+<Accordions>
+<Accordion title="One-click install for M3U8 / YouTube / FFmpeg / eD2k fails">
+The installer downloads from GitHub, which is often unreachable in mainland China. Check your network or use a proxy, then try again.
+</Accordion>
+</Accordions>

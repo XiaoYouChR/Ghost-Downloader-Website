@@ -1,0 +1,96 @@
+---
+title: 常见问题
+description: 常见问题与快速解决。
+---
+
+## 浏览器扩展
+
+<Accordions>
+<Accordion title="「协议版本不匹配」">
+桌面端和扩展版本不在同一代。把两边都升到最新版。商店版扩展还没更新的话，去设置 → 浏览器扩展 → 安装到 Chromium 浏览器 → **一键安装**。
+</Accordion>
+
+<Accordion title="「配对令牌无效」">
+在扩展弹窗中点击 **自动配对**，桌面端会弹出配对请求，点 **允许配对**。
+</Accordion>
+
+<Accordion title="扩展显示未连接，但桌面端已在运行">
+1. 确认设置 → 浏览器扩展 → **启用浏览器扩展** 已开启。
+2. 如果端口被占用，在设置 → 浏览器扩展 → **服务端口** 里换一个，然后重启桌面端。
+3. Windows / Linux：确认设置 → 浏览器扩展 → **允许浏览器扩展唤醒** 已开启。
+</Accordion>
+
+<Accordion title="点了「自动配对」，桌面端没反应">
+确认框可能被其他窗口挡住了——看看任务栏。还是不出现的话，检查设置 → 浏览器扩展 → **服务端口** 是否和扩展一致。
+</Accordion>
+
+<Accordion title="Firefox 会多下一份文件">
+Firefox 扩展 API 无法在下载开始前拦截。浏览器会存一份，Ghost Downloader 也存一份。下完后删掉浏览器下载目录里的那份即可。
+</Accordion>
+
+<Accordion title="Android 上无法接管浏览器下载">
+大多数安卓浏览器不支持扩展。复制链接后在 Ghost Downloader 里粘贴添加，或用系统分享菜单。
+</Accordion>
+</Accordions>
+
+## 下载
+
+<Accordions>
+<Accordion title="文件下完了，但打不开 / 校验不通过">
+线程数太高触发了反爬。去设置 → 综合下载设置 → **预分配线程数**，降到 8 或更低。关掉 **自动提速**。然后重新下载。
+</Accordion>
+
+<Accordion title="下载卡在最后几 KB，速度归零">
+暂停任务再继续。如果反复出现，把设置 → 综合下载设置 → **最小再分配大小** 调到 2048 KB 或更高。
+</Accordion>
+
+<Accordion title="下载直接失败，提示服务器错误">
+右键任务 → **编辑任务参数**，检查链接是否过期、是否需要特定的请求头（cookie、referer）。如果是 503 / Cloudflare 拦截，去设置 → 综合下载设置 → **模拟身份** 切换一个指纹试试。
+</Accordion>
+
+<Accordion title="SSL 握手失败 / 证书错误">
+去设置 → 综合下载设置 → **下载时验证 SSL 证书**，关掉（默认就是关的）。如果已经关了，问题可能出在 TLS 指纹——切换 **模拟身份** 试试。
+</Accordion>
+</Accordions>
+
+## 安装与启动
+
+<Accordions>
+<Accordion title="Windows：Smart App Control 拦截安装或启动">
+改用便携版（.zip），从 [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) 下载。如果便携版也被拦截，关闭 Smart App Control：Windows 设置 → 隐私和安全性 → 应用和浏览器控制 → Smart App Control → **关**。
+
+<Callout type="warn">
+Smart App Control 关闭后无法重新启用，除非重置 Windows。
+</Callout>
+</Accordion>
+
+<Accordion title="macOS：提示「已损坏，无法打开」">
+打开终端，运行：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/Ghost\ Downloader.app
+```
+
+或者双击 DMG 里附带的「修复软件损坏」脚本。
+</Accordion>
+
+<Accordion title="Linux（Arch/KDE）：「安装扩展」「打开文件夹」点了没反应">
+`ghost-downloader-bin` 自带的 Qt 和系统版本冲突。换成：
+
+```bash
+paru -S ghost-downloader-git
+```
+</Accordion>
+
+<Accordion title="应用内更新失败 / 弹出报错">
+直接从 [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) 下载最新版覆盖安装。Android 的「检查更新」没反应时也适用。
+</Accordion>
+</Accordions>
+
+## 运行时
+
+<Accordions>
+<Accordion title="M3U8 / YouTube / FFmpeg / eD2k 一键安装失败">
+一键安装需要从 GitHub 下载，国内网络经常访问不了。检查网络或挂代理后重试。
+</Accordion>
+</Accordions>

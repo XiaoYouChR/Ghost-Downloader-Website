@@ -1,0 +1,119 @@
+---
+title: Site Notes
+description: Per-site capabilities, limitations, and login/cookie handling for Bilibili, YouTube, GitHub Releases, and HuggingFace.
+---
+
+## Bilibili
+
+### Login and Quality
+
+Without login, Bilibili returns a maximum quality of 480P. Logging in unlocks higher quality tiers depending on account membership:
+
+| Account Status | Max Available Quality |
+|---|---|
+| Not logged in | 480P |
+| Logged in (regular user) | 1080P |
+| Premium member | 1080P60 / 4K / HDR / Dolby Vision |
+
+Login is configured in Settings → Bilibili Download → **Account Login**, with two methods:
+
+- **QR Code Login**: displays a QR code to scan with the Bilibili mobile app. The code is valid for about 180 seconds; click "Refresh QR Code" to regenerate after expiry.
+- **Import Cookie**: manually paste a full cookie string exported from your browser. Saving an empty value clears the current cookie.
+
+If the browser extension is installed, Bilibili downloads initiated through the extension automatically carry the browser's login state -- no additional setup in the app is needed.
+
+### Quality Settings
+
+Quality-related options under Settings → Bilibili Download:
+
+- **Default Quality**: 11 tiers from 240P to Dolby Vision.
+- **When Quality Unavailable**: choose to fall back to highest or lowest available quality.
+- **HDR**: request HDR video stream (Premium required).
+- **Dolby Atmos/Vision**: request Dolby Atmos and Dolby Vision (Premium required).
+
+### Download Mode
+
+The dropdown on the Task Draft card switches between download modes:
+
+- **Video**: downloads video and audio streams, merged into `.mp4`
+- **Audio**: downloads audio stream only, saved as `.m4a`
+- **Cover**: downloads the video cover image
+
+### Multi-part Videos and Subtitles
+
+After pasting a multi-part video link, use the "Select Parts" button to choose which parts to download. You can also specify parts directly in the URL's `p` parameter using commas and ranges (e.g. `?p=1,3-5`).
+
+If the video has subtitles (including AI-generated ones), use the "Select Subtitles" button to choose languages. Subtitles are converted to `.srt` format.
+
+## YouTube
+
+### Cookies and Restricted Content
+
+Most public YouTube videos can be downloaded without login. Cookies are needed in these cases:
+
+- Age-restricted videos
+- Members-only videos
+- Private videos (requires an authorized account)
+- When YouTube presents a bot verification challenge
+
+Two ways to provide cookies:
+
+1. **Automatic via browser extension** (recommended): after installing the browser extension, YouTube downloads initiated through it automatically carry the browser's login cookies. If the cookie contains login credentials (`LOGIN_INFO`, `SAPISID`, etc.), the app saves them automatically for future use.
+2. **Manual import**: Settings → YouTube Download → **YouTube Cookie** → Import. Open YouTube in your browser and log in, press F12 to open Developer Tools, go to the Network tab, find any request, copy the Cookie request header value, and paste it.
+
+### Runtime
+
+YouTube downloads depend on two runtime components: yt-dlp and QuickJS. Install them with one click in Settings → YouTube Download. On Android, QuickJS is built in -- only yt-dlp needs to be installed.
+
+### Region Restrictions
+
+Some videos are region-locked. If you encounter a "video is not available in your country" error, configure a proxy.
+
+## GitHub Releases
+
+GitHub Releases downloads are typically very slow from mainland China. Ghost Downloader includes built-in GitHub acceleration that automatically rewrites GitHub file links to download through a reverse proxy.
+
+Acceleration applies to these domains and paths:
+
+- `github.com/*/releases/download/*`
+- `github.com/*/archive/*`
+- `github.com/*/raw/*`
+- `raw.githubusercontent.com`, `objects.githubusercontent.com`, and several other GitHub subdomains
+
+### Configuration
+
+Settings → GitHub Acceleration:
+
+- **Enable GitHub Acceleration**: toggle, on by default.
+- **Proxy Site**: choose from preset proxy sites (gh-proxy.com, gh-proxy.org, gh.ddlc.top, ghfast.top), or enter a custom proxy URL. Click the Re-test Latency button to test each site's response latency.
+
+### Known Limitations
+
+- Acceleration only applies to file download links, not GitHub API or web page access.
+- Proxy site availability and speed may change at any time; periodically re-test latency.
+- If you already have a global proxy that can reach GitHub directly, you can disable this feature.
+
+## HuggingFace
+
+### Mirror Acceleration
+
+HuggingFace model and dataset repositories are slow to access directly from mainland China. Ghost Downloader includes built-in mirror acceleration that rewrites HuggingFace links to use a mirror site.
+
+The default mirror is `hf-mirror.com`. You can switch to a custom mirror in Settings → HuggingFace → **Mirror Site**.
+
+### Repository Downloads
+
+Pasting a HuggingFace repository link (e.g. `https://huggingface.co/org/model`) lists all files in the repository with their sizes, and you can select which files to download. Pasting a single-file link (one containing a `/resolve/` or `/blob/` path) downloads that file directly.
+
+Supported repository types: models, datasets, and Spaces.
+
+### Access Token
+
+Some models require authorization to download (e.g. gated models like Llama, Mistral). Enter a token from [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) in Settings → HuggingFace → **Access Token**.
+
+Accessing a gated repository without a token produces the error "This repository requires authorization; please configure a HuggingFace Access Token in Settings."
+
+### Known Limitations
+
+- Mirror sites may have sync delays; newly uploaded files may not be immediately available through the mirror.
+- If you already have a global proxy that can reach HuggingFace directly, you can leave the mirror site empty or disable acceleration.

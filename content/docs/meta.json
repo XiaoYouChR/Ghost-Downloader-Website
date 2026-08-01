@@ -1,0 +1,10 @@
+{
+  "title": "Ghost Downloader",
+  "pages": [
+    "index",
+    "user",
+    "dev",
+    "benchmark",
+    "donate"
+  ]
+}

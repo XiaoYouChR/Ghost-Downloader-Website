@@ -1,0 +1,84 @@
+---
+title: Android
+description: The Android build shares the same download engine as the desktop app; this page covers Android-specific permissions, background behavior, and known limitations.
+---
+
+Ghost Downloader on Android is not a stripped-down port. It is compiled from the same engine codebase as the desktop build and supports multi-protocol downloads, live recording, Selectable Files, Revive, browser extension pairing, and every other core feature.
+
+This page only covers what **differs from the desktop version**. Features already documented for the desktop (Task Drafts, Selectable Files, browser extension pairing, etc.) are not repeated here.
+
+## Permissions
+
+### Storage
+
+On first launch, a banner appears at the top of the screen: "Storage permission not granted, downloads to public directories may fail." Tap "Grant Permission" to jump to the system settings page.
+
+- Android 11+ (API 30+): requires "All files access" (MANAGE_EXTERNAL_STORAGE) to write to public directories such as `/storage/emulated/0/Download`.
+- Android 10 (API 29): requests the legacy WRITE_EXTERNAL_STORAGE permission. The manifest declares `requestLegacyExternalStorage`, so once granted, file access works the same as on older Android versions.
+
+Without storage permission, tapping the + button to create a new Task is blocked, and a toast "Storage permission required" appears.
+
+### Notifications
+
+If notification permission is not enabled, a second banner appears: "Notification permission not enabled, you will not be notified when downloads complete."
+
+Notification permission affects two things:
+- The system notification when a Task completes
+- The persistent status-bar notification during background downloads (foreground service notification)
+
+### Battery optimization
+
+On startup, the app automatically requests the system to ignore battery optimization (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). This prevents the system from killing the download process in the background. If you dismiss the prompt, background downloads may be interrupted by the system.
+
+## Background downloads
+
+### How it works
+
+When a Task is running or the browser extension is connected, the app starts a foreground service (`KeepAliveService`) that shows a persistent notification in the status bar. The notification text shows the current download speed in real time; when no Task is running but the browser extension is online, it reads "Browser Extension Connected." The foreground service stops automatically once all Tasks finish and the extension disconnects.
+
+During downloads, a `PARTIAL_WAKE_LOCK` is also held to keep the CPU awake while the screen is off. The lock is released when all Tasks complete.
+
+### OEM ROMs killing the background process
+
+<Callout type="warn">
+Aggressive background managers on OEM ROMs (MIUI/HyperOS, ColorOS, OriginOS, etc.) will kill foreground services. If downloads stop after the screen turns off, you need to manually add Ghost Downloader to the system's "auto-start" or "unrestricted background" whitelist. The exact path varies by brand and OS version but is typically found under Settings > App Management > Ghost Downloader > Battery Saver, or Settings > Battery > Background Power Management.
+</Callout>
+
+### Pressing Back does not terminate downloads
+
+Pressing the system Back button on Android does not close the app -- it moves the app to the background (`moveTaskToBack`) while downloads continue. This is intentional: actually closing the app would kill the download process.
+
+## File storage
+
+The default download directory is `/storage/emulated/0/Download`. This can be changed in "Settings."
+
+App data (configuration, logs, Task Records) is stored in the app's private directory and is deleted on uninstall. The log file path is `<app data directory>/GhostDownloader.log`.
+
+## Share receiver
+
+Ghost Downloader registers as an Android share target. When you use "Share" from another app (a browser, file manager, etc.), Ghost Downloader appears in the share sheet for the following content:
+
+- **Plain text**: the app extracts HTTP/HTTPS/FTP/magnet links from the text and creates Tasks automatically
+- **.torrent files**: creates a BT Task directly
+- **M3U8/MPD playlist files**: creates a streaming Task directly
+
+Both single and batch sharing (`ACTION_SEND` and `ACTION_SEND_MULTIPLE`) are supported.
+
+## Known limitations
+
+### Cannot register as the system default downloader
+
+Android has no "external download manager" protocol like desktop browsers do. When you tap a download link in an Android browser, the browser will not show a "choose download manager" dialog -- this is an Android system-level limitation, not a Ghost Downloader issue.
+
+Workarounds:
+- Long-press a link in the browser > copy the link > paste it into Ghost Downloader
+- Use the browser's "Share" function to send the link to Ghost Downloader
+- Install the browser extension on a desktop browser, and push Tasks to the Android device via pairing token (the Android build runs the same WebSocket server as the desktop, and pairing works identically)
+
+### Landscape / tablet layout
+
+The current version locks to portrait orientation. Tablet landscape layout is not yet supported.
+
+### Settings page controls
+
+In the Android settings page, sliders (such as "Chunk Threads") can be difficult to drag accurately on a touchscreen. Controls have been reflowed to a vertical layout for narrow screens, but some interaction details are still being refined.

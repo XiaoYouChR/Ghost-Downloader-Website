@@ -1,0 +1,53 @@
+---
+title: "Video: Quality, Subtitles, Playlists"
+description: Control quality selection, subtitle downloads, and partial playlist downloads for YouTube and other video sites.
+---
+
+## Quality and Codec
+
+After pasting a YouTube link, the Task Draft card automatically fetches the available quality tiers for that video. Before the fetch completes, the quality dropdown shows "Best Quality". Once fetched, the dropdown expands to the actual available resolutions (e.g. `1080p60`, `720p`, `480p`), with an audio-only option at the bottom.
+
+Selecting a resolution causes the app to pick the best format at or below that resolution.
+
+### Codec Preference
+
+Settings → YouTube Download → **Prefer MP4 Format** controls codec preference:
+
+- **On** (default): prefers H.264 codec in MP4 container, producing `.mp4` files.
+- **Off**: allows VP9/AV1 in WebM format, which typically has higher bitrate at the same resolution.
+
+Regardless of codec preference, video and audio streams are always downloaded separately, then merged into a single file by FFmpeg.
+
+### Metadata Embedding
+
+Two related toggles live in Settings → YouTube Download:
+
+- **Embed Metadata**: writes the video title, author, and other info into the output file metadata.
+- **Embed Chapters**: writes YouTube chapter markers into the output file so players can display chapter navigation.
+
+Both are on by default.
+
+## Subtitles
+
+The subtitle button (language icon) on the Task Draft card becomes available after quality info is fetched. Clicking it opens a "Select Subtitle Language" dialog listing all available subtitle languages for the video. Entries marked `(Auto)` are YouTube auto-generated captions.
+
+Selected subtitles are downloaded separately after the video finishes, saved as `.vtt` files in the same directory as the video. Auto-generated subtitle filenames include an `.auto` marker (e.g. `Video Title.en.auto.vtt`).
+
+The default checked languages come from the `SubtitleLanguages` value in the configuration file (comma-separated language codes, defaults to `en`). Each time you make a selection in the dialog, the chosen languages are saved to the current Task.
+
+## Playlists and Multiple Videos
+
+When pasting a YouTube playlist link (one containing a `list=` parameter), the Task Draft card shows a "Select Video" button. Clicking it fetches the playlist info and opens a "Select Video" dialog listing every video in the playlist with title and duration.
+
+In this dialog you can:
+
+- Check or uncheck individual videos
+- Use "Select All", "Select None", or "Invert Selection" for batch operations
+
+After confirming, only checked videos are downloaded. Each video independently goes through five steps: extract info, download video stream, download audio stream, merge, and download subtitles.
+
+Selection can still be changed after the Task starts via the file selection button on the task card -- newly checked videos begin downloading automatically, and unchecked videos retain their existing progress.
+
+<Callout type="warn">
+Each video in a playlist has its own download URL expiration. If the Task is paused for too long, expired videos will have their info re-extracted upon resume.
+</Callout>

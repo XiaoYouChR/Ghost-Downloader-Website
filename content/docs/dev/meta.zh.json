@@ -1,0 +1,13 @@
+{
+  "title": "开发者文档",
+  "description": "参与 Ghost Downloader 开发",
+  "icon": "Code",
+  "pages": [
+    "getting-started",
+    "contributing",
+    "architecture",
+    "features",
+    "workflows",
+    "reference"
+  ]
+}

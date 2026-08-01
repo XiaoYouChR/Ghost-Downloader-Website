@@ -1,0 +1,74 @@
+---
+title: Aria2 RPC Compatibility
+description: Let LinkSwift and other Aria2 RPC-compatible tools push download tasks to Ghost Downloader.
+---
+
+Ghost Downloader includes a built-in local server compatible with the Aria2 JSON-RPC protocol, listening on `127.0.0.1`. Any tool that can send `aria2.addUri` to Aria2 can push tasks to Ghost Downloader without installing Aria2 itself.
+
+Currently supported RPC methods:
+
+| Method | Description |
+|---|---|
+| `aria2.addUri` | Create a task. Supports `out` (filename), `dir` (save path), `header`, `user-agent`, and `referer` options |
+| `aria2.getVersion` | Returns the Ghost Downloader version |
+
+Other Aria2 methods (`aria2.tellStatus`, `aria2.remove`, etc.) are not implemented and will return `Method not found`.
+
+## Using with LinkSwift
+
+[LinkSwift](https://github.com/hmjz100/LinkSwift) is a Tampermonkey script that extracts direct download links from cloud storage web pages and pushes them via Aria2 RPC. It supports Baidu Netdisk, Alibaba Cloud Drive, China Mobile Cloud, China Telecom Cloud, Xunlei Cloud, Guangya Cloud, Quark Netdisk, UC Netdisk, and 123 Cloud. These services primarily serve users in mainland China.
+
+With Ghost Downloader, the flow is: LinkSwift extracts a direct link in the browser, sends it to Ghost Downloader via RPC, and Ghost Downloader creates a task and downloads the file.
+
+<Steps>
+<Step>
+
+### Ghost Downloader side
+
+Open **Settings → Aria2 RPC Compatibility** and turn on **Enable Aria2 RPC Compatibility**.
+
+Note the **Port** (default `16800`). If you set a **Token**, copy it — you will need it on the LinkSwift side.
+
+</Step>
+<Step>
+
+### LinkSwift side
+
+In LinkSwift's settings, set the RPC address to:
+
+```
+http://127.0.0.1:16800/jsonrpc
+```
+
+If you set a token in Ghost Downloader, enter `token:<your-token>` in LinkSwift's token field (same format as Aria2's `--rpc-secret`).
+
+</Step>
+<Step>
+
+### Verify
+
+On a supported cloud storage page, click LinkSwift's download button. If Ghost Downloader receives the task, the setup is complete.
+
+If the task does not appear, check that the port and token match, and that Ghost Downloader is running.
+
+</Step>
+</Steps>
+
+## Spoof Browser Fingerprint
+
+Some cloud storage services validate TLS fingerprints on direct links. If downloads fail or run at abnormal speeds, enable **Settings → Aria2 RPC Compatibility → Spoof Browser Fingerprint**. When enabled, tasks received via RPC will have browser TLS fingerprints and request headers attached.
+
+<Callout type="warn">
+Spoofing browser fingerprints requires a binary runtime. If the runtime is not installed, task parsing may fail.
+</Callout>
+
+## Other compatible tools
+
+Any tool that supports Aria2 RPC can connect the same way — point its RPC address to `http://127.0.0.1:<port>/jsonrpc` and fill in the token. Common examples include browser extensions (such as Aria2 Explorer) and command-line scripts.
+
+## Known limitations
+
+- Listens on `127.0.0.1` only; requests from other devices are not accepted.
+- Only `aria2.addUri` and `aria2.getVersion` are supported. Querying task status, pausing, or deleting tasks via RPC is not possible.
+- WebSocket is not supported; only HTTP POST is accepted.
+- If **Settings → Browser Extension → Enter draft mode when intercepting downloads** is enabled, tasks received via RPC will also enter Task Draft instead of starting immediately.

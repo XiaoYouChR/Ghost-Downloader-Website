@@ -1,0 +1,18 @@
+---
+title: Glossary
+description: Core concepts that appear repeatedly across the docs.
+---
+
+| Term | Meaning |
+| --- | --- |
+| CoreService | The background core service responsible for the AsyncIO event loop and task scheduling. |
+| FeatureService | The service that loads Feature Packs and dispatches URLs. |
+| Feature Pack | A protocol or capability module such as HTTP, BT, or M3U8. |
+| Task | A schedulable download or processing task. |
+| TaskStage | A sub-stage inside a task, used for chunks, sub-downloads, or processing phases. |
+| Browser Bridge | The local WebSocket bridge between the browser extension and the desktop app. |
+| Range | HTTP partial-request capability, which powers smart chunking and resume support. |
+| `.ghd` | The auxiliary state file used by HTTP tasks to restore chunk progress. |
+| N_m3u8DL-RE | External runtime used for M3U8 / DASH downloading. |
+| FFmpeg | Tool used for merging, remuxing, and media processing. |
+| Crowdin | The project's translation collaboration platform at `https://crowdin.com/project/ghost-downloader`. |

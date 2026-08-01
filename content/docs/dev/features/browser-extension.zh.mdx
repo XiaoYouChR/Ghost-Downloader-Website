@@ -1,0 +1,29 @@
+---
+title: 浏览器扩展
+description: 扩展能力、资源捕获和桌面任务控制。
+---
+
+扩展不是“浏览器版下载器”，而是桌面端的资源前哨：发现页面资源、接管浏览器下载、发送任务到桌面端，并展示桌面任务快照。
+
+## 关键入口
+
+| 文件 | 作用 |
+| --- | --- |
+| `browser_extension/app/src/background.ts` | background 总入口。 |
+| `browser_extension/app/src/background/desktop-bridge.ts` | WebSocket 连接、重连、请求分发。 |
+| `browser_extension/app/src/background/resource-bridge.ts` | 资源捕获和下载接管。 |
+| `browser_extension/app/src/shared/constants.ts` | 默认服务地址、高级功能和帮助文案。 |
+| `app/services/browser_service.py` | 桌面端桥接服务。 |
+
+## 高级功能
+
+| 功能 | 用途 |
+| --- | --- |
+| 视频录制 | 录制网页视频内容。 |
+| WebRTC 录制 | 捕获实时通信内容，通常需要刷新页面。 |
+| 屏幕捕捉 | 捕捉屏幕、窗口或标签页。 |
+| 模拟手机 | 用移动 UA 重新访问页面。 |
+| 深度搜索 | 重新分析页面请求资源。 |
+| 缓存捕捉 | 捕捉浏览器缓存资源。 |
+
+排查扩展问题时先看三件事：桌面端是否启用扩展服务、配对令牌是否一致、background 日志里 WebSocket 是否连接成功。

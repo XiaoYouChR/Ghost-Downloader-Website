@@ -1,0 +1,44 @@
+---
+title: Ghost Downloader 文档
+description: Ghost Downloader 用户指南与开发者文档。
+---
+
+<Callout type="info" title="支持项目">
+Ghost Downloader 免费开源，你的[捐赠](./donate)会直接用于开发、测试和维护。
+</Callout>
+
+<Cards>
+  <Card title="用户文档" href="./user" description="安装、浏览器扩展、下载功能与故障排查。" />
+  <Card title="开发者文档" href="./dev" description="环境搭建、架构总览与贡献指南。" />
+  <Card title="实测记录" href="./benchmark" description="下载速度、浏览器接管与媒体嗅探对比（2026-07-30）。" />
+  <Card title="贡献翻译" href="./dev/contributing/translation" description="前往 Crowdin 帮助翻译 Ghost Downloader。" />
+</Cards>
+
+## 出了问题？
+
+<Cards>
+  <Card title="常见问题" href="./user/faq" description="扩展连不上、下载失败或损坏、装不上或打不开，以及其他常见问题。" />
+</Cards>
+
+## 选型速查
+
+`✅` 支持 / 核心功能 · `⚠️` 部分支持或偏弱 · `❌` 不支持
+
+| | GD | IDM | NDM | Gopeed | Motrix | FDM |
+| --- | --- | --- | --- | --- | --- | --- |
+| HTTP / HTTPS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| BitTorrent / Magnet | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| 免费 | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| 开源 | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| 浏览器接管下载 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| 浏览器→桌面端深度联动 | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
+| 资源嗅探 | ✅ | ✅ | ⚠️ | ❌ | ❌ | ⚠️ |
+| HLS / m3u8 / DASH | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
+| 站点特化能力 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| 可扩展机制 | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+
+大多数下载器都能搞定基本下载。Ghost Downloader 的优势在于把「浏览器里发现资源 → 按协议处理 → 落到桌面」这整条链路跑通，而不只是下载本身。
+
+下载速度和媒体嗅探的实测数据见[实测记录](./benchmark)。
+
+资料来源：[Ghost Downloader](https://github.com/XiaoYouChR/Ghost-Downloader-3)、[IDM](https://support.internetdownloadmanager.com/)、[NDM](https://neatdownloadmanager.com/index.php/en/)、[Gopeed](https://gopeed.com/docs)、[Motrix](https://motrix.app/features)、[FDM](https://www.freedownloadmanager.org/)。

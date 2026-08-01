@@ -1,0 +1,26 @@
+---
+title: Debugging and Logs
+description: The most common troubleshooting entry points and log locations.
+---
+
+Desktop logs are written to `GhostDownloader/GhostDownloader.log` under the system data directory. When preparing an issue or debugging a regression in a PR, first classify the problem as startup, download, extension, persistence, or build related.
+
+| Problem | Check First |
+| --- | --- |
+| Startup failure | `GhostDownloader.log`, PySide6 / Qt plugin errors. |
+| HTTP download failure | Probe logic in `features/http_pack/pack.py` and worker errors in `task.py`. |
+| No BT speed | Trackers, DHT, proxy setup, and `libtorrent` session settings. |
+| M3U8 / Bilibili failure | Headers, cookies, external runtimes, and FFmpeg. |
+| Extension disconnects | Desktop extension switch, port `14370`, pairing token, and extension background logs. |
+| Task recovery problems | Serialization in `app/bases/models.py` and `app/supports/recorder.py`. |
+| Build failure | `deploy.py`, Nuitka output, and Feature Pack copy logs. |
+
+## Translation Resources
+
+Translation sources live in `app/assets/i18n/gd3.zh_CN.ts`, and Crowdin sync is configured in `crowdin.yml`. To refresh local translation resources:
+
+```powershell
+python sync_i18n_res.py
+```
+
+Crowdin project: [ghost-downloader](https://crowdin.com/project/ghost-downloader).

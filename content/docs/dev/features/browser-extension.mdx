@@ -1,0 +1,29 @@
+---
+title: Browser Extension
+description: Extension capabilities, resource capture, and desktop task control.
+---
+
+The extension is not a browser-only downloader. It acts as the desktop app's outpost: discovering page resources, intercepting browser downloads, sending tasks to the desktop app, and showing live desktop task snapshots.
+
+## Key Entry Points
+
+| File | Role |
+| --- | --- |
+| `browser_extension/app/src/background.ts` | Main background entry. |
+| `browser_extension/app/src/background/desktop-bridge.ts` | WebSocket connection, reconnection, and request dispatching. |
+| `browser_extension/app/src/background/resource-bridge.ts` | Resource capture and download interception. |
+| `browser_extension/app/src/shared/constants.ts` | Default service URL, advanced features, and help text. |
+| `app/services/browser_service.py` | Desktop-side bridge service. |
+
+## Advanced Features
+
+| Feature | Purpose |
+| --- | --- |
+| Video recording | Record web video content. |
+| WebRTC recording | Capture real-time communication streams. A page refresh is often required. |
+| Screen capture | Capture a screen, window, or tab. |
+| Mobile simulation | Revisit the page with a mobile user agent. |
+| Deep search | Re-analyze page requests for hidden resources. |
+| Cache capture | Capture resources already stored in browser cache. |
+
+When debugging extension problems, check these three things first: whether the desktop bridge service is enabled, whether the pairing token matches, and whether the extension background logs show a successful WebSocket connection.

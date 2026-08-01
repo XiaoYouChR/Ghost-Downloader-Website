@@ -1,0 +1,20 @@
+---
+title: Dependency Quick Reference
+description: Key dependencies for the desktop app, protocol capabilities, extension, and build flow.
+---
+
+| Dependency | Purpose |
+| --- | --- |
+| PySide6 | Qt desktop application framework. |
+| PyQt-Fluent-Widgets | Fluent-style widget library. |
+| niquests | HTTP / HTTPS / HTTP3 requests, proxies, and acceleration-related networking. |
+| libtorrent | BitTorrent protocol support. |
+| aioftp | Async FTP / FTPS client support. |
+| loguru | Logging. |
+| desktop-notifier | Cross-platform desktop notifications. |
+| qrcode | QR-code based flows such as Bilibili login. |
+| winloop / uvloop | Platform-specific event loop optimizations. |
+| Nuitka | Desktop compilation and packaging. |
+| React / Vite / TypeScript | Browser extension UI and build pipeline. |
+
+For the full dependency list, see `pyproject.toml`, `requirements.txt`, and `browser_extension/app/package.json`. Release packaging also depends on tools such as Inno Setup, create-dmg, AppImage tooling, and GitHub Actions environments.

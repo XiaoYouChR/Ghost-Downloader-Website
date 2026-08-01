@@ -1,0 +1,55 @@
+---
+title: Repository Map
+description: Locate the right source files quickly by task type.
+---
+
+import { File, Files, Folder } from 'fumadocs-ui/components/files';
+
+<Files>
+  <Folder name="app" defaultOpen>
+    <Folder name="services" defaultOpen>
+      <File name="core_service.py" />
+      <File name="feature_service.py" />
+      <File name="browser_service.py" />
+    </Folder>
+    <Folder name="bases">
+      <File name="models.py" />
+      <File name="interfaces.py" />
+    </Folder>
+    <Folder name="supports">
+      <File name="config.py" />
+      <File name="recorder.py" />
+    </Folder>
+    <Folder name="view">
+      <File name="pages/task_page.py" />
+      <File name="pages/setting_page.py" />
+      <File name="windows/main_window.py" />
+    </Folder>
+  </Folder>
+  <Folder name="features" defaultOpen>
+    <File name="http_pack" />
+    <File name="bittorrent_pack" />
+    <File name="ftp_pack" />
+    <File name="m3u8_pack" />
+    <File name="bili_pack" />
+    <File name="github_pack" />
+    <File name="ffmpeg_pack" />
+  </Folder>
+  <Folder name="browser_extension/app">
+    <File name="src/background/desktop-bridge.ts" />
+    <File name="src/background/resource-bridge.ts" />
+    <File name="src/shared/constants.ts" />
+  </Folder>
+</Files>
+
+## Find Files by Task
+
+| What You Need to Change | Start Here |
+| --- | --- |
+| URL parsing and task creation | `app/services/feature_service.py`, the matching `features/*_pack/pack.py` |
+| Task queue, pause, resume | `app/services/core_service.py`, `app/bases/models.py` |
+| HTTP chunking / resume / acceleration | `features/http_pack/task.py` |
+| Browser extension to desktop bridge | `app/services/browser_service.py`, `browser_extension/app/src/background/desktop-bridge.ts` |
+| Extension resource capture | `browser_extension/app/src/background/resource-bridge.ts` |
+| Config items and settings UI | `app/supports/config.py`, `app/view/pages/setting_page.py` |
+| Build workflow and validation | `deploy.py`, `.github/workflows/build.yml`, `.github/workflows/crowdin.yml` |

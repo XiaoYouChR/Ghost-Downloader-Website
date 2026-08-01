@@ -1,0 +1,52 @@
+---
+title: 环境与运行
+description: 安装依赖、启动桌面端、构建浏览器扩展。
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Steps>
+  <Step>
+    安装桌面端依赖。
+
+    ```powershell
+    cd C:\Users\XiaoYouChR\PycharmProjects\Ghost-Downloader-3
+    pip install --timeout=300 -r requirements.txt
+    ```
+  </Step>
+
+  <Step>
+    从源码启动桌面端。
+
+    ```powershell
+    python Ghost-Downloader-3.py
+    ```
+  </Step>
+
+  <Step>
+    如果要改浏览器扩展，安装并构建扩展。
+
+    ```powershell
+    cd browser_extension\app
+    npm install
+    npm run typecheck
+    npm run build
+    ```
+  </Step>
+</Steps>
+
+## 启动时发生了什么
+
+入口文件会加载 `UserConfig.json`，启动 `coreService`，创建 `MainWindow`，加载 `features/*_pack`，再通过 `taskRecorder` 恢复历史任务。需要无闪屏启动时可以加 `--silence`。
+
+```powershell
+python Ghost-Downloader-3.py --silence
+```
+
+## 常见卡点
+
+| 现象 | 先检查 |
+| --- | --- |
+| UI 起不来 | PySide6、Qt 插件、图形环境、日志文件。 |
+| 功能包缺失 | `features/<pack>/manifest.toml`、依赖包、加载日志。 |
+| 扩展连不上 | 桌面端扩展开关、`ws://127.0.0.1:14370`、配对令牌。 |

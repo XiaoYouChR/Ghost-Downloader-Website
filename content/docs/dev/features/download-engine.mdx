@@ -1,0 +1,26 @@
+---
+title: Download Engine
+description: Development entry points for HTTP chunking, resume, acceleration, speed limits, and proxies.
+---
+
+The main HTTP download logic lives in `features/http_pack`. It probes Range support, file size, and filenames, then creates tasks that write directly into the target file at specific offsets.
+
+## Key Implementations
+
+| Topic | Source Entry | Notes |
+| --- | --- | --- |
+| URL probe | `features/http_pack/pack.py` | Detects filename, size, and Range support. |
+| Chunked download | `features/http_pack/task.py` | Writes directly to the target file, without a merge step after completion. |
+| Resume support | `features/http_pack/task.py` | Depends on the target file plus auxiliary progress state. |
+| Auto acceleration | `features/http_pack/task.py` | Observes remaining chunks and reallocates them when needed. |
+| Speed limits / proxies | `app/supports/config.py`, `app/supports/utils.py` | HTTP, FTP, and BT apply them differently. |
+
+## User-visible Behavior
+
+| Behavior | Effect |
+| --- | --- |
+| Range probe fails | The task may fall back to a single connection, or resume support may not work. |
+| Target file and progress state are inconsistent | Resume may fail and require cleanup or a full redownload. |
+| Proxy config is invalid | HTTP, FTP, and BT fail in different ways and must be debugged separately. |
+| SSL verification fails | HTTPS links may fail during parsing or download. |
+| Auto acceleration reallocation | Large-file downloads may speed up, but the result still depends on server-side throttling. |

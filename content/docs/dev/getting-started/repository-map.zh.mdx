@@ -1,0 +1,55 @@
+---
+title: 仓库地图
+description: 按开发任务快速定位源码入口。
+---
+
+import { File, Files, Folder } from 'fumadocs-ui/components/files';
+
+<Files>
+  <Folder name="app" defaultOpen>
+    <Folder name="services" defaultOpen>
+      <File name="core_service.py" />
+      <File name="feature_service.py" />
+      <File name="browser_service.py" />
+    </Folder>
+    <Folder name="bases">
+      <File name="models.py" />
+      <File name="interfaces.py" />
+    </Folder>
+    <Folder name="supports">
+      <File name="config.py" />
+      <File name="recorder.py" />
+    </Folder>
+    <Folder name="view">
+      <File name="pages/task_page.py" />
+      <File name="pages/setting_page.py" />
+      <File name="windows/main_window.py" />
+    </Folder>
+  </Folder>
+  <Folder name="features" defaultOpen>
+    <File name="http_pack" />
+    <File name="bittorrent_pack" />
+    <File name="ftp_pack" />
+    <File name="m3u8_pack" />
+    <File name="bili_pack" />
+    <File name="github_pack" />
+    <File name="ffmpeg_pack" />
+  </Folder>
+  <Folder name="browser_extension/app">
+    <File name="src/background/desktop-bridge.ts" />
+    <File name="src/background/resource-bridge.ts" />
+    <File name="src/shared/constants.ts" />
+  </Folder>
+</Files>
+
+## 按任务找文件
+
+| 你要改什么 | 先看 |
+| --- | --- |
+| URL 解析和任务创建 | `app/services/feature_service.py`、对应 `features/*_pack/pack.py` |
+| 任务队列、暂停、恢复 | `app/services/core_service.py`、`app/bases/models.py` |
+| HTTP 分块/续传/提速 | `features/http_pack/task.py` |
+| 浏览器扩展连接桌面端 | `app/services/browser_service.py`、`browser_extension/app/src/background/desktop-bridge.ts` |
+| 扩展资源捕获 | `browser_extension/app/src/background/resource-bridge.ts` |
+| 配置项和设置页 | `app/supports/config.py`、`app/view/pages/setting_page.py` |
+| 仓库工作流和构建验证 | `deploy.py`、`.github/workflows/build.yml`、`.github/workflows/crowdin.yml` |

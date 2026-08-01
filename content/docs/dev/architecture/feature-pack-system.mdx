@@ -1,0 +1,51 @@
+---
+title: Feature Pack System
+description: How packs are discovered, loaded, ordered, and invoked.
+---
+
+Feature Packs are the capability decomposition mechanism in Ghost Downloader. `app/services/feature_service.py` scans the `features` directory for subdirectories containing `manifest.toml`, reads the entry file and dependencies, and then instantiates the matching pack class.
+
+<Callout type="warn" title="API Stability">
+This page documents internal implementation details, not a stable external plugin API. `app/feature_pack` and `features/*_pack` may still change together with the task model.
+</Callout>
+
+## Loading Flow
+
+| Step | Description |
+| --- | --- |
+| Discovery | Find `features/<pack>/manifest.toml`. |
+| Manifest read | Load `entry` and `dependencies` from `[pack]`. |
+| Dependency ordering | Load packs in dependency order, for example media features may depend on FFmpeg. |
+| Instantiation | Import the Feature Pack class from the entry module. |
+| UI registration | Load settings cards if the pack provides any. |
+| URL matching | Ask packs whether they can handle the current input during parsing. |
+
+## Implementation Checklist
+
+| Checklist Item | Where It Lands |
+| --- | --- |
+| Input coverage | `canHandle` or payload-based task creation logic. |
+| Pack dependencies | `dependencies` in `manifest.toml`. |
+| Task type | `Task` subclass, pause/resume behavior, persistence fields. |
+| User config | `PackConfig`, settings cards, defaults, and validators. |
+| Error messages | Readable failure messages for parse failures, missing dependencies, or network errors. |
+
+## Minimal Manifest Example
+
+```toml
+[pack]
+entry = "pack.py"
+dependencies = ["http_pack"]
+```
+
+A pack directory usually contains at least `manifest.toml` and an entry file. More complex packs may also include `task.py`, `config.py`, runtime helpers, or UI setting cards. In a PR, explain supported inputs, dependencies, pause support, and failure scenarios.
+
+## Related Entry Points
+
+| Entry Point | Purpose |
+| --- | --- |
+| `app/services/feature_service.py` | Discover and load packs. |
+| `app/feature_pack` | Current shared Feature Pack base capabilities. |
+| `features/http_pack` | The easiest simple protocol pack to start reading. |
+| `features/m3u8_pack` | A more complex pack that depends on external runtimes. |
+| `deploy.py` | Copies Feature Packs into build outputs and currently excludes `jack_yao`. |

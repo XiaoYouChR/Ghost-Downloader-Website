@@ -1,0 +1,26 @@
+---
+title: 下载引擎
+description: HTTP 分块、断点续传、自动提速、限速与代理的开发入口。
+---
+
+HTTP 下载能力主要在 `features/http_pack`。它会探测 Range、文件大小和文件名，再创建按 offset 直接写入目标文件的任务。
+
+## 关键实现
+
+| 主题 | 源码入口 | 备注 |
+| --- | --- | --- |
+| URL 探测 | `features/http_pack/pack.py` | 文件名、大小、Range 支持。 |
+| 分块下载 | `features/http_pack/task.py` | 直接写目标文件，不走完成后二次合并。 |
+| 断点续传 | `features/http_pack/task.py` | 依赖目标文件和辅助进度状态。 |
+| 自动提速 | `features/http_pack/task.py` | 观察剩余分片，必要时重分配。 |
+| 限速/代理 | `app/supports/config.py`、`app/supports/utils.py` | HTTP、FTP、BT 的落地方式不同。 |
+
+## 用户可见行为
+
+| 行为 | 影响 |
+| --- | --- |
+| Range 探测失败 | 任务可能退化为单连接下载，或无法断点续传。 |
+| 目标文件与进度状态不匹配 | 续传可能失败，需要重新下载或清理残留文件。 |
+| 代理配置异常 | HTTP、FTP、BT 的失败表现不同，需要分别排查。 |
+| SSL 校验失败 | HTTPS 链接可能无法解析或下载。 |
+| 自动提速重分配 | 可能提升大文件下载速度，但也受源站限流影响。 |

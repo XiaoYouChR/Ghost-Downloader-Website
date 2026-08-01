@@ -1,0 +1,18 @@
+---
+title: 术语表
+description: 文档中反复出现的核心概念。
+---
+
+| 术语 | 含义 |
+| --- | --- |
+| CoreService | 后台核心服务，负责 AsyncIO 事件循环和任务调度。 |
+| FeatureService | 功能包加载和 URL 分发服务。 |
+| Feature Pack | 一个协议或能力模块，例如 HTTP、BT、M3U8。 |
+| Task | 可被调度的下载或处理任务。 |
+| TaskStage | 任务中的子阶段，用于表示分块、子下载或处理步骤。 |
+| Browser Bridge | 浏览器扩展和桌面端之间的本地 WebSocket 桥。 |
+| Range | HTTP 分段请求能力，是智能分块和续传的基础。 |
+| `.ghd` | HTTP 任务用于恢复分块进度的辅助状态文件。 |
+| N_m3u8DL-RE | M3U8/DASH 下载所依赖的外部运行时。 |
+| FFmpeg | 媒体合并、转封装和音视频处理工具。 |
+| Crowdin | 项目的翻译协作平台，入口是 `https://crowdin.com/project/ghost-downloader`。 |
