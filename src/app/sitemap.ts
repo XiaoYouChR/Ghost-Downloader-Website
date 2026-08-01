@@ -1,3 +1,5 @@
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import type { MetadataRoute } from 'next';
 import { i18n } from '@/lib/i18n';
 import {
@@ -12,11 +14,43 @@ type SitemapEntry = MetadataRoute.Sitemap[number];
 
 export const dynamic = 'force-static';
 
-function createSitemapEntry(locale: string, pathname: string): SitemapEntry {
+function getContentFilePath(slug: string[] | undefined, locale: string): string | undefined {
+  const localeSuffix = locale === i18n.defaultLanguage ? '' : `.${locale}`;
+
+  if (!slug || slug.length === 0) {
+    return `content/docs/index${localeSuffix}.mdx`;
+  }
+
+  const directPath = `content/docs/${slug.join('/')}${localeSuffix}.mdx`;
+  if (existsSync(directPath)) return directPath;
+
+  const indexPath = `content/docs/${slug.join('/')}/index${localeSuffix}.mdx`;
+  if (existsSync(indexPath)) return indexPath;
+
+  return undefined;
+}
+
+function getGitLastmod(filePath: string): Date | undefined {
+  try {
+    const result = execSync(`git log -1 --format=%cI -- "${filePath}"`, {
+      encoding: 'utf-8',
+    }).trim();
+    return result ? new Date(result) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function createSitemapEntry(
+  locale: string,
+  pathname: string,
+  lastModified?: Date,
+): SitemapEntry {
   return {
     alternates: {
       languages: getLanguageAlternates(pathname),
     },
+    lastModified,
     url: getAbsoluteUrl(getLocalizedPath(locale, pathname)),
   };
 }
@@ -32,7 +66,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   for (const { lang, slug } of source.generateParams()) {
-    const entry = createSitemapEntry(lang, getDocsPagePath(slug));
+    const filePath = getContentFilePath(slug, lang);
+    const lastModified = filePath ? getGitLastmod(filePath) : undefined;
+    const entry = createSitemapEntry(lang, getDocsPagePath(slug), lastModified);
     entries.set(entry.url, entry);
   }
 

@@ -15,11 +15,14 @@ type LocaleSeoConfig = {
   openGraphLocale: string;
 };
 
-const iconMetadata = {
-  apple: '/images/logo.png',
-  icon: '/images/logo.png',
-  shortcut: '/images/logo.png',
-} as const;
+const iconMetadata: Metadata['icons'] = {
+  apple: '/apple-touch-icon.png',
+  icon: [
+    { url: '/favicon.ico', sizes: '32x32' },
+    { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+  ],
+  shortcut: '/favicon.ico',
+};
 
 const shareImage = {
   alt: `${appName} share image`,
@@ -79,7 +82,7 @@ function normalizeLocale(locale: string): SiteLocale {
   return locale === 'zh' ? 'zh' : 'en';
 }
 
-function getSeoConfig(locale: string) {
+export function getSeoConfig(locale: string) {
   return localeSeoConfigs[normalizeLocale(locale)];
 }
 
@@ -171,6 +174,7 @@ export function getLocaleLayoutMetadata(locale: string): Metadata {
     applicationName: appName,
     icons: iconMetadata,
     keywords: config.keywords,
+    manifest: '/site.webmanifest',
     metadataBase: siteUrlObject,
     title: {
       default: appName,

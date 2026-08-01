@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       allow: '/',
+      disallow: ['/api/', '/llms.txt', '/llms-full.txt', '/*/llms.mdx/'],
       userAgent: '*',
     },
     sitemap: getAbsoluteUrl('/sitemap.xml'),

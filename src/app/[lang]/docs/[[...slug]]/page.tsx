@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { getBreadcrumbItems } from 'fumadocs-core/breadcrumb';
 import { Card } from 'fumadocs-ui/components/card';
 import {
   DocsBody,
@@ -13,8 +14,13 @@ import {
 import type { ComponentProps } from 'react';
 import { getMDXComponents } from '@/components/mdx';
 import { getPageImage, getPageMarkdownUrl, source } from '@/lib/source';
-import { gitConfig } from '@/lib/shared';
-import { getDocsPageMetadata, getDocsPagePath } from '@/lib/site-metadata';
+import { appName, gitConfig } from '@/lib/shared';
+import {
+  getAbsoluteUrl,
+  getDocsPageMetadata,
+  getDocsPagePath,
+  getLocalizedPath,
+} from '@/lib/site-metadata';
 
 export default async function Page({ params }: PageProps<'/[lang]/docs/[[...slug]]'>) {
   const { lang, slug } = await params;
@@ -30,8 +36,37 @@ export default async function Page({ params }: PageProps<'/[lang]/docs/[[...slug
     />
   );
 
+  const breadcrumbItems = getBreadcrumbItems(page.url, source.getPageTree(lang), {
+    includeRoot: { url: getLocalizedPath(lang, '/') },
+    includePage: true,
+  });
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: appName,
+        item: getAbsoluteUrl(getLocalizedPath(lang, '/')),
+      },
+      ...breadcrumbItems
+        .filter((item): item is typeof item & { url: string } => !!item.url)
+        .map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 2,
+          name: String(item.name),
+          item: getAbsoluteUrl(item.url),
+        })),
+    ],
+  };
+
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="flex flex-row items-center gap-2 border-b pb-6">

@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import { createTranslator } from '@/lib/copy';
-import { getLatestDownloadRelease } from '@/lib/github-release';
-import { getHomePageMetadata, getLocalizedPath } from '@/lib/site-metadata';
+import { getLatestDownloadRelease, releasesUrl } from '@/lib/github-release';
+import { appName, repoUrl } from '@/lib/shared';
+import {
+  getAbsoluteUrl,
+  getHomePageMetadata,
+  getLocalizedPath,
+  getSeoConfig,
+} from '@/lib/site-metadata';
 import { SiteFooter } from '@/components/site-footer';
 import { Hero } from '@/components/home/hero';
 import { Resilience } from '@/components/home/resilience';
@@ -22,8 +28,43 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const release = await getLatestDownloadRelease();
   const t = createTranslator(lang);
 
+  const seoConfig = getSeoConfig(lang);
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: appName,
+      description: seoConfig.homeDescription,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Windows, macOS, Linux, Android',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      url: getAbsoluteUrl('/'),
+      downloadUrl: releasesUrl,
+      ...(release.data.latestVersion && {
+        softwareVersion: release.data.latestVersion,
+      }),
+      license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+      image: getAbsoluteUrl('/images/banner.png'),
+      sourceOrganization: {
+        '@type': 'Person',
+        name: 'XiaoYouChR',
+        url: repoUrl,
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: appName,
+      url: getAbsoluteUrl('/'),
+    },
+  ];
+
   return (
     <main className="bg-ground text-ink">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero
         copy={{
           title: t('hero.title'),
