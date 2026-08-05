@@ -20,7 +20,7 @@ type ProtocolsCopy = {
 
 export function Protocols({ copy }: { copy: ProtocolsCopy }) {
   return (
-    <Section className="border-t border-edge">
+    <Section className="overflow-hidden border-t border-edge">
       <motion.div {...entrance}>
         <SectionTitle>{copy.title}</SectionTitle>
         <SectionBody className="mt-5">{copy.body}</SectionBody>
