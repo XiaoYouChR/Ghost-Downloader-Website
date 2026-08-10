@@ -1,0 +1,37 @@
+---
+title: 代理配置
+description: 配置全局代理和按域名匹配的代理规则。
+---
+
+## 全局代理
+
+**设置 → 综合下载设置 → 代理服务器**，填入代理 URL：
+
+```
+http://host:port
+http://user:password@host:port
+socks5://host:port
+socks5://user:password@host:port
+```
+
+支持 `http`、`https`、`socks4`、`socks5` 协议，均可在 URL 中携带用户名和密码。留空则不使用代理。
+
+## 各下载类型支持的代理协议
+
+| 下载类型 | HTTP | HTTPS | SOCKS4 | SOCKS5 |
+| --- | --- | --- | --- | --- |
+| HTTP/HTTPS | ✅ | ✅ | ✅ | ✅ |
+| FTP/FTPS | ❌ | ❌ | ✅ | ✅ |
+| BitTorrent | ✅ | ❌ | ✅ | ✅ |
+
+## 按域名指定代理
+
+通过身份预设可以为特定域名配置不同的代理：
+
+**设置 → 综合下载设置 → 身份预设 → 添加**。填入主机匹配（支持 `*.example.com` 通配），在预设中指定代理 URL。
+
+命中预设的下载使用预设代理，不走全局。
+
+<Callout type="info">
+代理仅影响下载流量。浏览器扩展与桌面端的连接不经过代理。
+</Callout>

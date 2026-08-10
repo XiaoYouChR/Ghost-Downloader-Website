@@ -1,0 +1,25 @@
+---
+title: Task System
+description: How TaskService, Task, TaskStep, and taskRecorder work together.
+---
+
+The task system revolves around two key files: `app/services/task_service.py` and `app/models/task.py`.
+
+| Concept | Role | What to Watch When Changing It |
+| --- | --- | --- |
+| `TaskService` | AsyncIO scheduler running in a background thread. | Do not operate on QWidget directly from it. |
+| `Task` | A download or processing task. | New fields must stay compatible with persistence. |
+| `TaskStep` | A sub-progress unit, such as an HTTP chunk or media-processing stage. | The UI and extension use it to compute total progress. |
+| `taskRecorder` | Persists and restores task history. | Structural changes must keep old records readable. |
+
+## Scheduling Flow
+
+1. The UI or extension submits a URL.
+2. `TaskService` runs parsing logic and creates a `Task`.
+3. The task enters the queue and is controlled by the maximum concurrency limit.
+4. Running tasks update `TaskStep`.
+5. Completion, pause, or failure is written back to the recorder.
+
+<Callout type="info" title="When a Change Is Risky">
+If you change state enums, task serialization, pause/resume behavior, or stage progress, that affects the UI, the browser extension, and historical task recovery. The risk is higher than a normal internal Feature Pack change.
+</Callout>

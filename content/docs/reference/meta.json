@@ -1,0 +1,10 @@
+{
+  "title": "Reference",
+  "icon": "BookOpen",
+  "pages": [
+    "settings",
+    "configuration",
+    "site-notes",
+    "errors"
+  ]
+}

@@ -1,0 +1,75 @@
+---
+title: 配置文件与日志
+description: 各平台的数据目录位置。
+---
+
+所有配置、任务记录和日志保存在同一个数据目录下。
+
+## 数据目录
+
+两种模式，在 **设置 → 应用 → 数据存储模式** 中切换。
+
+### 用户模式（默认）
+
+<Tabs items={['Windows', 'macOS', 'Linux', 'Android']} groupId="os">
+<Tab value="Windows">
+
+```
+%LOCALAPPDATA%\GhostDownloader
+```
+
+</Tab>
+<Tab value="macOS">
+
+```
+~/Library/Application Support/GhostDownloader
+```
+
+</Tab>
+<Tab value="Linux">
+
+```
+~/.local/share/GhostDownloader
+```
+
+</Tab>
+<Tab value="Android">
+
+```
+/storage/emulated/0/Android/data/com.xychr.ghostdownloader/files/GhostDownloader
+```
+
+</Tab>
+</Tabs>
+
+### Portable 模式
+
+数据目录在可执行文件旁的 `GhostDownloader/` 文件夹。适合 U 盘携带。
+
+切换模式时数据自动复制到新位置，程序退出后需手动重新打开。
+
+## 目录结构
+
+<Files>
+  <Folder name="GhostDownloader" defaultOpen>
+    <File name="UserConfig.json" />
+    <File name="GhostDownloader.log" />
+    <File name="tasks.jsonl" />
+    <Folder name="browser_extension" />
+  </Folder>
+</Files>
+
+| 文件 | 内容 |
+|---|---|
+| `UserConfig.json` | 所有设置（JSON 格式，可手动编辑，关闭程序后再改） |
+| `GhostDownloader.log` | 运行日志，512 KB 轮转，保留 5 个历史 |
+| `tasks.jsonl` | 任务记录，每行一条 |
+| `browser_extension/` | 扩展 CRX 解包目录 |
+
+## 提交 Issue 时附带日志
+
+**设置 → 关于 → 提供反馈** 中的"查看日志"按钮可直接定位到日志文件。
+
+<Callout type="warn">
+日志可能包含下载链接和文件名。提交前检查隐私内容。
+</Callout>

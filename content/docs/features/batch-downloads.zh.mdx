@@ -1,0 +1,56 @@
+---
+title: 批量下载
+description: 用模板语法一次生成大量下载链接。
+---
+
+新建任务 → 点击 **批量添加** 按钮。输入带占位符的 URL，下方实时预览展开结果。
+
+## 语法
+
+### 数字范围
+
+```
+http://example.com/img/[1-100].jpg
+```
+
+展开为 `img/1.jpg` 到 `img/100.jpg`，共 100 个链接。
+
+起始数字带前导零时自动补齐：`[001-050]` → `001`、`002`、...、`050`。
+
+### 步长
+
+```
+http://example.com/page/[1-10:2].html
+```
+
+展开为 `1.html`、`3.html`、`5.html`、`7.html`、`9.html`。
+
+### 字母范围
+
+```
+http://example.com/part_[a-f].zip
+```
+
+展开为 `part_a.zip` 到 `part_f.zip`。
+
+### 枚举
+
+```
+http://example.com/{mp4,mkv,avi}/video
+```
+
+展开为三个链接。
+
+### 组合
+
+多个占位符取笛卡尔积：
+
+```
+http://example.com/{en,zh}/chapter_[01-03].pdf
+```
+
+→ 6 个链接（2 语言 × 3 章节）。
+
+<Callout type="idea">
+全部完成后想自动关机或休眠？见[完成后动作](./plan)。
+</Callout>

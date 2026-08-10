@@ -1,0 +1,60 @@
+---
+title: 常见问题
+description: 快速解决。
+---
+
+高频问题有独立页面：[扩展连不上](./extension-connection) · [更新失败](./update-failed) · [下载损坏](./corrupted-downloads) · [平台问题](./platform-issues)
+
+以下是其他常见问题。
+
+## 浏览器扩展
+
+<Accordions>
+<Accordion title="协议版本不匹配">
+桌面端和扩展版本不在同一代。两边都升到最新版。商店版扩展没更新的话用 **设置 → 浏览器扩展 → 一键安装**。
+</Accordion>
+
+<Accordion title="配对令牌无效">
+在扩展中点 **自动配对**，桌面端弹出请求后点允许。
+</Accordion>
+
+<Accordion title="Firefox 下载管理器里多出一个已取消的条目">
+正常现象。Firefox 的拦截机制会先创建下载条目再取消，所以 Firefox 下载管理器中会显示一条"已取消"的记录。文件并没有实际被下载两次，忽略即可。
+</Accordion>
+
+<Accordion title="Android 上无法接管浏览器下载">
+大多数安卓浏览器不支持扩展。复制链接后在 GD 里粘贴，或用系统分享菜单。
+</Accordion>
+</Accordions>
+
+## 下载
+
+<Accordions>
+<Accordion title="下载卡在最后几 KB，速度归零">
+暂停再继续。反复出现时把 **设置 → 综合下载设置 → 最小再分配大小** 调到 2048 KB 或更高。
+</Accordion>
+
+<Accordion title="下载直接失败，提示服务器错误">
+**右键任务 → 编辑**，检查链接是否过期、是否需要 Cookie。403 / Cloudflare 拦截时换个客户端档案试试。
+</Accordion>
+
+<Accordion title="SSL 握手失败">
+**设置 → 综合下载设置 → 验证 SSL 证书** 确认关闭（默认关）。还不行就换客户端档案。
+</Accordion>
+</Accordions>
+
+## 安装与启动
+
+<Accordions>
+<Accordion title="Linux（Arch/KDE）：点击无反应">
+`ghost-downloader-bin` 自带的 Qt 和系统冲突。换成：
+
+```bash
+paru -S ghost-downloader-git
+```
+</Accordion>
+
+<Accordion title="运行时（yt-dlp / FFmpeg / eD2k）安装失败">
+需要从 GitHub 下载。国内网络访问不了时挂代理后重试。
+</Accordion>
+</Accordions>

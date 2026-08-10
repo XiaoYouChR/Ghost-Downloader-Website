@@ -1,0 +1,86 @@
+---
+title: 环境搭建
+description: 安装依赖、启动桌面端和浏览器扩展。
+---
+
+## 前提
+
+- Python ≥ 3.11（项目默认 3.11）
+- [uv](https://docs.astral.sh/uv/) 包管理器
+- Node.js ≥ 18（仅改扩展时需要）
+
+## 桌面端
+
+<Steps>
+<Step>
+
+### 克隆仓库
+
+```bash
+git clone https://github.com/XiaoYouChR/Ghost-Downloader-3.git
+cd Ghost-Downloader-3
+```
+
+</Step>
+<Step>
+
+### 安装依赖
+
+```bash
+uv sync
+```
+
+</Step>
+<Step>
+
+### 启动
+
+```bash
+uv run python Ghost-Downloader-3.py
+```
+
+静默启动（不显示闪屏）：加 `--silence`。
+
+</Step>
+</Steps>
+
+## 浏览器扩展
+
+<Steps>
+<Step>
+
+### 安装依赖
+
+```bash
+cd browser_extension/app
+npm install
+```
+
+</Step>
+<Step>
+
+### 构建
+
+```bash
+npm run build
+```
+
+构建产物在 `browser_extension/chromium/` 和 `browser_extension/firefox/`。
+
+</Step>
+<Step>
+
+### 加载到浏览器
+
+Chrome → `chrome://extensions` → 开启开发者模式 → 加载已解压的扩展程序 → 选择 `browser_extension/chromium/`。
+
+</Step>
+</Steps>
+
+## 常见问题
+
+| 现象 | 检查 |
+|------|------|
+| UI 起不来 | PySide6 是否安装、图形环境是否可用、查看日志 |
+| 功能包缺失 | `features/<pack>/` 目录是否完整、查看启动日志 |
+| 扩展连不上桌面端 | 桌面端扩展开关是否开启、端口是否被占用 |

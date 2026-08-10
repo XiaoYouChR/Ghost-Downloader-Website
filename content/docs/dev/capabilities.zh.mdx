@@ -1,0 +1,117 @@
+---
+title: FeaturePack 能力
+description: Parser、Card、BinaryRuntime、PackPage、PackConfig 的用法。
+---
+
+一个 FeaturePack 可以提供以下能力的任意组合。
+
+## Parser
+
+URL 匹配和任务解析。FeatureService 按 `priority` 从低到高依次检查每个 Parser 的 `match()`，第一个返回 `True` 的接管。
+
+```python title="示例：FTP Parser"
+class FtpParser(TaskParser):
+    priority = 95
+
+    def match(self, options: TaskOptions) -> bool:
+        return urlparse(options.url).scheme.lower() in {"ftp", "ftps"}
+
+    async def parse(self, options: TaskOptions) -> Task:
+        # 连接 FTP 服务器，获取文件信息，构造 Task
+        ...
+```
+
+`matchPassive()` 用于剪贴板监听等被动场景，默认调用 `match()`。可以覆写使其更严格（比如只匹配特定扩展名）。
+
+## Card
+
+自定义 Draft 确认卡片和 Task 进度卡片。
+
+```python title="示例：注册 Card"
+class MyPack(FeaturePack):
+    packId = "my_pack"
+    parsers = [MyParser]
+    taskCards = {MyTask: MyTaskCard}
+    draftCards = {MyTask: MyDraftCard}
+```
+
+- `taskCards` 映射 Task 类型到 TaskCard 子类（主窗口显示的进度卡片）
+- `draftCards` 映射 Task 类型到 DraftCard 子类（确认窗口的卡片）
+- 不注册时使用默认基类卡片
+
+## BinaryRuntime
+
+管理外部可执行文件（ffmpeg、yt-dlp 等）。
+
+```python title="示例：声明 Runtime"
+class FfmpegRuntime(BinaryRuntime):
+    name = "ffmpeg"
+    canInstall = True
+    title = "FFmpeg"
+    description = "音视频处理工具"
+
+    def path(self) -> str:
+        return shutil.which("ffmpeg") or ""
+
+    async def installTask(self) -> Task:
+        # 返回一个下载+解压的 Task
+        ...
+```
+
+在 Pack 中声明：
+
+```python
+class MyPack(FeaturePack):
+    def runtimes(self) -> list[BinaryRuntime]:
+        return [FfmpegRuntime()]
+```
+
+设置页面会自动为有 `canInstall = True` 的 Runtime 显示安装按钮。
+
+## PackPage
+
+向侧边栏添加自定义页面（如资源商店）。
+
+```python
+class MyPage(PackPage):
+    icon = FluentIcon.LIBRARY
+    title = "资源下载"
+```
+
+```python
+class MyPack(FeaturePack):
+    def pages(self) -> list[type[PackPage]]:
+        return [MyPage]
+```
+
+## PackConfig
+
+为 Pack 添加持久化配置项，自动注入全局设置系统。
+
+```python title="示例：FFmpeg 配置"
+class FFmpegConfig(PackConfig):
+    installFolder = ConfigItem("FFmpeg", "InstallFolder", f"{APP_DATA_DIR}/FFmpeg")
+
+    def settingGroups(self, parent: QWidget) -> list[CollapsibleSettingCardGroup]:
+        from app.view.components.setting_card_group import CollapsibleSettingCardGroup
+        from app.view.components.setting_cards import SelectFolderSettingCard
+
+        group = CollapsibleSettingCardGroup(self.tr("FFmpeg"), "ffmpeg", parent)
+        folderCard = SelectFolderSettingCard(
+            ffmpegConfig.installFolder, f"{APP_DATA_DIR}/FFmpeg",
+            self.tr("FFmpeg 安装目录"), group,
+        )
+        runtimeCard = self.createRuntimeCard(ffmpegRuntime, group)
+        folderCard.pathChanged.connect(runtimeCard._onInstallFolderChanged)
+        group.addSettingCards([folderCard, runtimeCard])
+        runtimeCard.refreshStatus()
+        return [group]
+```
+
+```python
+class FFmpegPack(FeaturePack):
+    packId = "ffmpeg"
+    config = FFmpegConfig()
+```
+
+配置值通过 `cfg.pack_FFmpegConfig_installFolder.value` 读取。`__init_subclass__` 自动给 key 加 `pack_{类名}_` 前缀，所以不同 Pack 的同名配置项不会冲突。

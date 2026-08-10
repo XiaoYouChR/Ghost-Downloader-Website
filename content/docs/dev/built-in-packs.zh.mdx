@@ -1,0 +1,29 @@
+---
+title: 内置功能包
+description: 12 个内置 FeaturePack 的职责、优先级和能力一览。
+---
+
+Parser 优先级越低越先匹配。第一个 `match()` 返回 True 的 Parser 处理该 URL。
+
+| Pack | packId | Parser | 优先级 | 能力 | 运行时 |
+|---|---|---|---|---|---|
+| `ed2k_pack` | `ed2k` | ED2kParser | 45 | parser, uriSchemes | 外部 eD2k 运行时 |
+| `bili_pack` | `bili` | BilibiliParser | 50 | parser, taskCards, draftCards | — |
+| `disk_pack` | `disk` | InstallParser | 55 | parser | — |
+| `ffmpeg_pack` | `ffmpeg` | MergeParser | 60 | parser | FFmpeg, FFprobe |
+| `yt_dlp_pack` | `ytdlp` | YouTubeParser | 70 | parser, taskCards, draftCards | yt-dlp |
+| `m3u8_pack` | `m3u8` | M3U8Parser | 80 | parser, taskCards, draftCards, fileTypes | N_m3u8DL-RE |
+| `bittorrent_pack` | `bt` | TorrentParser | 85 | parser, taskCards, draftCards, fileTypes, uriSchemes | libtorrent (Python) |
+| `huggingface_pack` | `huggingface` | HuggingFaceParser | 85 | parser, taskCards, draftCards | — |
+| `github_pack` | `github` | GitHubParser | 90 | parser, taskCards (复用 HttpTaskCard) | — |
+| `ftp_pack` | `ftp` | FtpParser | 95 | parser, taskCards, draftCards, uriSchemes | — |
+| `http_pack` | `http` | HttpParser | 100 | parser, taskCards | — |
+| `jack_yao` | `jack_yao` | — | — | pages | — |
+
+<Callout type="info">
+`jack_yao` 仅提供一个应用内页面（资源下载目录），没有 Parser。`deploy.py` 中它在 `FEATURE_PACK_BLACKLIST` 里，不进入正式发布。
+</Callout>
+
+<Callout type="warn">
+Android 构建时 `bittorrent_pack`、`ed2k_pack`、`jack_yao` 被 strip（`build_apk.sh` 第 15-17 行）。
+</Callout>

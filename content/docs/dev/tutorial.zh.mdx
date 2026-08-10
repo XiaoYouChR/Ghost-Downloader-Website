@@ -1,0 +1,94 @@
+---
+title: 你的第一个 FeaturePack
+description: 从零创建一个可加载的 FeaturePack。
+---
+
+以 `http_pack` 为模板，创建一个处理自定义协议的 Pack。
+
+<Steps>
+<Step>
+### 创建目录
+
+在 `features/` 下新建目录：
+
+```bash
+cp -r features/http_pack features/my_pack
+```
+
+删掉不需要的文件，保留 `pack.py`。
+
+</Step>
+<Step>
+### 定义 Pack 类
+
+```python title="features/my_pack/pack.py" {3,4}
+from app.models.pack import FeaturePack, TaskParser
+
+class MyPack(FeaturePack):
+    packId = "my_pack"
+    parsers = [MyParser]
+```
+
+`packId` 全局唯一。`parsers` 列出这个 Pack 提供的所有 Parser。
+
+</Step>
+<Step>
+### 实现 Parser
+
+```python title="features/my_pack/pack.py"
+from app.models.task import Task, TaskOptions
+from urllib.parse import urlparse
+
+class MyParser(TaskParser):
+    priority = 40  # 数字越小越优先匹配
+
+    def match(self, options: TaskOptions) -> bool:
+        return urlparse(options.url).hostname == "example.com"
+
+    async def parse(self, options: TaskOptions) -> Task:
+        # 构造并返回一个 Task
+        task = HttpTask(
+            name="example.zip",
+            url=options.url,
+            fileSize=0,
+            outputFolder=options.outputFolder,
+        )
+        task.addStep(HttpTaskStep(...))
+        return task
+```
+
+- `match()` 返回 `True` 时此 Parser 接管这个 URL
+- `parse()` 负责将 URL 解析为可执行的 Task
+- `priority` 越低越先被检查，HTTP 兜底 Parser 是 100
+
+</Step>
+<Step>
+### 添加 manifest.toml
+
+在 `features/my_pack/` 下创建 `manifest.toml`：
+
+```toml title="features/my_pack/manifest.toml"
+[pack]
+entry = "pack.py"
+class = "MyPack"
+dependencies = ["http_pack"]
+```
+
+- `entry` — 入口文件名
+- `class` — 入口文件中的 Pack 类名
+- `dependencies` — 依赖的其他 Pack 目录名（按拓扑排序加载，先加载依赖）
+
+启动时 `FeatureService.load()` 自动扫描 `features/` 目录，读取每个子目录的 `manifest.toml` 并加载。不需要手动注册。
+
+</Step>
+<Step>
+### 测试
+
+启动应用，粘贴一个 `example.com` 的链接。如果 Parser 正常匹配，会弹出确认窗口。
+
+</Step>
+</Steps>
+
+<Callout type="info">
+完整 API 见 [API 参考](./api-reference)。更多能力（Card、BinaryRuntime、PackPage）见[能力指南](./capabilities)。
+</Callout>

@@ -1,0 +1,51 @@
+---
+title: Aria2 RPC 兼容
+description: 让 LinkSwift 等 Aria2 兼容工具把下载推送到 GD。
+---
+
+GD 内置 Aria2 RPC 兼容服务。支持 Aria2 RPC 的工具（如 [LinkSwift](https://github.com/hmjz100/LinkSwift)）可以直接把任务推过来，不需要安装 Aria2。
+
+## 开启
+
+**设置 → Aria2 RPC 兼容** → 开启。记住端口（默认 `16800`）和令牌。
+
+## 搭配 LinkSwift
+
+<Steps>
+<Step>
+### GD 端
+
+**设置 → Aria2 RPC 兼容** → 开启，记下端口和令牌。
+</Step>
+<Step>
+### LinkSwift 端
+
+RPC 地址填：
+
+```
+http://127.0.0.1:16800/jsonrpc
+```
+
+令牌填：`token:<你的令牌>`
+</Step>
+<Step>
+### 验证
+
+在支持的网盘页面点 LinkSwift 下载按钮，GD 收到任务即配置成功。
+</Step>
+</Steps>
+
+## 支持的方法
+
+| 方法 | 说明 |
+|---|---|
+| `aria2.addUri` | 创建任务（支持 `out`、`dir`、`header`、`user-agent`、`referer`） |
+| `aria2.getVersion` | 返回版本号 |
+
+其余方法未实现。
+
+## 限制
+
+- 仅本机访问（127.0.0.1）
+- 不支持通过 RPC 暂停/删除/查询任务状态
+- 草稿模式开启时，RPC 任务也会进入确认窗口

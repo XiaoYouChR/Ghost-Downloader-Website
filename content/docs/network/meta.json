@@ -1,0 +1,9 @@
+{
+  "title": "Network & Compatibility",
+  "icon": "Network",
+  "pages": [
+    "tls-fingerprint",
+    "proxy",
+    "android"
+  ]
+}

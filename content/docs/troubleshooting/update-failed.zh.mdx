@@ -1,0 +1,32 @@
+---
+title: 更新失败
+description: 自动更新不工作时的排查步骤。
+---
+
+## 更新机制
+
+Ghost Downloader 启动时从 GitHub Releases 获取最新版本信息，比较版本号后弹出更新对话框。选择资产后，GD 会将更新包作为普通下载任务执行。
+
+## 排查步骤
+
+<Steps>
+<Step>
+### 检查网络连通性
+
+更新检查需要访问 GitHub API。如果你的网络无法直连 GitHub，在设置中配置代理后重启应用。
+</Step>
+<Step>
+### 下载更新包失败
+
+更新包的下载和普通任务一样，可能遇到相同的网络问题。确认代理设置正确，或尝试减少线程数。
+</Step>
+<Step>
+### 手动更新
+
+如果自动更新始终失败，直接从 [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest) 下载对应平台的安装包，覆盖安装即可。
+</Step>
+</Steps>
+
+<Callout type="info" title="没有收到更新提示？">
+检查 设置 → 应用 → 启动时检查更新 是否开启。
+</Callout>

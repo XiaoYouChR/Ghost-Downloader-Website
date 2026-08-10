@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" font-family="system-ui, -apple-system, 'Noto Sans SC', sans-serif">
+  <style>
+    .box { fill: #fff; stroke: #cfd4d3; stroke-width: 1.2; rx: 6 }
+    .box-label { fill: #111315; font-size: 12px; font-weight: 500 }
+    .box-detail { fill: #5b6167; font-size: 10.5px }
+    .probe { fill: #f4f5f3; stroke: #cfd4d3; stroke-width: 1.2; rx: 8 }
+    .probe-label { fill: #111315; font-size: 13px; font-weight: 600; text-anchor: middle }
+    .arrow { stroke: #5b6167; stroke-width: 1.3; fill: none; marker-end: url(#ah) }
+    .arrow-degrade { stroke: #d97706; stroke-width: 1.3; fill: none; stroke-dasharray: 5 3; marker-end: url(#ah-warn) }
+    .branch-label { fill: #888e95; font-size: 10px }
+    .degrade-label { fill: #d97706; font-size: 9.5px; text-anchor: middle }
+
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #2c2c2e; stroke: #3a3a3c }
+      .box-label { fill: #e5e5e7 }
+      .box-detail { fill: #8e8e93 }
+      .probe { fill: #1c1c1e; stroke: #3a3a3c }
+      .probe-label { fill: #e5e5e7 }
+      .arrow { stroke: #8e8e93 }
+      .arrow-degrade { stroke: #f59e0b }
+      .branch-label { fill: #8e8e93 }
+      .degrade-label { fill: #f59e0b }
+    }
+  </style>
+
+  <defs>
+    <marker id="ah" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="none" stroke="#5b6167" stroke-width="1"/>
+    </marker>
+    <marker id="ah-warn" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="none" stroke="#d97706" stroke-width="1"/>
+    </marker>
+  </defs>
+
+  <!-- Probe -->
+  <rect class="probe" x="20" y="110" width="120" height="44"/>
+  <text class="probe-label" x="80" y="138">Range 探测</text>
+
+  <!-- Branch lines from probe -->
+  <!-- Top: 206 → 多线程 -->
+  <path class="arrow" d="M 140,120 L 220,60"/>
+  <text class="branch-label" x="155" y="78">206</text>
+
+  <!-- Middle: 200 + size → 单线程(截断) -->
+  <path class="arrow" d="M 140,132 L 220,142"/>
+  <text class="branch-label" x="152" y="132">200 + 大小</text>
+
+  <!-- Bottom: 200 no size → 单线程(续传) -->
+  <path class="arrow" d="M 140,145 L 220,228"/>
+  <text class="branch-label" x="148" y="198">200 无大小</text>
+
+  <!-- Mode 1: 多线程分片 -->
+  <rect class="box" x="222" y="30" width="220" height="62"/>
+  <text class="box-label" x="234" y="50">多线程分片</text>
+  <text class="box-detail" x="234" y="68">并行下载、自动加速、断点续传</text>
+  <text class="box-detail" x="234" y="82">进度文件每秒保存</text>
+
+  <!-- Mode 2: 单线程(截断) -->
+  <rect class="box" x="222" y="116" width="220" height="48"/>
+  <text class="box-label" x="234" y="136">单线程 - 不支持 Range</text>
+  <text class="box-detail" x="234" y="154">重试从头下载，截断已有文件</text>
+
+  <!-- Mode 3: 单线程(续传) -->
+  <rect class="box" x="222" y="202" width="220" height="48"/>
+  <text class="box-label" x="234" y="222">单线程 - 未知大小</text>
+  <text class="box-detail" x="234" y="240">重试从当前位置继续</text>
+
+  <!-- Degradation arrow: 多线程 → 单线程(截断) -->
+  <path class="arrow-degrade" d="M 442,82 Q 500,110 442,126"/>
+  <text class="degrade-label" x="520" y="106">运行时降级</text>
+  <text class="degrade-label" x="520" y="120">服务器中途返回 200</text>
+</svg>

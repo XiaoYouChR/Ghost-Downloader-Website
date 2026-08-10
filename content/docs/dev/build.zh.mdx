@@ -1,0 +1,57 @@
+---
+title: 构建与发布
+description: 本地构建和 CI 发布流程。
+---
+
+## 本地构建
+
+### 桌面端
+
+```bash
+uv sync
+uv run scripts/deploy.py
+```
+
+产物在 `dist/` 下。Windows/Linux 是 `Ghost-Downloader-3.dist/` 目录，macOS 是 `.app` 包。
+
+<Callout type="info">
+本地构建只产出可运行程序。安装器、DMG、deb、AppImage 由 CI 打包。
+</Callout>
+
+### 浏览器扩展
+
+```bash
+cd browser_extension/app
+npm install
+npm run build
+```
+
+产物在 `dist/`。
+
+<Callout type="warn">
+改了桌面端和扩展之间的消息格式后，两边要一起构建和测试。
+</Callout>
+
+### 构建失败排查
+
+| 问题 | 解决 |
+|------|------|
+| 编译后启动报 ModuleNotFoundError | `scripts/deploy.py` 里的 `EXTRA_INCLUDE_MODULES` 加上缺失的模块 |
+| FeaturePack 没出现在产物里 | 确认 pack 目录下有 `manifest.toml` |
+
+---
+
+## CI 发布
+
+`.github/workflows/build.yml`，手动触发。
+
+选择 `build_target`（windows / macos / linux / android / all）和是否 `create_release`。
+
+| 平台 | 产物 |
+|------|------|
+| Windows | `.exe` 安装器 + `.zip` 便携版（x64 + arm64） |
+| macOS | `.dmg`（arm64 + x64） |
+| Linux | `.deb` + `.AppImage` + `.tar.xz`（x64 + arm64） |
+| Android | `.apk`（arm64，不含 BT/eD2k） |
+
+翻译同步：`crowdin.yml`（桌面端）和 `crowdin-browser.yml`（扩展），手动触发 push/pull。

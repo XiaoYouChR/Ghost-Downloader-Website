@@ -1,0 +1,10 @@
+{
+  "title": "参考",
+  "icon": "BookOpen",
+  "pages": [
+    "settings",
+    "configuration",
+    "site-notes",
+    "errors"
+  ]
+}

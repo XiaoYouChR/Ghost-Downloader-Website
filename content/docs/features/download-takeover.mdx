@@ -1,0 +1,52 @@
+---
+title: Taking Over Browser Downloads
+description: How the browser extension intercepts downloads, what draft mode does, and the behavioral difference between cancel and remove in the extension.
+---
+
+## How Takeover Happens
+
+After installing the browser extension and completing pairing, the extension takes over HTTP/HTTPS downloads in the browser by default. When the browser is about to start a download, the extension intercepts it, cancels the browser's native download, and sends the download information (URL, filename, headers) to the desktop app through the Desktop Bridge.
+
+The "Take over" toggle in the extension popup controls whether takeover is enabled. When turned off, all downloads are handled natively by the browser.
+
+### Downloads That Will Not Be Taken Over
+
+The following will not trigger takeover:
+
+- Downloads using non-HTTP/HTTPS protocols (e.g., `blob:`, `data:`, `ftp:`)
+- Downloads whose file extension matches the "Skip extensions" list in extension settings
+- Downloads whose referrer domain matches the "Skip domains" list in extension settings
+- Downloads whose file size is below the "Minimum Intercept Size" setting (0 means intercept all)
+- Downloads with unknown file size when "Intercept when size unknown" is turned off
+- Downloads triggered while holding the bypass shortcut key (default: Alt)
+
+## Draft Mode
+
+The desktop app's "Settings -> Browser Extension -> Enter draft mode when intercepting downloads" controls whether taken-over downloads start immediately or enter a Task Draft first.
+
+**With draft mode on**, every taken-over download opens the "Add Task" dialog, where you can change the download path, filename, and Subworker count before confirming. Clicking "Download Later" queues the task without starting it immediately.
+
+**With draft mode off**, taken-over downloads start immediately with default settings, without showing a dialog.
+
+Draft mode defaults to off.
+
+## Removing Tasks from the Extension
+
+The task list in the extension popup offers two deletion operations that behave differently on the desktop side:
+
+| Operation in extension | Button in extension | Behavior on desktop |
+|---|---|---|
+| Cancel | `x` button on the task card | **Removes the task and deletes downloaded files** |
+| Remove from List | Right-click menu -> "Remove from List" | **Removes from task list but keeps downloaded files** |
+
+These two operations correspond to `cancel` (`shouldDeleteFiles=True`) and `remove` (`shouldDeleteFiles=False`) on the desktop side, respectively.
+
+Note: clicking `x` to cancel a completed task in the extension will also delete the downloaded file. If you only want to clear a completed task from the list without deleting the file, use "Remove from List" in the right-click menu.
+
+## Behavior When the Desktop App Is Not Running
+
+If the extension has takeover enabled but the desktop app is not running, takeover still takes effect — the browser's native download is cancelled, and the download request enters the extension-side Task Queue. The extension will attempt to launch the desktop app via the `ghostdownloader://` protocol (requires "Settings -> Browser Extension -> Allow browser extension to wake the desktop client" to be enabled on the desktop side). Once the desktop app starts and reconnects, download requests in the Task Queue are sent automatically.
+
+If the desktop app ultimately does not start, these download requests remain in the extension's Task Queue until the connection is restored or the extension is uninstalled. The browser's native download has already been cancelled and will not resume automatically.
+
+For how the extension discovers downloadable media resources on a page, see [Sniffing Page Media](./media-sniffing).

@@ -1,0 +1,9 @@
+{
+  "title": "上手",
+  "icon": "Rocket",
+  "pages": [
+    "install",
+    "browser-extension",
+    "first-download"
+  ]
+}

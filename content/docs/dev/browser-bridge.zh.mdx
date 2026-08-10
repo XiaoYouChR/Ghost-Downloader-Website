@@ -1,0 +1,94 @@
+---
+title: 浏览器桥接
+description: 从扩展到桌面端的完整通信管道。
+---
+
+扩展通过 WebSocket 连接桌面端，所有交互走 JSON 消息。
+
+源码：桌面端 `app/services/browser_service.py`，扩展 `browser_extension/app/src/`。
+
+![浏览器扩展到桌面端的通信管道](/images/docs/browser-bridge.svg)
+
+视频下载按钮走完整管道（MSE 探针 → 归属引擎 → 站点策略 → 资源缓存 → 桌面端）。下载接管和外部扩展跳过页面媒体识别，直接从 Background 进入。
+
+## 从点击到下载
+
+### 点击视频上的下载按钮
+
+这是最复杂的入口。扩展需要解决一个核心问题：页面上可能有多个视频（信息流、短视频），它们共享网络请求，且现代播放器用 blob: URL 隐藏真实媒体地址。扩展必须弄清楚"用户点的是哪个视频，它的真实下载地址是什么"。
+
+三层管道运行在三个不同的执行上下文中：
+
+<Steps>
+<Step>
+
+### MSE 探针（MAIN world）
+
+一段注入到页面 JS 上下文的脚本，拦截媒体相关 API：`createObjectURL`、`addSourceBuffer`、`appendBuffer`、`fetch`、`XMLHttpRequest`。
+
+MSE 播放器（YouTube、抖音、Instagram 等）通过 `MediaSource` API 分段喂数据给 `<video>`。探针记录每次 `appendBuffer` 调用，建立"哪个 `<video>` 消费了哪些网络请求"的关联证据，通过 `postMessage` 发送到 ISOLATED world。
+
+必须在 MAIN world 运行，ISOLATED world 的 content script 无法访问页面的 `MediaSource` 实例。
+
+</Step>
+<Step>
+
+### 归属引擎（ISOLATED world）
+
+为每个 `<video>` 元素维护一个会话，跟踪该元素关联的所有 URL。URL 归属分两级：
+
+- **临时归属**：根据 URL 中的视频 ID、时间顺序、或"页面上只有一个视频"等启发式推断
+- **锁定归属**：MSE 探针证实了某个会话的 `SourceBuffer` 消费了某个 URL 的数据，不可撤销
+
+信息流场景（抖音、Instagram Reels）中，浏览器会预取下一个视频的数据。预取的 URL 最初被临时归属到当前视频的会话。当下一个视频的 `<video>` 元素出现并完成 MSE 绑定时，归属引擎回收这些 URL 并锁定到正确的会话。
+
+用户点击下载按钮时，归属引擎生成当前会话的只读快照，交给站点策略。
+
+</Step>
+<Step>
+
+### 站点策略（ISOLATED world）
+
+按域名分发到对应的策略函数。每个策略接收会话快照（只读），返回一个 Selection：
+
+| 站点 | 策略 | 原因 |
+|------|------|------|
+| YouTube | 把页面 URL 交给桌面端 yt-dlp | YouTube 的加密签名 URL 无法被扩展直接重新下载 |
+| 抖音 | 按 URL 路径标记区分视频轨/音频轨/完整文件，按 `modal_id` 跨会话查找预取的 URL | 预取的 URL 可能还归属在上一个视频的会话中 |
+| X (Twitter) | 只选 HLS 主播放列表，按海报的 media ID 过滤相邻推文 | 变体播放列表是单轨的（只有画面或只有声音） |
+| Instagram | 解码 URL 中 base64 编码的 `efg` 参数，提取轨道角色和码率；抓取页面 `<script>` 标签中的 CDN 链接 | 自适应播放器只请求当前画质，`<script>` 中有更高码率的版本 |
+| 通用 | 优先级：流地址 → 完整文件 → 分轨合并 | 兜底，覆盖未知站点 |
+
+</Step>
+<Step>
+
+### 发送到桌面端
+
+Selection 从 content script 发到 background（Service Worker）。background 用 URL 查资源缓存，补充请求头、文件大小、Range 支持等元数据。
+
+缓存未命中时等待 1500ms，webRequest 监听器可能还没记录到这个 URL 的响应。仍然没有就生成一个零元数据的资源，桌面端自己做 Range 探测。
+
+合并下载（视频+音频分轨）时并行查两个资源。最终通过 WebSocket 发送到桌面端，进入[架构总览](./overview)中描述的 解析 → 草稿/直接 → 入队 → 调度 流程。
+
+</Step>
+</Steps>
+
+### 下载接管
+
+用户在浏览器中点击普通下载链接（如 `.zip` 文件），扩展拦截浏览器默认下载行为。
+
+| | Chrome | Firefox |
+|---|--------|---------|
+| 触发事件 | `onDeterminingFilename` | `onCreated` |
+| 文件名 | 有 | 无 |
+| 处理方式 | 阻止默认下载 | 清除下载记录 |
+
+拦截前检查：接管开关 → URL 协议（仅 http/https）→ 域名过滤 → 扩展名过滤 → 最小大小过滤。
+
+通过过滤后取消浏览器下载，用资源缓存补充元数据，发送下载请求。按住 Ctrl 可跳过拦截。
+
+## 草稿确认
+
+视频下载按钮触发时 `draft` 由扩展自动设定；下载接管时 `draft` 取决于用户设置；手动粘贴的 URL 默认进草稿。
+
+确认窗口显示解析器返回的任务：格式选择（YouTube 的画质列表）、文件勾选（多文件任务）、下载路径。用户确认后任务正式入队。

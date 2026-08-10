@@ -1,13 +1,23 @@
 {
   "title": "Developer",
-  "description": "Contributing to Ghost Downloader",
   "icon": "Code",
   "pages": [
-    "getting-started",
+    "---Getting Started---",
+    "setup",
+    "---Architecture---",
+    "overview",
+    "task-system",
+    "download-engine",
+    "browser-bridge",
+    "---FeaturePack---",
+    "tutorial",
+    "capabilities",
+    "api-reference",
+    "built-in-packs",
+    "---Contributing---",
     "contributing",
-    "architecture",
-    "features",
-    "workflows",
-    "reference"
+    "translation",
+    "build",
+    "glossary"
   ]
 }

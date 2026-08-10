@@ -1,0 +1,30 @@
+---
+title: Error Reference
+description: All user-visible errors with causes and fixes.
+---
+
+Search for the error message you see to find the fix.
+
+## General
+
+- **"{name} not installed"** — Install the runtime in Settings.
+- **"Server returned error ({status})"** — 403: try changing TLS fingerprint. 404: link expired. 429: reduce threads.
+- **"Cannot establish FTP connection"** — Check URL format and proxy settings.
+- **"Process exited abnormally"** — Reinstall the runtime (ffmpeg/yt-dlp).
+
+## yt-dlp
+
+- **"Requires login Cookie"** — Use the extension's download button (auto-carries cookies).
+- **"YouTube captcha"** — Change IP or proxy, or wait.
+- **"Format unavailable"** — Choose a different quality.
+- **"Extraction failed"** — Update yt-dlp runtime in Settings.
+
+## BitTorrent
+
+- **"Duplicate torrent"** — Already in the list.
+- **"No files selected"** — Select at least one file.
+
+## FFmpeg
+
+- **"Merge failed"** — Source may be corrupted; try a different quality.
+- **"DRM protected"** — Cannot be downloaded; use the platform's official app.

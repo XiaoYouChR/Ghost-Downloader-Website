@@ -1,0 +1,27 @@
+---
+title: Platform Issues
+description: OS-specific problems and fixes.
+---
+
+## macOS — "App is damaged"
+
+Run the "Fix Damaged App" script included in the DMG, or:
+
+```bash
+xattr -cr /Applications/Ghost\ Downloader.app
+```
+
+## Windows — Smart App Control
+
+Smart App Control may block GD from starting. Use the portable version (.zip) instead.
+
+## Windows — Defender False Positive
+
+Add the GD install directory to Windows Security → Exclusions.
+
+## Linux — AppImage Won't Run
+
+```bash
+chmod +x Ghost-Downloader-*.AppImage
+sudo apt install libfuse2  # if needed
+```

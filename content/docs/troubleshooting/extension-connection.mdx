@@ -1,0 +1,13 @@
+---
+title: Extension Won't Connect
+description: Troubleshooting steps when the browser extension can't connect.
+---
+
+The extension auto-retries when disconnected. If it stays disconnected, check these in order:
+
+1. **Desktop app is running** — check system tray for GD icon
+2. **Port conflict** — default `14370`. Change in **Settings → Browser Extension**, match in extension settings
+3. **Token expired** — extension says unauthorized → **Settings → Browser Extension** → regenerate token → paste into extension
+4. **Firewall** — add GD to your firewall's allowlist
+5. **Browser incompatibility** — try Chrome or Edge to rule out browser issues
+6. **Re-pair** — clear token in extension settings, regenerate in desktop, pair again

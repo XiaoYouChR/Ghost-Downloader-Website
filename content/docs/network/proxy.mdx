@@ -1,0 +1,16 @@
+---
+title: Proxy
+description: Configure download proxy settings.
+---
+
+**Settings → General → Proxy Server**
+
+Formats: `http://host:port`, `socks5://host:port`, etc. Leave empty for no proxy.
+
+| Download Type | HTTP | SOCKS4 | SOCKS5 |
+|---|---|---|---|
+| HTTP/HTTPS | ✅ | ✅ | ✅ |
+| FTP | ❌ | ✅ | ✅ |
+| BitTorrent | ✅ | ✅ | ✅ |
+
+Per-domain proxy: **Settings → Identity Presets → Add**, set host pattern and proxy URL.

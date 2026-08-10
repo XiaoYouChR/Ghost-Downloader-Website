@@ -1,0 +1,24 @@
+{
+  "title": "Features",
+  "icon": "Layers",
+  "pages": [
+    "---Downloads---",
+    "files",
+    "aria2-rpc",
+    "videos",
+    "torrents",
+    "live-streams",
+    "ed2k",
+    "---Browser Extension---",
+    "media-sniffing",
+    "download-takeover",
+    "cat-catch",
+    "batch-images",
+    "media-control",
+    "---Task Management---",
+    "editing-tasks",
+    "batch-downloads",
+    "plan",
+    "categories"
+  ]
+}

@@ -1,0 +1,98 @@
+---
+title: 设置参考
+description: 不容易一眼看懂的设置项说明。
+---
+
+只收录不容易一眼看懂的设置项。
+
+所有设置保存在数据目录的 `UserConfig.json` 中，详见[配置文件位置](./configuration)。
+
+## 综合下载设置
+
+<TypeTable
+  type={{
+    "预分配线程数": {
+      type: "1 ~ 256",
+      default: "8",
+      description: "每个任务启动时的分片数。CDN 或云存储建议 8~32，超过 64 可能被反爬拦截导致文件损坏。"
+    },
+    "自动提速": {
+      type: "boolean",
+      default: "true",
+      description: "运行中检测到带宽未跑满时自动增加分片。目标服务器对并发敏感（频繁 429）时关闭。"
+    },
+    "最小再分配大小": {
+      type: "64 ~ 102400 KB",
+      default: "512",
+      description: "分片剩余工作量大于此值时才会被拆分。调大减少小文件开销，调小让负载更均匀。"
+    },
+    "验证 SSL 证书": {
+      type: "boolean",
+      default: "false",
+      description: "校验服务器证书链。默认关闭是因为校园网/企业代理常注入自签证书。修改后需重启。"
+    },
+    "保留文件修改时间": {
+      type: "boolean",
+      default: "false",
+      description: "下载完成后用服务器返回的 Last-Modified 设置文件时间。服务器不返回此 header 时无效。"
+    },
+  }}
+/>
+
+## 模拟身份
+
+<TypeTable
+  type={{
+    "客户端档案": {
+      type: "auto / chrome / edge / firefox / safari / raw",
+      default: "auto",
+      description: "下载请求使用的 TLS 指纹。auto 根据来源自动匹配。遇到 403 时切换通常能解决。raw 不模拟。"
+    },
+  }}
+/>
+
+## 浏览器扩展
+
+<TypeTable
+  type={{
+    "服务端口": {
+      type: "1024 ~ 65535",
+      default: "14370",
+      description: "扩展连接桌面端的端口。被占用时才需要改，改完在扩展设置中同步。"
+    },
+    "接管时进入草稿模式": {
+      type: "boolean",
+      default: "false",
+      description: "开启：接管的下载先弹确认窗，可改名改路径。关闭：直接用默认配置开始。"
+    },
+  }}
+/>
+
+## 应用
+
+<TypeTable
+  type={{
+    "关闭主窗口时": {
+      type: "询问 / 后台运行 / 退出",
+      default: "询问",
+      description: "后台运行 = 关窗口不停下载。不想每次被问就选一个固定行为。"
+    },
+    "剪贴板监听": {
+      type: "boolean",
+      default: "true",
+      description: "检测到剪贴板中的链接时自动弹出添加任务。频繁复制链接但不想被打断时关闭。"
+    },
+  }}
+/>
+
+## 下载分类
+
+<TypeTable
+  type={{
+    "启用下载分类": {
+      type: "boolean",
+      default: "false",
+      description: "新任务根据扩展名自动归类并分发到不同文件夹。只影响之后新建的任务。"
+    },
+  }}
+/>

@@ -1,0 +1,64 @@
+---
+title: 平台特定问题
+description: macOS、Windows、Linux 上的已知问题和修复方法。
+---
+
+<Tabs items={['macOS', 'Windows', 'Linux']} groupId="os">
+<Tab value="macOS">
+
+## "应用已损坏，无法打开"
+
+macOS Gatekeeper 会阻止未经 Apple 公证的应用。
+
+**修复方法：**
+
+1. 打开 DMG 中的"修复软件损坏"脚本并运行。
+2. 如果脚本不存在，在终端执行：
+
+```bash
+xattr -cr /Applications/Ghost\ Downloader.app
+```
+
+之后重新打开应用即可。
+
+</Tab>
+<Tab value="Windows">
+
+## Smart App Control 阻止启动
+
+Windows 11 的 Smart App Control 可能阻止 GD 启动。
+
+**解决方法：**
+
+- 使用便携版（`.zip` 解压即用）
+- 或在 **Windows 安全中心 → 应用和浏览器控制** 中关闭 Smart App Control
+
+## Defender 误报
+
+Windows Defender 偶尔将 Nuitka 编译的二进制误报为威胁。
+
+**解决方法：**
+
+在 Windows 安全中心 → 病毒和威胁防护 → 排除项 中添加 GD 安装目录。
+
+</Tab>
+<Tab value="Linux">
+
+## AppImage 无法运行
+
+下载后需要添加执行权限：
+
+```bash
+chmod +x Ghost-Downloader-*.AppImage
+```
+
+## 无法启动（缺少依赖）
+
+部分发行版需要安装 `libfuse2`（AppImage 运行时依赖）：
+
+```bash
+sudo apt install libfuse2
+```
+
+</Tab>
+</Tabs>

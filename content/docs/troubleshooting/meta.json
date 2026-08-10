@@ -1,0 +1,11 @@
+{
+  "title": "Troubleshooting",
+  "icon": "LifeBuoy",
+  "pages": [
+    "extension-connection",
+    "update-failed",
+    "corrupted-downloads",
+    "platform-issues",
+    "faq"
+  ]
+}

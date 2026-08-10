@@ -1,0 +1,118 @@
+---
+title: 错误信息参考
+description: 所有用户可见错误的原因和修复方法。
+---
+
+搜索你看到的错误信息，找到对应的修复方案。
+
+## 通用错误
+
+<Accordions>
+<Accordion title="{name} 未安装，请在设置中安装">
+原因： 当前任务依赖的外部运行时（ffmpeg、yt-dlp 等）未安装。
+
+修复： 设置 → 对应功能的设置页 → 点击安装按钮。安装本身也是一个下载任务。
+</Accordion>
+
+<Accordion title="服务器返回了错误（{status}）">
+原因： HTTP 响应状态码非 2xx。
+
+常见状态码：
+| 状态码 | 含义 | 建议 |
+|--------|------|------|
+| 403 | 访问被拒 | 换 TLS 指纹（编辑任务 → 客户端配置文件），或使用代理 |
+| 404 | 资源已删除 | 确认链接是否过期 |
+| 429 | 请求过于频繁 | 降低线程数，稍后重试 |
+| 503 | 服务过载 | 稍后重试 |
+</Accordion>
+
+<Accordion title="无法建立 FTP 连接">
+原因： FTP 服务器不可达或认证失败。
+
+修复： 检查 URL 格式（`ftp://user:pass@host:port/path`）、防火墙是否放行、代理设置是否正确（FTP 仅支持 SOCKS4/5）。
+</Accordion>
+
+<Accordion title="进程异常退出（{code}）：{detail}">
+原因： 外部进程（ffmpeg、yt-dlp、N_m3u8DL-RE）崩溃。
+
+修复： 在设置中重新安装对应运行时。如果反复出现，附带日志提交 issue。
+</Accordion>
+
+<Accordion title="发生了意外错误：{detail}">
+原因： 未预期的异常，通常是 bug。
+
+修复： 附带日志文件提交 [GitHub Issue](https://github.com/XiaoYouChR/Ghost-Downloader-3/issues)。
+</Accordion>
+</Accordions>
+
+## yt-dlp 错误
+
+<Accordions>
+<Accordion title="需要登录 Cookie / 该视频为会员专享 / 该视频需要年龄验证">
+原因： 视频需要登录状态才能访问。
+
+修复： 使用浏览器扩展的「下载此媒体」按钮——扩展会自动携带浏览器的 Cookie。如果手动添加链接，在编辑任务中添加 Cookie header。
+</Accordion>
+
+<Accordion title="YouTube 要求验证码">
+原因： 当前 IP 被 YouTube 限流（通常是短时间大量请求导致）。
+
+修复： 换 IP 或使用代理；或等待几小时后重试。
+</Accordion>
+
+<Accordion title="HTTP 403 Forbidden（yt-dlp）">
+原因： 视频平台拒绝了请求，通常是 TLS 指纹被识别。
+
+修复： 编辑任务 → 客户端配置文件 → 换一个浏览器指纹。
+</Accordion>
+
+<Accordion title="格式不可用">
+原因： 请求的画质或格式在该视频上不存在。
+
+修复： 重新选择画质，或不指定格式让 yt-dlp 自动选择最佳。
+</Accordion>
+
+<Accordion title="提取失败">
+原因： yt-dlp 无法解析页面结构，通常是平台更新了前端。
+
+修复： 设置中更新 yt-dlp 运行时到最新版本。
+</Accordion>
+</Accordions>
+
+## BitTorrent 错误
+
+<Accordions>
+<Accordion title="重复的种子">
+原因： 同一种子已在下载列表中（info hash 相同）。
+
+修复： 在任务列表中找到已有的同名任务。如需重新下载，先删除再重新添加。
+</Accordion>
+
+<Accordion title="未选择任何文件">
+原因： 取消了种子内所有文件的勾选。
+
+修复： 编辑任务 → 文件选择 → 至少勾选一个文件。
+</Accordion>
+
+<Accordion title="BT 会话启动失败">
+原因： libtorrent 无法初始化，通常是监听端口被占用。
+
+修复： 检查是否有其他 BT 客户端在运行，或在设置中更换 BT 监听端口范围。
+</Accordion>
+</Accordions>
+
+## FFmpeg 错误
+
+<Accordions>
+<Accordion title="合并失败">
+原因： ffmpeg 在混流（视频+音频合并）时出错。通常是源文件损坏或格式不兼容。
+
+修复： 尝试重新下载源文件。如果是视频站点的流，尝试选择不同的画质/编码格式。
+</Accordion>
+
+<Accordion title="无效或受 DRM 保护的媒体">
+原因： 媒体内容使用了 DRM 加密保护。
+
+修复： Ghost Downloader 无法处理 DRM 内容。使用平台官方客户端的离线下载功能。
+</Accordion>
+</Accordions>

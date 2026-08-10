@@ -1,0 +1,47 @@
+---
+title: 第一次下载
+description: 安装并配对扩展后，用 Ghost Downloader 完成第一个下载。
+---
+
+<Steps>
+<Step>
+### 在浏览器中找到下载链接
+
+打开任意包含文件下载的页面，比如 GitHub Releases、网盘分享页、或软件官网。
+</Step>
+<Step>
+### 点击下载链接
+
+浏览器扩展会自动拦截下载请求，Ghost Downloader 弹出任务确认对话框（Draft）。
+
+如果是视频页面，你也可以悬停视频后点击浮现的下载按钮。
+</Step>
+<Step>
+### 确认下载
+
+对话框中显示文件名、大小和下载目录。确认无误后点击 **下载** 按钮。
+
+点击文件名可以重命名；点击右侧编辑按钮可以修改 URL、headers、代理等高级选项。
+</Step>
+<Step>
+### 观察进度
+
+主窗口的任务卡片实时显示速度和进度。HTTP 下载的进度条按分片着色，每段对应一个下载线程。
+</Step>
+<Step>
+### 完成
+
+双击任务卡片打开文件，或 **右键 → 打开文件夹**。
+</Step>
+</Steps>
+
+<Callout type="info" title="没有弹出确认对话框？">
+检查扩展是否已连接——扩展图标应显示已连接状态。如果未连接，参考[扩展连不上](../../troubleshooting/extension-connection)。
+</Callout>
+
+<Callout type="idea" title="其他添加任务的方式">
+- 在 GD 主窗口直接粘贴 URL（支持多行）
+- 拖拽文件（.torrent / .m3u8）或链接到窗口
+- 开启剪贴板监听：复制 URL 后自动弹出确认
+- 关闭「拦截时使用 Draft 模式」可跳过确认直接开始下载
+</Callout>

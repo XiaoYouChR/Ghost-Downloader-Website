@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" font-family="system-ui, -apple-system, 'Noto Sans SC', sans-serif">
+  <style>
+    .lane-bg { fill: #f4f5f3; stroke: #dfe2e0; stroke-width: 1 }
+    .lane-head { fill: #111315; font-size: 13px; font-weight: 600 }
+    .lane-sub { fill: #888e95; font-size: 11px }
+    .box { fill: #fff; stroke: #cfd4d3; stroke-width: 1; rx: 6 }
+    .box-label { fill: #111315; font-size: 12px; font-weight: 500 }
+    .box-detail { fill: #5b6167; font-size: 11px }
+    .arrow { stroke: #5b6167; stroke-width: 1.5; fill: none; marker-end: url(#ah) }
+    .arrow-back { stroke: #1d4ed8; stroke-width: 1.5; fill: none; stroke-dasharray: 6 3; marker-end: url(#ah-blue) }
+    .arrow-label { font-size: 10px; fill: #888e95 }
+    .arrow-label-blue { font-size: 10px; fill: #1d4ed8 }
+    .service { fill: #888e95; font-size: 10px; font-style: italic }
+    .divider { stroke: #e8ebe9; stroke-width: 1; stroke-dasharray: 4 4 }
+    .fork-line { stroke: #5b6167; stroke-width: 1.2; fill: none }
+    .fork-label { font-size: 10px; fill: #5b6167 }
+
+    @media (prefers-color-scheme: dark) {
+      .lane-bg { fill: #1c1c1e; stroke: #2c2c2e }
+      .lane-head { fill: #e5e5e7 }
+      .lane-sub { fill: #8e8e93 }
+      .box { fill: #2c2c2e; stroke: #3a3a3c }
+      .box-label { fill: #e5e5e7 }
+      .box-detail { fill: #8e8e93 }
+      .arrow { stroke: #8e8e93 }
+      .arrow-back { stroke: #5a9cf6 }
+      .arrow-label { fill: #8e8e93 }
+      .arrow-label-blue { fill: #5a9cf6 }
+      .service { fill: #8e8e93 }
+      .divider { stroke: #3a3a3c }
+      .fork-line { stroke: #8e8e93 }
+      .fork-label { fill: #8e8e93 }
+    }
+  </style>
+
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#5b6167" stroke-width="1.2"/>
+    </marker>
+    <marker id="ah-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#1d4ed8" stroke-width="1.2"/>
+    </marker>
+    <marker id="ah-fork" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+      <path d="M0,0 L6,2.5 L0,5" fill="none" stroke="#5b6167" stroke-width="1"/>
+    </marker>
+  </defs>
+
+  <!-- Swim lanes -->
+  <rect class="lane-bg" x="16" y="16" width="330" height="688" rx="10"/>
+  <rect class="lane-bg" x="374" y="16" width="330" height="688" rx="10"/>
+
+  <text class="lane-head" x="181" y="42" text-anchor="middle">主线程</text>
+  <text class="lane-sub" x="181" y="56" text-anchor="middle">UI + Services</text>
+
+  <text class="lane-head" x="539" y="42" text-anchor="middle">异步线程</text>
+  <text class="lane-sub" x="539" y="56" text-anchor="middle">CoroutineRunner</text>
+
+  <!-- 1. Receive URL -->
+  <rect class="box" x="40" y="76" width="282" height="52"/>
+  <text class="service" x="52" y="92">BrowserService</text>
+  <text class="box-label" x="52" y="114">收到 URL（WebSocket / 粘贴 / URI scheme）</text>
+
+  <!-- Arrow: submit parse -->
+  <line class="arrow" x1="322" y1="102" x2="396" y2="102"/>
+  <text class="arrow-label" x="359" y="96" text-anchor="middle">提交</text>
+
+  <!-- 2. Parse -->
+  <rect class="box" x="398" y="76" width="282" height="96"/>
+  <text class="service" x="410" y="92">FeatureService</text>
+  <text class="box-label" x="410" y="114">解析 URL</text>
+  <text class="box-detail" x="410" y="132">- 身份预设注入</text>
+  <text class="box-detail" x="410" y="148">- 解析器链匹配</text>
+  <text class="box-detail" x="410" y="164">- 创建任务和步骤</text>
+
+  <!-- Arrow: callback -->
+  <line class="arrow-back" x1="398" y1="192" x2="322" y2="192"/>
+  <text class="arrow-label-blue" x="359" y="186" text-anchor="middle">回调</text>
+
+  <!-- 3. Draft decision -->
+  <rect class="box" x="40" y="206" width="282" height="44"/>
+  <text class="service" x="52" y="222">BrowserService</text>
+  <text class="box-label" x="52" y="240">草稿决策</text>
+
+  <!-- Fork: two paths from draft decision -->
+  <!-- Fork point -->
+  <line class="fork-line" x1="181" y1="250" x2="181" y2="268"/>
+  <line class="fork-line" x1="181" y1="268" x2="100" y2="268"/>
+  <line class="fork-line" x1="181" y1="268" x2="260" y2="268"/>
+
+  <!-- Left path: direct -->
+  <line class="fork-line" x1="100" y1="268" x2="100" y2="378" marker-end="url(#ah-fork)"/>
+  <text class="fork-label" x="88" y="284">直接</text>
+
+  <!-- Right path: draft → confirmation window -->
+  <line class="fork-line" x1="260" y1="268" x2="260" y2="290"/>
+
+  <rect class="box" x="150" y="290" width="172" height="62"/>
+  <text class="service" x="162" y="306">DraftTaskDialog</text>
+  <text class="box-label" x="162" y="324">确认窗口</text>
+  <text class="box-detail" x="162" y="342">格式、文件勾选、路径</text>
+
+  <line class="fork-line" x1="236" y1="352" x2="236" y2="378" marker-end="url(#ah-fork)"/>
+  <text class="fork-label" x="264" y="284">草稿</text>
+
+  <!-- 4. Add + Schedule -->
+  <rect class="box" x="40" y="380" width="282" height="56"/>
+  <text class="service" x="52" y="396">TaskService</text>
+  <text class="box-label" x="52" y="418">入队：文件名去重 → 分类 → 等待队列 → 调度</text>
+
+  <!-- Arrow: submit run -->
+  <line class="arrow" x1="322" y1="408" x2="396" y2="408"/>
+  <text class="arrow-label" x="359" y="402" text-anchor="middle">提交</text>
+
+  <!-- 5. Execute -->
+  <rect class="box" x="398" y="368" width="282" height="96"/>
+  <text class="service" x="410" y="384">Task</text>
+  <text class="box-label" x="410" y="406">执行</text>
+  <text class="box-detail" x="410" y="424">- 按步骤顺序迭代</text>
+  <text class="box-detail" x="410" y="440">- 每步独立管理网络 I/O</text>
+  <text class="box-detail" x="410" y="456">- 分片并行 / 加速 / 续传</text>
+
+  <!-- Arrow: callback -->
+  <line class="arrow-back" x1="398" y1="484" x2="322" y2="484"/>
+  <text class="arrow-label-blue" x="359" y="478" text-anchor="middle">回调</text>
+
+  <!-- 6. Complete / Fail -->
+  <rect class="box" x="40" y="498" width="282" height="52"/>
+  <text class="service" x="52" y="514">TaskService</text>
+  <text class="box-label" x="52" y="536">完成 / 失败 → 信号通知 UI 和扩展</text>
+
+  <!-- Separator -->
+  <line class="divider" x1="36" y1="574" x2="684" y2="574"/>
+
+  <!-- 7. Mutation pattern -->
+  <rect class="box" x="40" y="590" width="282" height="52"/>
+  <text class="box-label" x="52" y="612">变更操作（暂停 / 编辑 / 重下 / 删除）</text>
+  <text class="box-detail" x="52" y="628">取消运行 → 等回调 → 执行后续动作</text>
+
+  <rect class="box" x="398" y="590" width="282" height="52"/>
+  <text class="box-label" x="410" y="612">取消当前任务</text>
+  <text class="box-detail" x="410" y="628">取消信号传播 → 步骤标记已暂停</text>
+
+  <line class="arrow" x1="322" y1="606" x2="396" y2="606"/>
+  <text class="arrow-label" x="359" y="600" text-anchor="middle">取消</text>
+
+  <line class="arrow-back" x1="398" y1="628" x2="322" y2="628"/>
+  <text class="arrow-label-blue" x="359" y="650" text-anchor="middle">回调</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="684" x2="70" y2="684" stroke="#5b6167" stroke-width="1.5" fill="none" marker-end="url(#ah)"/>
+  <text class="arrow-label" x="76" y="688">同步提交</text>
+
+  <line x1="160" y1="684" x2="190" y2="684" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="6 3" fill="none" marker-end="url(#ah-blue)"/>
+  <text class="arrow-label-blue" x="196" y="688">异步回调（下一个事件循环轮次）</text>
+</svg>

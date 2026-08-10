@@ -1,0 +1,41 @@
+---
+title: 贡献入口
+description: Issue、PR 和翻译的起点。
+---
+
+<Cards>
+  <Card title="GitHub 仓库" href="https://github.com/XiaoYouChR/Ghost-Downloader-3" external description="源码、Release、Issue 和 PR。" />
+  <Card title="报告 Bug" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=bug_report.yml" external description="复现步骤、环境、日志越完整越好。" />
+  <Card title="功能需求" href="https://github.com/XiaoYouChR/Ghost-Downloader-3/issues/new?template=feature_request.yml" external description="说明使用场景，不只是描述按钮。" />
+  <Card title="贡献翻译" href="./translation" description="Crowdin 翻译，不需要写代码。" />
+</Cards>
+
+## PR 前检查
+
+| 改动类型 | 必须说明 |
+|---|---|
+| 下载逻辑 | 影响哪些协议，是否影响暂停/续传/限速 |
+| 任务模型 | 是否影响历史任务恢复和浏览器任务快照 |
+| FeaturePack | 依赖、输入类型、失败提示、设置项 |
+| 浏览器扩展 | 是否需要同步修改桌面端 BrowserService 协议 |
+| 构建 | 是否需要跑 `python deploy.py` 或触发 GitHub Actions |
+
+<Callout type="info">
+影响下载行为的 PR，描述里写明测试过的链接类型、平台和是否涉及扩展。
+</Callout>
+
+## Issue 信息清单
+
+| 信息 | 示例 |
+|---|---|
+| 系统与架构 | Windows x64、macOS arm64、Ubuntu x86_64 |
+| 软件版本 | GD 版本 + 扩展版本 |
+| 链接类型 | HTTP、BT、FTP、M3U8、Bilibili、GitHub |
+| 复现步骤 | 从打开软件到出现问题的最短路径 |
+| 日志或截图 | `GhostDownloader.log`、扩展 background 报错 |
+
+## 构建验证
+
+<Cards>
+  <Card title="构建与发布" href="./build" description="本地构建和 GitHub Actions CI。" />
+</Cards>

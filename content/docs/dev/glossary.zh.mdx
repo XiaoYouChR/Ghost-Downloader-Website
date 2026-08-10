@@ -1,0 +1,50 @@
+---
+title: 术语表
+description: 代码和文档中的核心概念，与 CONTEXT.md 对齐。
+---
+
+权威定义见仓库根目录 `CONTEXT.md`。以下是速查。
+
+## 任务
+
+| 术语 | 含义 | 避免使用 |
+|------|------|---------|
+| Task | 用户可见的下载项，五个状态：WAITING / RUNNING / PAUSED / COMPLETED / FAILED | download、job |
+| Task Step | Task 内的一个可执行步骤，一个 Task 可有多个 Step | stage、phase、action |
+| Task Run | Task 在下载循环中的当前执行，同时只有零或一个 | execution、session |
+| Subworker | HTTP/FTP Step 内的分片传输单元，负责一个 byte-range 区间 | worker、thread、chunk |
+| Task Error | 已知失败（服务器错误、磁盘不足等），携带用户可见消息 | — |
+| Pausable | 取决于当前 Step 是否支持断点恢复 | — |
+
+## 任务创建
+
+| 术语 | 含义 | 避免使用 |
+|------|------|---------|
+| Task Options | 解析/创建/编辑 Task 的应用层选项 | payload（仅在传输 seam 使用） |
+| Task Parser | FeaturePack 提供的能力，将 Task Options 转为 Task。声明优先级和匹配规则 | — |
+| Task Draft | 用户确认前的未确认任务状态。包含 Draft Item（Parsing / Resolved / Failed） | pending task |
+| Resource | 浏览器扩展捕获的可下载物，转换为 Task Options 进入创建流程 | — |
+| Selectable File | 多文件 Task 内的可勾选下载单元 | — |
+| Revive | COMPLETED Task 因新勾选文件而回到下载状态 | — |
+
+## 服务
+
+| 术语 | 含义 | 避免使用 |
+|------|------|---------|
+| Task Service | 任务工作流的唯一公共入口：add / start / pause / delete / redownload / edit | 直接操作 Task 状态 |
+| Feature Service | FeaturePack 发现、Parser 路由和 Pack 生命周期管理 | — |
+| FeaturePack | 插件包，可提供 Parser / Card / BinaryRuntime / PackPage / PackConfig | module、extension |
+| Browser Service | 浏览器扩展的协议适配器，翻译扩展消息为 Task Service 动词 | — |
+| Signal Bus | 进程级事件总线，仅承载跨模块应用事件（activationRequested / openUriRequested / exceptionCaught） | — |
+
+## 其他
+
+| 术语 | 含义 |
+|------|------|
+| Binary Runtime | FeaturePack 可探测或安装的外部可执行文件（ffmpeg、yt-dlp、N_m3u8DL-RE） |
+| Category | 下载分类，按扩展名匹配到目标目录 |
+| Client | 带 TLS 指纹模拟的 HTTP 客户端（wreq） |
+| Plan | 所有任务完成后执行的动作（关机/重启/休眠/打开文件） |
+| Speed Meter | 全局速度监视和限速门控 |
+| `.ghd` | HTTP/FTP 任务的分片进度文件，二进制格式 |
+| Crowdin | 翻译协作平台，[项目入口](https://crowdin.com/project/ghost-downloader) |

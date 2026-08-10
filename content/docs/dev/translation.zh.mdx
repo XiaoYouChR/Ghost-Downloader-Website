@@ -1,0 +1,47 @@
+---
+title: 贡献翻译
+description: 通过 Crowdin 为 Ghost Downloader 贡献翻译。
+---
+
+<Cards>
+  <Card title="打开 Crowdin 项目" href="https://crowdin.com/project/ghost-downloader" external description="Ghost Downloader 翻译入口。" />
+</Cards>
+
+## 步骤
+
+<Steps>
+<Step>
+打开 [Crowdin 项目](https://crowdin.com/project/ghost-downloader) 并登录。
+</Step>
+<Step>
+选择目标语言（English、Japanese、Russian、繁体中文、香港繁体）。
+</Step>
+<Step>
+翻译未完成的条目，或改进已有翻译。
+</Step>
+<Step>
+等待维护者通过 Sync Crowdin 工作流拉取。翻译会自动生成 PR 合入仓库。
+</Step>
+</Steps>
+
+<Callout type="info">
+翻译在 Crowdin 完成，不需要 fork 仓库或修改 `.ts`/`.qm` 文件。
+</Callout>
+
+## 仓库中的翻译文件
+
+| 文件 | 作用 |
+|---|---|
+| `crowdin.yml` | Crowdin 同步配置 |
+| `app/assets/i18n/gd3.zh_CN.ts` | 简体中文源文案 |
+| `app/assets/i18n/gd3.*.ts` | 各目标语言 Qt 翻译源文件 |
+| `app/assets/i18n/gd3.*.qm` | Qt 编译后的翻译资源 |
+| `sync_i18n_res.py` | 刷新 Qt 翻译资源 |
+
+## 本地刷新翻译
+
+维护翻译相关 PR 时在仓库根目录运行：
+
+```bash
+python sync_i18n_res.py
+```

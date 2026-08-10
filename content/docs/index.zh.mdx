@@ -4,25 +4,21 @@ description: Ghost Downloader 用户指南与开发者文档。
 ---
 
 <Callout type="info" title="支持项目">
-Ghost Downloader 免费开源，你的[捐赠](./donate)会直接用于开发、测试和维护。
+Ghost Downloader 免费开源。[赞助](./donate)直接用于开发维护，[贡献翻译](./dev/contributing/translation)不需要写代码。
 </Callout>
 
 <Cards>
-  <Card title="用户文档" href="./user" description="安装、浏览器扩展、下载功能与故障排查。" />
-  <Card title="开发者文档" href="./dev" description="环境搭建、架构总览与贡献指南。" />
-  <Card title="实测记录" href="./benchmark" description="下载速度、浏览器接管与媒体嗅探对比（2026-07-30）。" />
-  <Card title="贡献翻译" href="./dev/contributing/translation" description="前往 Crowdin 帮助翻译 Ghost Downloader。" />
-</Cards>
-
-## 出了问题？
-
-<Cards>
-  <Card title="常见问题" href="./user/faq" description="扩展连不上、下载失败或损坏、装不上或打不开，以及其他常见问题。" />
+  <Card title="开始使用" href="./getting-started/install" description="安装、配对扩展、第一次下载。" />
+  <Card title="下载内容" href="./downloads/files" description="文件、视频、种子、直播、eD2k。" />
+  <Card title="浏览器扩展" href="./browser-extension/media-sniffing" description="嗅探、拦截、猫抓、批量图片。" />
+  <Card title="进阶用法" href="./power-user/editing-tasks" description="编辑任务、批量、TLS 指纹、代理。" />
+  <Card title="疑难解答" href="./troubleshooting/faq" description="连不上、下载失败、打不开。" />
+  <Card title="开发者" href="./dev" description="搭建环境、架构、写 FeaturePack。" />
 </Cards>
 
 ## 选型速查
 
-`✅` 支持 / 核心功能 · `⚠️` 部分支持或偏弱 · `❌` 不支持
+`✅` 支持 · `⚠️` 部分支持 · `❌` 不支持
 
 | | GD | IDM | NDM | Gopeed | Motrix | FDM |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -34,11 +30,9 @@ Ghost Downloader 免费开源，你的[捐赠](./donate)会直接用于开发、
 | 浏览器→桌面端深度联动 | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
 | 资源嗅探 | ✅ | ✅ | ⚠️ | ❌ | ❌ | ⚠️ |
 | HLS / m3u8 / DASH | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
-| 站点特化能力 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| 可扩展机制 | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+| 站点特化 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| 可扩展（插件） | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
 
-大多数下载器都能搞定基本下载。Ghost Downloader 的优势在于把「浏览器里发现资源 → 按协议处理 → 落到桌面」这整条链路跑通，而不只是下载本身。
-
-下载速度和媒体嗅探的实测数据见[实测记录](./benchmark)。
+实测速度和嗅探数据见[实测记录](./benchmark)。
 
 资料来源：[Ghost Downloader](https://github.com/XiaoYouChR/Ghost-Downloader-3)、[IDM](https://support.internetdownloadmanager.com/)、[NDM](https://neatdownloadmanager.com/index.php/en/)、[Gopeed](https://gopeed.com/docs)、[Motrix](https://motrix.app/features)、[FDM](https://www.freedownloadmanager.org/)。

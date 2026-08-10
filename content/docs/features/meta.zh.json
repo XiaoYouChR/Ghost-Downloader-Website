@@ -1,0 +1,24 @@
+{
+  "title": "功能",
+  "icon": "Layers",
+  "pages": [
+    "---下载---",
+    "files",
+    "aria2-rpc",
+    "videos",
+    "torrents",
+    "live-streams",
+    "ed2k",
+    "---浏览器扩展---",
+    "media-sniffing",
+    "download-takeover",
+    "cat-catch",
+    "batch-images",
+    "media-control",
+    "---任务管理---",
+    "editing-tasks",
+    "batch-downloads",
+    "plan",
+    "categories"
+  ]
+}
