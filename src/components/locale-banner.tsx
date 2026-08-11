@@ -22,7 +22,9 @@ export function LocaleBanner() {
     prefersChineseSnapshot,
     serverSnapshot,
   );
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem('locale-banner-dismissed') === '1',
+  );
 
   if (!prefersChinese || dismissed) return null;
 
@@ -40,7 +42,7 @@ export function LocaleBanner() {
       </Link>
       <button
         type="button"
-        onClick={() => setDismissed(true)}
+        onClick={() => { localStorage.setItem('locale-banner-dismissed', '1'); setDismissed(true); }}
         className="ml-1 opacity-70 transition-opacity hover:opacity-100"
         aria-label="关闭"
       >
