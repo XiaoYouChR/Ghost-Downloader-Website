@@ -1,103 +1,70 @@
 ---
-title: Install and System Requirements
-description: Minimum OS versions, architectures, package formats, and the difference between installer and portable builds.
+title: Installation
+description: Download and install Ghost Downloader.
 ---
 
 ## System Requirements
 
-| Platform | Minimum Version | Architectures |
+| Platform | Minimum Version | Architecture |
 |---|---|---|
 | Windows | 10+ | x86_64, arm64 |
 | macOS | 13.0+ | x86_64, arm64 |
 | Linux | glibc 2.35+ | x86_64, arm64 |
-| Android | 10+ | arm64-v8a |
+| Android | 10+ | arm64 |
 
-### CPUs Without AVX
+<Callout type="warn">
+Windows 7 and CPUs without AVX instruction set support (processors from before 2011) are not supported.
+</Callout>
 
-Ghost Downloader is built on Qt 6.6+, which dropped support for CPUs without the AVX instruction set. If your CPU lacks AVX (common on processors from before 2011), the app will crash immediately on launch with no useful error message.
+## Download and Install
 
-To check: on Windows, use [CPU-Z](https://www.cpuid.com/softwares/cpu-z.html) and look at the instruction set list; on Linux, run `grep avx /proc/cpuinfo` -- any output means AVX is supported.
-
-There is no workaround for machines without AVX.
-
-### Windows 7
-
-The current version does not support Windows 7. An archived release compatible with Windows 7 was published in the past -- search for tags containing `win7` on the [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) page. Archived releases are unmaintained and will not receive feature updates or security fixes.
-
-## Package Formats
+Download the installer for your platform from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest).
 
 <Tabs groupId="os" items={["Windows", "macOS", "Linux", "Android"]}>
 
 <Tab value="Windows">
 
-Each release ships two packages:
-
 | File | Description |
 |---|---|
-| `*-Setup.exe` | Inno Setup installer. Installs to Program Files, creates Start Menu and optional desktop shortcuts, and cleans up registry keys and data directories on uninstall. Runs under the current user's privileges -- no administrator required. |
-| `*.zip` | Portable package. Extract anywhere and run directly. Does not touch the registry. |
+| `*-Setup.exe` | Installer, writes to Program Files, creates shortcut |
+| `*.zip` | Portable version, extract and run, no registry changes |
 
-Separate packages are provided for x86_64 and arm64. Make sure you download the one matching your system architecture.
+Make sure to choose the version matching your system architecture (x86_64 or arm64).
 
-### Installer vs. Portable
-
-The installer stores data (task records, settings, logs) in the system's per-user data directory (`%LocalAppData%\GhostDownloader`).
-
-The portable build's data storage depends on whether a `GhostDownloader` directory exists next to the executable: if it does, data is written there (Portable Mode); if it does not, behavior is the same as the installer -- data goes to the system per-user data directory. To activate Portable Mode on a fresh portable build, create an empty `GhostDownloader` folder alongside the `.exe`.
-
-You can switch between modes at runtime: Settings → Data Storage Mode, then click "Switch to Portable Mode" or "Switch to User Mode". Data is copied to the new location and the app exits -- reopen it manually.
-
-When to use portable:
-
-- Carrying Ghost Downloader on a USB drive or external disk
-- System permissions prevent running an installer
-- Running multiple independent instances on the same machine
-- As a quick way to rule out installation-related problems when the installer build misbehaves
+For startup issues, see [Platform-Specific Issues](../../troubleshooting/platform-issues).
 
 </Tab>
 
 <Tab value="macOS">
 
-Released as `.dmg`, one each for x86_64 and arm64.
+Download the `.dmg` and drag it into Applications.
 
-Ghost Downloader is not notarized by Apple. On first launch, macOS Gatekeeper will block it with an error saying the app "is damaged and can't be opened" or is "from an unidentified developer".
-
-The DMG includes a script called "Fix Damaged App" (修复软件损坏). After dragging Ghost Downloader.app into /Applications, double-click the script and enter your login password. It runs:
-
-```bash
-sudo spctl --master-disable
-sudo xattr -rd com.apple.quarantine /Applications/Ghost\ Downloader.app
-```
-
-After that the app opens normally. You can also run these two commands manually in Terminal if you prefer.
+The first launch is blocked by Gatekeeper. Running the "Repair Damaged Software" script inside the DMG resolves it. See [Platform-Specific Issues](../../troubleshooting/platform-issues) for details.
 
 </Tab>
 
 <Tab value="Linux">
 
-Each release ships three packages, one of each for x86_64 and arm64:
-
 | Format | Description |
 |---|---|
-| `.deb` | Installs to `/opt/Ghost-Downloader-3` with a symlink at `/usr/bin/ghost-downloader` and a desktop entry. |
-| `.AppImage` | Single-file executable. Requires FUSE on the host system. If FUSE is unavailable (e.g. in containers or WSL), launch with `--appimage-extract-and-run`. |
-| `.tar.xz` | Raw build output. Extract and run `Ghost-Downloader-3.bin` directly. For users who manage their own install locations. |
+| `.deb` | Installs to `/opt`, registers desktop entry |
+| `.AppImage` | Single file, run directly after `chmod +x` |
+| `.tar.xz` | Extract and run `Ghost-Downloader-3.bin` |
 
-### Arch Linux (AUR)
-
-Community-maintained AUR packages:
-
-- [`ghost-downloader-bin`](https://aur.archlinux.org/packages/ghost-downloader-bin) -- prebuilt binary
-- [`ghost-downloader-git`](https://aur.archlinux.org/packages/ghost-downloader-git) -- built from source
-
-Maintainer: [@zxp19821005](https://github.com/zxp19821005). These packages are community-maintained and are not official Ghost Downloader releases.
+Arch Linux users can use the AUR: [`ghost-downloader-bin`](https://aur.archlinux.org/packages/ghost-downloader-bin)
 
 </Tab>
 
 <Tab value="Android">
 
-Released as `.apk`, arm64-v8a only. x86 emulators and 32-bit devices are not supported.
+Download the `.apk` and install it. arm64 architecture only, emulators are not supported.
 
 </Tab>
 
 </Tabs>
+
+## Installed vs Portable (Windows)
+
+The installed version stores data in the system user directory. The portable version keeps data in the program folder.
+
+Create an empty `GhostDownloader` folder next to the `.exe` to activate portable mode. While running, you can switch in **Settings → App → Data Storage Mode**.

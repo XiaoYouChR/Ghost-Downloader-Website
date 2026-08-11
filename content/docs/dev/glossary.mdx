@@ -1,18 +1,50 @@
 ---
 title: Glossary
-description: Core concepts that appear repeatedly across the docs.
+description: Core concepts in code and documentation, aligned with CONTEXT.md.
 ---
 
+Authoritative definitions live in `CONTEXT.md` at the repository root. Quick reference below.
+
+## Tasks
+
+| Term | Meaning | Avoid |
+|------|------|---------|
+| Task | A user-visible download item with five states: WAITING / RUNNING / PAUSED / COMPLETED / FAILED | download, job |
+| Task Step | An executable step within a Task. A Task may have one or more Steps | stage, phase, action |
+| Task Run | The current execution of a Task in the download loop, zero or one at a time | execution, session |
+| Subworker | A chunk transfer unit within an HTTP or FTP Step, responsible for one byte-range | worker, thread, chunk |
+| Task Error | A known failure (server error, insufficient disk, etc.) carrying a user-visible message | — |
+| Pausable | Depends on whether the current Step supports byte-range resume | — |
+
+## Task Creation
+
+| Term | Meaning | Avoid |
+|------|------|---------|
+| Task Options | Application-level options for parsing, creating, or editing a Task | payload (only used at the transport seam) |
+| Task Parser | A FeaturePack capability that converts Task Options into a Task. Declares priority and matching rules | — |
+| Task Draft | An unconfirmed task state before user confirmation. Contains Draft Items (Parsing / Resolved / Failed) | pending task |
+| Resource | A downloadable item captured by the browser extension, converted into Task Options to enter the creation flow | — |
+| Selectable File | A checkable download unit within a multi-file Task | — |
+| Revive | A COMPLETED Task returns to download state because of newly selected files | — |
+
+## Services
+
+| Term | Meaning | Avoid |
+|------|------|---------|
+| Task Service | The sole public entry point for the task workflow: add / start / pause / delete / redownload / edit | directly manipulating Task state |
+| Feature Service | FeaturePack discovery, Parser routing, and Pack lifecycle management | — |
+| FeaturePack | A plugin package that can provide Parser / Card / BinaryRuntime / PackPage / PackConfig | module, extension |
+| Browser Service | Protocol adapter for the browser extension, translating extension messages into Task Service verbs | — |
+| Signal Bus | Process-level event bus carrying only cross-module application events (activationRequested / openUriRequested / exceptionCaught) | — |
+
+## Others
+
 | Term | Meaning |
-| --- | --- |
-| TaskService | The background core service responsible for the AsyncIO event loop and task scheduling. |
-| FeatureService | The service that loads Feature Packs and dispatches URLs. |
-| Feature Pack | A protocol or capability module such as HTTP, BT, or M3U8. |
-| Task | A schedulable download or processing task. |
-| TaskStep | A sub-stage inside a task, used for chunks, sub-downloads, or processing phases. |
-| Browser Bridge | The local WebSocket bridge between the browser extension and the desktop app. |
-| Range | HTTP partial-request capability, which powers smart chunking and resume support. |
-| `.ghd` | The auxiliary state file used by HTTP tasks to restore chunk progress. |
-| N_m3u8DL-RE | External runtime used for M3U8 / DASH downloading. |
-| FFmpeg | Tool used for merging, remuxing, and media processing. |
-| Crowdin | The project's translation collaboration platform at `https://crowdin.com/project/ghost-downloader`. |
+|------|------|
+| Binary Runtime | External executable that a FeaturePack can probe or install (ffmpeg, yt-dlp, N_m3u8DL-RE) |
+| Category | Download classification, matched to a target directory by extension |
+| Client | HTTP client with TLS fingerprint emulation (wreq) |
+| Plan | An action executed after all tasks complete (shutdown / restart / hibernate / open file) |
+| Speed Meter | Global speed monitoring and rate-limiting gate |
+| `.ghd` | Chunk progress file for HTTP/FTP tasks, binary format |
+| Crowdin | Translation collaboration platform, [project entry](https://crowdin.com/project/ghost-downloader) |

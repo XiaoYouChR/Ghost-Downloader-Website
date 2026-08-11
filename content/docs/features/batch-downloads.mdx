@@ -1,79 +1,56 @@
 ---
-title: Adding Many Links at Once
-description: Use template syntax to generate a large number of download links in one go, and set up automatic shutdown, sleep, or file opening after all tasks complete.
+title: Batch Download
+description: Use template syntax to generate a large number of download links at once.
 ---
 
-## Template Expansion
+Create a New Task → click the **Batch Add** button. Enter a URL with placeholders; the expanded result is previewed in real time below.
 
-If the links you need follow a pattern — sequentially numbered images, multiple formats of the same video — you can generate them with template syntax.
+## Syntax
 
-Click the "Batch Add" button in the "Add Task" dialog to open the "Batch Add" dialog. Enter a URL with placeholders in the template field; the preview area below updates in real time.
-
-## Template Syntax
-
-### Numeric Range `[start-end]`
+### Numeric Range
 
 ```
 http://example.com/img/[1-100].jpg
 ```
 
-Expands to `img/1.jpg`, `img/2.jpg`, ..., `img/100.jpg` — 100 links total.
+Expands to `img/1.jpg` through `img/100.jpg`, 100 links in total.
 
-### Zero-Padding `[001-050]`
+If the starting number has leading zeros, they are padded automatically: `[001-050]` → `001`, `002`, ..., `050`.
 
-When the starting number has leading zeros, expanded numbers are zero-padded to the same width:
-
-```
-http://example.com/img/[001-050].jpg
-```
-
-Expands to `img/001.jpg`, `img/002.jpg`, ..., `img/050.jpg`.
-
-### Step `[start-end:step]`
+### Step Size
 
 ```
 http://example.com/page/[1-10:2].html
 ```
 
-Expands to `page/1.html`, `page/3.html`, `page/5.html`, `page/7.html`, `page/9.html`.
+Expands to `1.html`, `3.html`, `5.html`, `7.html`, `9.html`.
 
-### Letter Range `[a-z]`
+### Letter Range
 
 ```
 http://example.com/part_[a-f].zip
 ```
 
-Expands to `part_a.zip` through `part_f.zip`. Uppercase letters work the same way (`[A-F]`). Mixing cases is not supported.
+Expands to `part_a.zip` through `part_f.zip`.
 
-### Enumeration `{val1,val2,val3}`
+### Enumeration
 
 ```
 http://example.com/{mp4,mkv,avi}/video
 ```
 
-Expands to three links containing `mp4`, `mkv`, and `avi` respectively.
+Expands to three links.
 
-### Combining Placeholders
+### Combination
 
-A single template can contain multiple placeholders. Ghost Downloader computes their Cartesian product:
+Multiple placeholders form a Cartesian product:
 
 ```
 http://example.com/{en,zh}/chapter_[01-03].pdf
 ```
 
-Expands to 6 links: `en/chapter_01.pdf`, `en/chapter_02.pdf`, `en/chapter_03.pdf`, `zh/chapter_01.pdf`, `zh/chapter_02.pdf`, `zh/chapter_03.pdf`.
+→ 6 links (2 languages × 3 chapters).
 
-## Plan: What to Do After All Tasks Complete
-
-If you have a batch of tasks to download and want something to happen automatically when they all finish — for example, shutting down your computer after an overnight download — use the **Plan** feature.
-
-Click the "Schedule Task" button (clock icon) in the task list toolbar to open the "Schedule Task" dialog. The dialog reads "Perform the following after all tasks are completed:" and offers these choices:
-
-- **Shutdown**
-- **Restart**
-- **Sleep**
-- **Open File** — selecting this requires specifying a file path.
-
-Once set, the "Schedule Task" button stays pressed, indicating the plan is active. Clicking the button again cancels the plan.
-
-When every task (including queued ones) has completed, Ghost Downloader executes your chosen action.
+<Callout type="idea">
+Want to auto shut down or hibernate after all tasks complete? See [Actions after Completion](./plan).
+</Callout>

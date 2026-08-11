@@ -1,30 +1,118 @@
 ---
-title: Error Reference
-description: All user-visible errors with causes and fixes.
+title: Error Message Reference
+description: Causes and fixes for all user-visible errors.
 ---
 
-Search for the error message you see to find the fix.
+Search for the error message you see to find the corresponding fix.
 
-## General
+## General Errors
 
-- **"{name} not installed"** — Install the runtime in Settings.
-- **"Server returned error ({status})"** — 403: try changing TLS fingerprint. 404: link expired. 429: reduce threads.
-- **"Cannot establish FTP connection"** — Check URL format and proxy settings.
-- **"Process exited abnormally"** — Reinstall the runtime (ffmpeg/yt-dlp).
+<Accordions>
+<Accordion title="{name} is not installed. Install it in Settings">
+Reason: The external Binary Runtime this Task depends on (ffmpeg, yt-dlp, etc.) is not installed.
 
-## yt-dlp
+Fix: Settings → the corresponding feature's settings page → click the Install button. The installation itself is also a Task.
+</Accordion>
 
-- **"Requires login Cookie"** — Use the extension's download button (auto-carries cookies).
-- **"YouTube captcha"** — Change IP or proxy, or wait.
-- **"Format unavailable"** — Choose a different quality.
-- **"Extraction failed"** — Update yt-dlp runtime in Settings.
+<Accordion title="The server returned an error ({status})">
+Reason: The HTTP response status code is not 2xx.
 
-## BitTorrent
+Common status codes:
+| Status Code | Meaning | Suggestion |
+|--------|------|------|
+| 403 | Access denied | Change the TLS fingerprint (edit Task → client configuration file), or use a proxy |
+| 404 | Content deleted | Confirm whether the link has expired |
+| 429 | Too many requests | Reduce the number of connections and retry later |
+| 503 | Service overloaded | Retry later |
+</Accordion>
 
-- **"Duplicate torrent"** — Already in the list.
-- **"No files selected"** — Select at least one file.
+<Accordion title="Unable to establish FTP connection">
+Reason: The FTP server is unreachable, or authentication failed.
 
-## FFmpeg
+Fix: Check the URL format (`ftp://user:pass@host:port/path`), whether the firewall allows the connection, and whether the proxy settings are correct (FTP only supports SOCKS4/5).
+</Accordion>
 
-- **"Merge failed"** — Source may be corrupted; try a different quality.
-- **"DRM protected"** — Cannot be downloaded; use the platform's official app.
+<Accordion title="Process exited abnormally ({code}): {detail}">
+Reason: An external process (ffmpeg, yt-dlp, N_m3u8DL-RE) crashed.
+
+Fix: Reinstall the corresponding Binary Runtime in Settings. If it keeps happening, file an issue with the logs.
+</Accordion>
+
+<Accordion title="An unexpected error occurred: {detail}">
+Reason: An unhandled exception, usually a bug.
+
+Fix: File a [GitHub Issue](https://github.com/XiaoYouChR/Ghost-Downloader-3/issues) with the log files.
+</Accordion>
+</Accordions>
+
+## yt-dlp Errors
+
+<Accordions>
+<Accordion title="Login cookie required / This video is member-only / This video requires age verification">
+Reason: The video requires a logged-in session to access.
+
+Fix: Use the browser extension's "Download This Media" button. The extension automatically carries the browser's cookies. If you add the link manually, add a Cookie header when editing the Task.
+</Accordion>
+
+<Accordion title="YouTube requires a CAPTCHA">
+Reason: The current IP is rate-limited by YouTube (usually caused by a large number of requests in a short period).
+
+Fix: Change IP or use a proxy, or wait a few hours and retry.
+</Accordion>
+
+<Accordion title="HTTP 403 Forbidden (yt-dlp)">
+Reason: The video platform rejected the request, usually because the TLS fingerprint was recognized.
+
+Fix: Edit Task → client configuration file → switch to a different browser fingerprint.
+</Accordion>
+
+<Accordion title="Format unavailable">
+Reason: The requested quality or format does not exist for this video.
+
+Fix: Re-select the quality, or leave the format unspecified and let yt-dlp automatically choose the best one.
+</Accordion>
+
+<Accordion title="Extraction failed">
+Reason: yt-dlp cannot parse the page structure, usually because the platform updated its frontend.
+
+Fix: Update the yt-dlp Binary Runtime to the latest version in Settings.
+</Accordion>
+</Accordions>
+
+## BitTorrent Errors
+
+<Accordions>
+<Accordion title="Duplicate torrent">
+Reason: The same torrent is already in the download list (same info hash).
+
+Fix: Find the existing Task with the same name in the Task list. To download it again, delete it first and then re-add it.
+</Accordion>
+
+<Accordion title="No files selected">
+Reason: All files inside the torrent were unchecked.
+
+Fix: Edit Task → file selection → check at least one file.
+</Accordion>
+
+<Accordion title="BT session failed to start">
+Reason: libtorrent could not initialize, usually because the listening port is occupied.
+
+Fix: Check whether another BT client is running, or change the BT listening port range in Settings.
+</Accordion>
+</Accordions>
+
+## FFmpeg Errors
+
+<Accordions>
+<Accordion title="Merge failed">
+Reason: ffmpeg failed during muxing (combining video and audio). Usually the source files are corrupted or the formats are incompatible.
+
+Fix: Try re-downloading the source files. For streams from video sites, try selecting a different quality or encoding format.
+</Accordion>
+
+<Accordion title="Invalid or DRM-protected media">
+Reason: The media content is protected with DRM encryption.
+
+Fix: Ghost Downloader cannot handle DRM content. Use the offline download feature of the platform's official client.
+</Accordion>
+</Accordions>

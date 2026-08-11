@@ -1,52 +1,86 @@
 ---
-title: Setup and Run
-description: Install dependencies, start the desktop app, and build the browser extension.
+title: Environment Setup
+description: Install dependencies, start the desktop app and browser extension.
 ---
 
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+## Prerequisites
+
+- Python ≥ 3.11 (project defaults to 3.11)
+- [uv](https://docs.astral.sh/uv/) package manager
+- Node.js ≥ 18 (only required when modifying the extension)
+
+## Desktop
 
 <Steps>
-  <Step>
-    Install desktop dependencies.
+<Step>
 
-    ```powershell
-    cd C:\Users\XiaoYouChR\PycharmProjects\Ghost-Downloader-3
-    uv sync
-    ```
-  </Step>
+### Clone the repository
 
-  <Step>
-    Start the desktop app from source.
-
-    ```powershell
-    python Ghost-Downloader-3.py
-    ```
-  </Step>
-
-  <Step>
-    If you are changing the browser extension, install and build it too.
-
-    ```powershell
-    cd browser_extension\app
-    npm install
-    npm run typecheck
-    npm run build
-    ```
-  </Step>
-</Steps>
-
-## What Happens on Startup
-
-The entry file loads `UserConfig.json`, starts `coreService`, creates `MainWindow`, loads `features/*_pack`, and restores memorized tasks through `taskRecorder`. For a silent startup without the splash screen:
-
-```powershell
-python Ghost-Downloader-3.py --silence
+```bash
+git clone https://github.com/XiaoYouChR/Ghost-Downloader-3.git
+cd Ghost-Downloader-3
 ```
 
-## Common Blockers
+</Step>
+<Step>
 
-| Symptom | Check First |
-| --- | --- |
-| UI does not launch | PySide6, Qt plugins, graphics environment, and log files. |
-| Feature Packs are missing | `features/<pack>/manifest.toml`, dependencies, and pack loading logs. |
-| Extension cannot connect | Desktop extension switch, `ws://127.0.0.1:14370`, and the pairing token. |
+### Install dependencies
+
+```bash
+uv sync
+```
+
+</Step>
+<Step>
+
+### Start
+
+```bash
+uv run python Ghost-Downloader-3.py
+```
+
+Add `--silence` for silent startup (no splash screen).
+
+</Step>
+</Steps>
+
+## Browser Extension
+
+<Steps>
+<Step>
+
+### Install dependencies
+
+```bash
+cd browser_extension/app
+npm install
+```
+
+</Step>
+<Step>
+
+### Build
+
+```bash
+npm run build
+```
+
+Build output is in `browser_extension/chromium/` and `browser_extension/firefox/`.
+
+</Step>
+<Step>
+
+### Load into the browser
+
+Chrome → `chrome://extensions` → enable Developer mode → Load unpacked → select `browser_extension/chromium/`.
+
+</Step>
+</Steps>
+
+## Common Issues
+
+| Symptom | Check |
+|------|------|
+| UI won't start | Whether PySide6 is installed, whether the graphics environment is available, check logs |
+| FeaturePack missing | Whether the `features/<pack>/` directory is complete, check startup logs |
+| Extension can't connect to the desktop | Whether the desktop extension switch is enabled, whether the port is occupied |

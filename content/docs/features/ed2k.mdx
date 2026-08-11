@@ -1,10 +1,18 @@
 ---
-title: eD2k Downloads
-description: Download via ed2k:// links.
+title: eD2k Download
+description: Download files via ed2k:// links.
 ---
 
-Requires an external runtime — install it in **Settings → General**.
+Ghost Downloader supports `ed2k://` protocol links.
 
-Register the `ed2k://` protocol in **Settings → Associations** to open eD2k links directly in GD.
+## Prerequisites
 
-Not available on Android.
+The eD2k feature depends on an external runtime. Before first use, install the corresponding runtime in **Settings → General Download Settings**.
+
+## URI Scheme Association
+
+After registering the `ed2k://` protocol in **Settings → Association Settings**, clicking an eD2k link in a browser or other program automatically opens GD.
+
+<Callout type="warn" title="Platform Limitations">
+The Android version does not support eD2k (the feature is removed at build time). Association settings are only available on Windows and Linux.
+</Callout>

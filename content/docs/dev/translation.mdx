@@ -1,53 +1,47 @@
 ---
-title: Contribute Translation
-description: Use Crowdin to add or improve Ghost Downloader translations.
+title: Contribute Translations
+description: Contribute translations to Ghost Downloader via Crowdin.
 ---
 
-import { Step, Steps } from 'fumadocs-ui/components/steps';
-
 <Cards>
-  <Card title="Open Crowdin Project" href="https://crowdin.com/project/ghost-downloader" external description="Official Ghost Downloader translation workspace." />
-  <Card title="View Translation Sync Workflow" href="../../workflows/translation-sync" description="See how Sync Crowdin pulls translations and opens PRs." />
+  <Card title="Open the Crowdin project" href="https://crowdin.com/project/ghost-downloader" external description="Ghost Downloader translation entry point." />
 </Cards>
 
-## Translation Steps
+## Steps
 
 <Steps>
-  <Step>
-    Open the [ghost-downloader Crowdin project](https://crowdin.com/project/ghost-downloader) and sign in with your Crowdin account.
-  </Step>
-
-  <Step>
-    Choose the target language you want to contribute to, such as English, Japanese, Russian, Traditional Chinese, or Hong Kong Chinese.
-  </Step>
-
-  <Step>
-    Open untranslated or review-needed strings and submit translations or improvements.
-  </Step>
-
-  <Step>
-    Wait for maintainers to pull the translations back through the `Sync Crowdin` workflow. The repository will then receive a translation PR.
-  </Step>
+<Step>
+Open the [Crowdin project](https://crowdin.com/project/ghost-downloader) and sign in.
+</Step>
+<Step>
+Choose a target language (English, Japanese, Russian, Traditional Chinese, Hong Kong Traditional).
+</Step>
+<Step>
+Translate unfinished entries, or improve existing translations.
+</Step>
+<Step>
+Wait for maintainers to pull via the Sync Crowdin workflow. Translations are automatically generated as a PR and merged into the repository.
+</Step>
 </Steps>
 
-<Callout type="info" title="No Code Required">
-Most translation contributions should be done directly in Crowdin. You do not need to fork the repository or edit `.ts` / `.qm` files manually.
+<Callout type="info">
+Translation is done on Crowdin. No need to fork the repository or modify `.ts`/`.qm` files.
 </Callout>
 
-## Translation Files in the Repository
+## Translation files in the repository
 
 | File | Purpose |
-| --- | --- |
-| `crowdin.yml` | Crowdin project sync configuration. |
-| `app/assets/i18n/gd3.zh_CN.ts` | Simplified Chinese source strings. |
-| `app/assets/i18n/gd3.*.ts` | Qt translation source files for target languages. |
-| `app/assets/i18n/gd3.*.qm` | Compiled Qt translation resources. |
-| `sync_i18n_res.py` | Refreshes Qt translation resources and bundled app assets. |
+|---|---|
+| `crowdin.yml` | Crowdin synchronization configuration |
+| `app/assets/i18n/gd3.zh_CN.ts` | Simplified Chinese source strings |
+| `app/assets/i18n/gd3.*.ts` | Qt translation source files for each target language |
+| `app/assets/i18n/gd3.*.qm` | Compiled Qt translation resources |
+| `sync_i18n_res.py` | Refreshes Qt translation resources |
 
-## Refresh Translation Resources Locally
+## Refresh translations locally
 
-When maintaining a translation-related PR, run this in the repository root:
+Run this in the repository root when working on translation-related PRs:
 
-```powershell
+```bash
 python sync_i18n_res.py
 ```

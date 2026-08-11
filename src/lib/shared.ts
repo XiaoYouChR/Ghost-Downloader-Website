@@ -21,5 +21,5 @@ export const externalLinks = {
 
 /** Docs pages linked from site chrome. Hardcoded paths — see CONTEXT.md. */
 export const docsLinks = {
-  donate: '/docs/support/donate',
+  donate: '/docs/donate',
 };

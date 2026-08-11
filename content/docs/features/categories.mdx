@@ -1,10 +1,25 @@
 ---
 title: Download Categories
-description: Auto-sort downloads by file type into folders.
+description: Automatically categorize downloads by file type and assign different storage directories.
 ---
 
-**Settings → Download Categories** → enable.
+## Enable
 
-Each category has a name, icon, extension list (e.g. `mp4, mkv`), and optional download folder.
+**Settings → Download Categories** → toggle on.
 
-Use `{default}/Videos` to put categorized files in a subfolder of the default download directory.
+## Category Rules
+
+Each category includes a name, an icon (25 options), an extension list (e.g., `mp4, mkv, avi`), and an optional dedicated download directory.
+
+The directory supports the `{default}` placeholder: enter `{default}/Videos` → the actual path is the `Videos` folder in the default download directory.
+
+## Automatic Categorization
+
+When a new Task is created, Ghost Downloader automatically matches a Category based on the file extension. Matching proceeds top to bottom through the rule list; the first hit applies.
+
+## Manual Operations
+
+- Category dropdown in the Task list toolbar: filter by Category
+- **Right-click menu → Move to Category**: batch re-categorize existing Tasks
+- In the Draft confirmation dialog, each Task card can select a Category individually
+- In the file selection dialog, files can be filtered by Category type

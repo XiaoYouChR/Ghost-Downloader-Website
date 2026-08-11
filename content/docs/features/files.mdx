@@ -5,10 +5,18 @@ description: HTTP and FTP file downloads.
 
 ## HTTP
 
-Paste a link or let the extension intercept. GD downloads with multiple threads and automatically increases speed when bandwidth allows.
+Paste a link or capture it from the browser. GD automatically downloads with multiple threads, and automatically increases threads when speed is insufficient.
 
-Supports resume — pause and continue without restarting.
+Supports resume: after pausing, you can continue without starting over.
+
+<Callout type="info">
+The number of threads can be adjusted when creating a new task, or modified during download via **Right-click → Edit**.
+</Callout>
+
+---
 
 ## FTP
 
-Paste `ftp://` or `ftps://` links. Directory links show a file tree for selection. Proxy: SOCKS4/SOCKS5 only.
+Paste an `ftp://` or `ftps://` link. If the link points to a directory, a file tree is listed for selection.
+
+Like HTTP, it supports multiple threads and resume. Proxy supports only SOCKS4/SOCKS5.

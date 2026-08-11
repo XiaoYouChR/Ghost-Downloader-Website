@@ -1,37 +1,184 @@
 ---
 title: Architecture Overview
-description: "The main boundaries in Ghost Downloader: UI, services, tasks, Feature Packs, and the browser bridge."
+description: Mental model, complete lifecycle, design decisions.
 ---
 
-Ghost Downloader's architecture can be summarized in one sentence: the UI raises intent, `TaskService` schedules work, `FeatureService` selects the right capability, protocol logic stays inside `features/*_pack`, and the browser extension connects through `BrowserService`.
+GD is a signal-driven actor model. Each Service owns private state and communicates externally only through Qt Signals. The UI layer may be replaced at any time (desktop vs Android), but Service behavior should not change. Dependencies are one-way: UI → Services → Models ← Features. Reverse references would couple Services to a specific UI framework.
 
-<Callout type="warn" title="Architecture Boundaries">
-Protocol parsing belongs to Feature Packs, task scheduling belongs to `TaskService`, UI interaction belongs to `app/view`, and the browser bridge is an extension-facing local service rather than a public remote-control API.
+Source code: `app/services/`, `app/models/`, `features/`.
+
+## Components
+
+| Component | Responsibility | Source file |
+|------|------|--------|
+| CoroutineRunner | Qt↔asyncio bridge; all async work runs on its thread | `app/common/coroutine_runner.py` |
+| TaskService | Task queue, state machine, scheduling, persistence | `app/services/task_service.py` |
+| FeatureService | FeaturePack loading (topological sort), parser chain, identity preset injection | `app/services/feature_service.py` |
+| BrowserService | Extension WebSocket communication, pairing, Task snapshot push | `app/services/browser_service.py` |
+| SpeedMeter | Global speed aggregation (once per second), global speed limit | `app/services/speed_meter.py` |
+| Aria2RpcServer | Aria2 RPC protocol compatibility layer | `app/services/aria2_rpc_server.py` |
+| CategoryService | Automatic download directory categorization by file type | `app/services/category_service.py` |
+
+CoroutineRunner uses a separate thread instead of embedding asyncio in the main thread, avoiding UI jank caused by heavy network I/O blocking the main thread. Task snapshot push performs a full string comparison once per second. The Task list is small (dozens to hundreds of entries); incremental tracking would require ten times the code of a full comparison, which is not worth it.
+
+## Complete Lifecycle of a Task
+
+![Task lifecycle: collaboration between the main thread and the async thread](/images/docs/lifecycle.svg)
+
+### From URL to Task
+
+No matter where the URL comes from, it goes through the same pipeline: parse → enqueue → schedule → execute. The difference is only the entry point.
+
+<Tabs items={["Browser Extension", "Manual Paste / URI Scheme"]}>
+<Tab value="Browser Extension">
+
+<Steps>
+<Step>
+
+### The extension sends a download request
+
+The user clicked a download button in the browser (or triggered download interception). The extension sends a request over WebSocket, carrying the URL, request headers, and resource metadata.
+
+WebSocket rather than Native Messaging. Cross-platform, convenient, stable. Native Messaging requires a separate host manifest and platform-specific registration for each browser. WebSocket works through a single port.
+
+</Step>
+<Step>
+
+### Desktop-side parsing
+
+The desktop side iterates over all parsers by priority. The first parser that can handle this URL takes over and creates a Task.
+
+If the URL matches an identity preset (for example, a Bilibili domain) and the request does not carry a client fingerprint, the preset fingerprint configuration is automatically injected before parsing.
+
+</Step>
+<Step>
+
+### Draft confirmation or direct enqueue
+
+Two conditions determine whether a confirmation window is shown:
+
+- The `draft` parameter in the extension request
+- The "Confirm before download" option in user settings
+
+When both are false, the Task is enqueued directly. Otherwise, a confirmation window appears; the user selects a format, checks files, and confirms the path before enqueueing.
+
+The confirmation result is returned to the extension over WebSocket: created / entered draft / parse failed.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Manual Paste / URI Scheme">
+
+The URL goes directly into the parser chain. After the Task is created, a confirmation window pops up (manual paste defaults to draft). This flow has one less WebSocket communication step than the extension entry; everything else is identical.
+
+</Tab>
+</Tabs>
+
+### Enqueue
+
+<Steps>
+<Step>
+
+### Filename deduplication
+
+Check three locations for files with the same name: the Task list in memory, actual files on disk, and progress files on disk. On conflict, append suffixes such as `(1)`, `(2)`.
+
+Progress files are checked too; otherwise they would collide with running Tasks.
+
+</Step>
+<Step>
+
+### Category and disk check
+
+If automatic categorization is enabled, assign a download directory by file type. Check whether the target disk has enough free space.
+
+</Step>
+<Step>
+
+### Enter the waiting queue
+
+The Task is appended to the tail of the waiting queue. The scheduler checks the concurrency count and, when a slot is available, immediately submits it to the async thread for execution.
+
+</Step>
+</Steps>
+
+### Execution
+
+Tasks execute one Step at a time in order. A Bilibili video Task usually has three Steps: download video track, download audio track, FFmpeg muxing. Each Step independently manages its own network connection, progress, and error recovery.
+
+The Step iterator re-checks the Task state each time before fetching the next Step. If the previous Step failed and the Task state becomes FAILED, iteration terminates immediately and does not attempt subsequent Steps. Output files of completed Steps remain on disk.
+
+<Callout type="info">
+For the download mechanism inside Steps (slicing, acceleration, resume), see [Download Engine](./download-engine). For the full communication pipeline from the browser extension to the desktop side, see [Browser Bridge](./browser-bridge).
 </Callout>
 
-## Layers and Responsibilities
+### Pause and Resume
 
-| Layer | Main Source | Responsibility |
-| --- | --- | --- |
-| Entry | `Ghost-Downloader-3.py` | Logging, config loading, translation, service startup, window creation. |
-| UI | `app/view` | Task list, settings page, dialogs, tray integration. |
-| Services | `app/services` | Task scheduling, Feature Pack loading, browser bridge. |
-| Models | `app/models/task.py` | `Task`, `TaskStep`, state, and serialization. |
-| Feature Packs | `features/*_pack` | Protocol parsing, download execution, external runtime integration. |
-| Extension | `browser_extension/app` | Resource capture, extension UI, WebSocket requests. |
+Pausing cancels the running async task, marks all unfinished Steps as paused, and keeps progress files on disk.
 
-## Core Data Flow
+On resume, the Task is re-enqueued. Completed Steps are skipped; failed Steps start over (progress cleared); paused Steps continue from the position saved in the progress file.
 
-1. A user action or browser extension submits a URL or payload.
-2. `TaskService` asks `FeatureService` to choose a Feature Pack that can handle it.
-3. The chosen Feature Pack creates a `Task`.
-4. `TaskService` runs the task under concurrency limits.
-5. The UI, extension, and `taskRecorder` consume task state updates.
+<Callout type="warn">
+The pause behavior during process exit is different: it only changes the state, not cancels the async tasks. The cost of cancelling them one by one is higher than directly ending the process; the async tasks are destroyed with the process.
+</Callout>
 
-## Read More
+### Errors and Failures
 
-<Cards>
-  <Card title="Task System" href="../task-system" description="Task states, stages, scheduling, and persistence." />
-  <Card title="Feature Pack System" href="../feature-pack-system" description="Pack discovery, dependency ordering, and loading boundaries." />
-  <Card title="Browser Bridge" href="../browser-bridge" description="How the extension connects to the desktop app and creates tasks." />
-</Cards>
+Temporary errors inside a Step (network timeout, connection drop) are retried by the Step itself (wait 5 seconds, then reconnect). Permanent errors (HTTP 403/404, fatal I/O errors) abort the Step directly.
+
+After a Step fails, the Task is marked as failed. When the user manually restarts it, the Task is re-enqueued. Completed Steps are skipped; failed Steps have their progress cleared and execute from the beginning.
+
+### Modification Operations
+
+Edit, re-download, selection change, and delete all follow the same pattern: cancel the run first, wait for cancellation to finish, then perform the subsequent action.
+
+The callback timing depends on whether the Task is running: running → the callback fires after the async thread finishes cleanup (next event-loop turn); not running → the callback fires immediately within the current call stack. Cancelling a running Task requires waiting for the async thread to respond; cancelling a not-running Task has no async work to wait for.
+
+| Operation | What happens after cancellation |
+|------|-------------|
+| Edit | Replace parameters (URL, request headers, fingerprint, etc.), Task ID unchanged → reschedule |
+| Re-download | Delete output files and progress files → reset all Steps → reschedule |
+| Selection change | Update selections. If a completed Task gains files that are not complete → re-enqueue |
+| Delete | Optionally delete output files → remove from memory and persistence |
+
+For multi-file Tasks (BT, playlists), files that are unchecked keep their existing progress and are not deleted. If a file that is currently downloading is unchecked, cancel the run first, then update the selection.
+
+### Process Exit and Recovery
+
+**Exit**: set all Tasks to paused → write to disk → deactivate FeaturePacks one by one → write to disk again → close the async thread.
+
+Two disk writes: the first saves the paused state; the second captures state modifications that may occur when FeaturePacks are deactivated.
+
+**Recovery**: load all Tasks from the persistence file. Tasks in WAITING and RUNNING are automatically enqueued for scheduling. FAILED and PAUSED Tasks remain as they are, waiting for user manual action.
+
+## Persistence
+
+The Task list is stored as JSONL (one JSON object per line), using class names as deserialization identifiers.
+
+JSONL rather than SQLite. Task subclasses are numerous and change frequently, and each subclass has different fields. The class-name registry provides polymorphic serialization with zero migration cost: adding a subclass requires no migration script. The cost is that class names become the serialization contract; renaming them makes old Tasks unrecoverable.
+
+Write strategy: a 200ms debounce merges multiple state changes into one write; write to a temporary file first, then rename (atomic operation). If the process crashes within the debounce window, the most recent state change is lost.
+
+## Impact Scope of Changes
+
+| What you change | What to check |
+|--------|------|
+| Task scheduling logic | Snapshot format, extension's Task list handling |
+| Add / modify a parser | Priority numbers: the smaller the number, the earlier it is checked; confirm no conflict with existing parsers |
+| Extension-side message format | Desktop-side message handling and the extension must be updated in sync |
+| Task / Step subclass names | Persistence file relies on class-name mapping; renaming causes old Tasks to fail loading |
+| FeaturePack enable / disable | Disabling is synchronously blocking (waits on the event loop); calling from an async thread deadlocks |
+| FeaturePack configuration subclasses | Subclasses register into the global config at import time; identifiers contain the class name, so same-named subclasses conflict |
+| Identity preset logic | Preset is injected before parsing, but injection is skipped when the request already carries a fingerprint |
+
+## Entry Points
+
+| You want to | Start from |
+|------|----------|
+| Debug a stuck download / abnormal speed | The corresponding FeaturePack's `task.py` |
+| Debug extension connection failure | `app/services/browser_service.py` |
+| Add support for a new site | [Start from the tutorial](./tutorial), create a new FeaturePack under `features/` |
+| Change UI | Dialogs and cards under `app/view/` |
+| Change the download engine | [Download Engine](./download-engine) |
+| Change extension behavior | [Browser Bridge](./browser-bridge) |

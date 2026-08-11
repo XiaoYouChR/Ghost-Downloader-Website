@@ -1,119 +1,58 @@
 ---
 title: Site Notes
-description: Per-site capabilities, limitations, and login/cookie handling for Bilibili, YouTube, GitHub Releases, and HuggingFace.
+description: Special operations and restrictions for each site.
 ---
 
 ## Bilibili
 
-### Login and Quality
+After logging in, you can download higher quality. **Settings → Bilibili Download → Account Login** supports QR code login and manual Cookie import.
 
-Without login, Bilibili returns a maximum quality of 480P. Logging in unlocks higher quality tiers depending on account membership:
+| Quality | Requirement |
+|------|------|
+| 480P and below | No login required |
+| 720P / 1080P | Login required |
+| 1080P+ / 4K / HDR / Dolby | VIP membership required |
 
-| Account Status | Max Available Quality |
-|---|---|
-| Not logged in | 480P |
-| Logged in (regular user) | 1080P |
-| Premium member | 1080P60 / 4K / HDR / Dolby Vision |
+For multi-part videos, select the parts to download in the confirmation window. Subtitles and covers are fetched automatically; check them in the confirmation window.
 
-Login is configured in Settings → Bilibili Download → **Account Login**, with two methods:
-
-- **QR Code Login**: displays a QR code to scan with the Bilibili mobile app. The code is valid for about 180 seconds; click "Refresh QR Code" to regenerate after expiry.
-- **Import Cookie**: manually paste a full cookie string exported from your browser. Saving an empty value clears the current cookie.
-
-If the browser extension is installed, Bilibili downloads initiated through the extension automatically carry the browser's login state -- no additional setup in the app is needed.
-
-### Quality Settings
-
-Quality-related options under Settings → Bilibili Download:
-
-- **Default Quality**: 11 tiers from 240P to Dolby Vision.
-- **When Quality Unavailable**: choose to fall back to highest or lowest available quality.
-- **HDR**: request HDR video stream (Premium required).
-- **Dolby Atmos/Vision**: request Dolby Atmos and Dolby Vision (Premium required).
-
-### Download Mode
-
-The dropdown on the Task Draft card switches between download modes:
-
-- **Video**: downloads video and audio streams, merged into `.mp4`
-- **Audio**: downloads audio stream only, saved as `.m4a`
-- **Cover**: downloads the video cover image
-
-### Multi-part Videos and Subtitles
-
-After pasting a multi-part video link, use the "Select Parts" button to choose which parts to download. You can also specify parts directly in the URL's `p` parameter using commas and ranges (e.g. `?p=1,3-5`).
-
-If the video has subtitles (including AI-generated ones), use the "Select Subtitles" button to choose languages. Subtitles are converted to `.srt` format.
+The fallback strategy when a quality is unavailable can be configured in **Settings → Bilibili Download**.
 
 ## YouTube
 
-### Cookies and Restricted Content
+It is recommended to use the extension's download button (automatically carries login cookies). When pasting a link directly, if a video requires login, GD will try to use saved cookies.
 
-Most public YouTube videos can be downloaded without login. Cookies are needed in these cases:
+| Issue | Solution |
+|------|------|
+| Member-only / age-restricted videos | Use the download button (automatically carries cookies) |
+| Captcha / frequent 403 | Change IP or proxy, wait a while |
+| Incomplete quality options | Confirm you are logged in with an account that has membership |
 
-- Age-restricted videos
-- Members-only videos
-- Private videos (requires an authorized account)
-- When YouTube presents a bot verification challenge
+Playlists: paste a playlist link, then select the videos to download.
 
-Two ways to provide cookies:
-
-1. **Automatic via browser extension** (recommended): after installing the browser extension, YouTube downloads initiated through it automatically carry the browser's login cookies. If the cookie contains login credentials (`LOGIN_INFO`, `SAPISID`, etc.), the app saves them automatically for future use.
-2. **Manual import**: Settings → YouTube Download → **YouTube Cookie** → Import. Open YouTube in your browser and log in, press F12 to open Developer Tools, go to the Network tab, find any request, copy the Cookie request header value, and paste it.
-
-### Runtime
-
-YouTube downloads depend on two runtime components: yt-dlp and QuickJS. Install them with one click in Settings → YouTube Download. On Android, QuickJS is built in -- only yt-dlp needs to be installed.
-
-### Region Restrictions
-
-Some videos are region-locked. If you encounter a "video is not available in your country" error, configure a proxy.
+yt-dlp runtime is required. On first use, install it in Settings.
 
 ## GitHub Releases
 
-GitHub Releases downloads are typically very slow from mainland China. Ghost Downloader includes built-in GitHub acceleration that automatically rewrites GitHub file links to download through a reverse proxy.
+When a direct connection to GitHub is not available, enable **Settings → GitHub Accelerator**. GD includes multiple proxy sites (gh-proxy.com, ghfast.top, etc.) and automatically tests speeds to choose the fastest. You can also enter a custom proxy site.
 
-Acceleration applies to these domains and paths:
-
-- `github.com/*/releases/download/*`
-- `github.com/*/archive/*`
-- `github.com/*/raw/*`
-- `raw.githubusercontent.com`, `objects.githubusercontent.com`, and several other GitHub subdomains
-
-### Configuration
-
-Settings → GitHub Acceleration:
-
-- **Enable GitHub Acceleration**: toggle, on by default.
-- **Proxy Site**: choose from preset proxy sites (gh-proxy.com, gh-proxy.org, gh.ddlc.top, ghfast.top), or enter a custom proxy URL. Click the Re-test Latency button to test each site's response latency.
-
-### Known Limitations
-
-- Acceleration only applies to file download links, not GitHub API or web page access.
-- Proxy site availability and speed may change at any time; periodically re-test latency.
-- If you already have a global proxy that can reach GitHub directly, you can disable this feature.
+When no proxy site is available, it automatically falls back to a direct connection.
 
 ## HuggingFace
 
-### Mirror Acceleration
+After pasting a model repository link, files are listed automatically. Check the ones you need to download.
 
-HuggingFace model and dataset repositories are slow to access directly from mainland China. Ghost Downloader includes built-in mirror acceleration that rewrites HuggingFace links to use a mirror site.
+**Settings → HuggingFace** lets you configure:
+- Mirror site (default hf-mirror.com)
+- Access Token (fill in when downloading models that require authorization, such as Llama, Mistral)
 
-The default mirror is `hf-mirror.com`. You can switch to a custom mirror in Settings → HuggingFace → **Mirror Site**.
+## Douyin
 
-### Repository Downloads
+The extension download button supports it directly. HD videos automatically merge video and audio tracks.
 
-Pasting a HuggingFace repository link (e.g. `https://huggingface.co/org/model`) lists all files in the repository with their sizes, and you can select which files to download. Pasting a single-file link (one containing a `/resolve/` or `/blob/` path) downloads that file directly.
+## X (Twitter)
 
-Supported repository types: models, datasets, and Spaces.
+The extension download button supports it directly. Videos are downloaded as HLS streams.
 
-### Access Token
+## Instagram / Facebook
 
-Some models require authorization to download (e.g. gated models like Llama, Mistral). Enter a token from [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) in Settings → HuggingFace → **Access Token**.
-
-Accessing a gated repository without a token produces the error "This repository requires authorization; please configure a HuggingFace Access Token in Settings."
-
-### Known Limitations
-
-- Mirror sites may have sync delays; newly uploaded files may not be immediately available through the mirror.
-- If you already have a global proxy that can reach HuggingFace directly, you can leave the mirror site empty or disable acceleration.
+The extension download button supports it directly. Video and audio are downloaded separately and then merged automatically.

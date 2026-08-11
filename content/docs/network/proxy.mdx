@@ -1,16 +1,37 @@
 ---
-title: Proxy
-description: Configure download proxy settings.
+title: Proxy Configuration
+description: Configure global proxy and per-domain matching proxy rules.
 ---
 
-**Settings → General → Proxy Server**
+## Global Proxy
 
-Formats: `http://host:port`, `socks5://host:port`, etc. Leave empty for no proxy.
+**Settings → General Download Settings → Proxy Server**, fill in the proxy URL:
 
-| Download Type | HTTP | SOCKS4 | SOCKS5 |
-|---|---|---|---|
-| HTTP/HTTPS | ✅ | ✅ | ✅ |
-| FTP | ❌ | ✅ | ✅ |
-| BitTorrent | ✅ | ✅ | ✅ |
+```
+http://host:port
+http://user:password@host:port
+socks5://host:port
+socks5://user:password@host:port
+```
 
-Per-domain proxy: **Settings → Identity Presets → Add**, set host pattern and proxy URL.
+The `http`, `https`, `socks4`, and `socks5` protocols are supported. All can carry username and password in the URL. Leave empty to use no proxy.
+
+## Proxy protocols supported by each download type
+
+| Download Type | HTTP | HTTPS | SOCKS4 | SOCKS5 |
+| --- | --- | --- | --- | --- |
+| HTTP/HTTPS | ✅ | ✅ | ✅ | ✅ |
+| FTP/FTPS | ❌ | ❌ | ✅ | ✅ |
+| BitTorrent | ✅ | ❌ | ✅ | ✅ |
+
+## Specify proxy by domain
+
+Different proxies can be configured for specific domains through identity presets:
+
+**Settings → General Download Settings → Identity Presets → Add**. Fill in the host match (supports `*.example.com` wildcards) and specify the proxy URL in the preset.
+
+Downloads that match a preset use the preset proxy instead of the global one.
+
+<Callout type="info">
+Proxy only affects download traffic. The connection between the browser extension and the desktop app does not go through the proxy.
+</Callout>

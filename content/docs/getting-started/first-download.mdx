@@ -1,10 +1,47 @@
 ---
 title: First Download
-description: Make your first download with Ghost Downloader.
+description: After installing and pairing the extension, complete your first download with Ghost Downloader.
 ---
 
-1. Find a download link in your browser
-2. Click it — the extension intercepts and GD shows a confirmation dialog
-3. Confirm — click **Download**
-4. Watch progress in the main window
-5. Double-click the task card to open the file, or **right-click → Open Folder**
+<Steps>
+<Step>
+### Find a download link in the browser
+
+Open any page containing file downloads, such as GitHub Releases, a cloud drive share page, or the software's official website.
+</Step>
+<Step>
+### Click the download link
+
+The browser extension automatically intercepts the download request, and Ghost Downloader shows a task confirmation dialog (Draft).
+
+On video pages, you can also hover over the video and click the download button that appears.
+</Step>
+<Step>
+### Confirm the download
+
+The dialog shows the file name, size, and download directory. Click the **Download** button once confirmed.
+
+Click the file name to rename it; click the edit button on the right to modify advanced options such as URL, headers, and proxy.
+</Step>
+<Step>
+### Watch the progress
+
+The task card in the main window shows speed and progress in real time. The HTTP download progress bar is colored by segment, with each segment corresponding to one Subworker.
+</Step>
+<Step>
+### Finish
+
+Double-click the task card to open the file, or **right-click → Open folder**.
+</Step>
+</Steps>
+
+<Callout type="info" title="No confirmation dialog?">
+Check whether the extension is connected. The extension icon should show a connected state. If not, see [Extension cannot connect](../../troubleshooting/extension-connection).
+</Callout>
+
+<Callout type="idea" title="Other ways to add a task">
+- Paste a URL directly in the GD main window (multi-line supported)
+- Drag and drop files (.torrent / .m3u8) or links onto the window
+- Enable clipboard monitoring: a confirmation dialog appears automatically after copying a URL
+- Turn off "Use Draft mode when intercepting" to skip confirmation and start downloading directly.
+</Callout>

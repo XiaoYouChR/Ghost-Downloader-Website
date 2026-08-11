@@ -1,27 +1,64 @@
 ---
-title: Platform Issues
-description: OS-specific problems and fixes.
+title: Platform-Specific Issues
+description: Known issues and fixes on macOS, Windows, and Linux.
 ---
 
-## macOS — "App is damaged"
+<Tabs items={['macOS', 'Windows', 'Linux']} groupId="os">
+<Tab value="macOS">
 
-Run the "Fix Damaged App" script included in the DMG, or:
+## "App Is Damaged and Cannot Be Opened"
+
+macOS Gatekeeper blocks apps not notarized by Apple.
+
+**Fix:**
+
+1. Open the "Fix Damaged Software" script in the DMG and run it.
+2. If the script does not exist, run in Terminal:
 
 ```bash
 xattr -cr /Applications/Ghost\ Downloader.app
 ```
 
-## Windows — Smart App Control
+Then reopen the app.
 
-Smart App Control may block GD from starting. Use the portable version (.zip) instead.
+</Tab>
+<Tab value="Windows">
 
-## Windows — Defender False Positive
+## Smart App Control Blocks Startup
 
-Add the GD install directory to Windows Security → Exclusions.
+Windows 11's Smart App Control may prevent GD from starting.
 
-## Linux — AppImage Won't Run
+**Workaround:**
+
+- Use the portable version (`.zip`, extract and run)
+- Or turn off Smart App Control in **Windows Security → App and browser control**
+
+## Defender False Positive
+
+Windows Defender occasionally flags Nuitka-compiled binaries as a threat.
+
+**Workaround:**
+
+Add the GD installation directory to Windows Security → Virus and threat protection → Exclusions.
+
+</Tab>
+<Tab value="Linux">
+
+## AppImage Does Not Run
+
+After download, add execute permission:
 
 ```bash
 chmod +x Ghost-Downloader-*.AppImage
-sudo apt install libfuse2  # if needed
 ```
+
+## Cannot Start (Missing Dependencies)
+
+Some distributions need `libfuse2` (AppImage runtime dependency):
+
+```bash
+sudo apt install libfuse2
+```
+
+</Tab>
+</Tabs>

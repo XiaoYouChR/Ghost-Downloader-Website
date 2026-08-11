@@ -1,15 +1,29 @@
 ---
 title: Cat Catch Advanced Features
-description: Media capture toggles in the extension's Advanced panel.
+description: Media capture tools in the extension's advanced panel.
 ---
 
-Click extension icon → Advanced. These toggles are powered by [Cat Catch](https://github.com/nichuanfang/cat-catch) integration. Each toggle applies only to the current tab.
+Click the extension icon → Advanced. This integrates the media capture capabilities of [Cat Catch](https://github.com/nichuanfang/cat-catch). Each switch only affects the current tab.
 
-| Toggle | Description |
+<TypeTable type={{
+  "Recorder": { type: "Switch", description: "Record video/audio currently playing on the page" },
+  "WebRTC Capture": { type: "Switch", description: "Capture media streams from video calls and P2P live streams" },
+  "Screen Capture": { type: "Switch", description: "Record the entire tab or screen" },
+  "Deep Search": { type: "Switch", description: "More aggressively search for hidden media resources on the page" },
+  "Cache Capture": { type: "Switch", description: "Extract previously played media from the browser cache" },
+  "Mobile UA": { type: "Switch", description: "Disguise as a mobile device; some sites return formats that are easier to download" },
+}} />
+
+<Callout type="info">
+Refresh the page after enabling Mobile UA for it to take effect.
+</Callout>
+
+## When to Use
+
+| Situation | Which to Enable |
 |---|---|
-| Recorder | Record playing video/audio |
-| WebRTC Capture | Capture video calls and P2P streams |
-| Screen Capture | Record tab or entire screen |
-| Deep Search | Aggressively scan for hidden media |
-| Cache Capture | Extract media from browser cache |
-| Mobile UA | Spoof User-Agent as mobile device |
+| Video is visible on the page but the sniffing list is empty | Recorder or Deep Search |
+| Want to record a video call screen | WebRTC Capture |
+| Want to record web games/Canvas animations | Screen Capture |
+| A video that just played now has a dead link | Cache Capture |
+| Sites encrypted on desktop but not on mobile | Mobile UA |

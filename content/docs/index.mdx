@@ -1,28 +1,24 @@
 ---
-title: Ghost Downloader Docs
-description: User guides and developer documentation for Ghost Downloader.
+title: Ghost Downloader Documentation
+description: User guide and developer documentation for Ghost Downloader.
 ---
 
 <Callout type="info" title="Support the Project">
-Ghost Downloader is free and open source. Your [donation](./donate) directly funds development, testing, and maintenance.
+Ghost Downloader is free and open source. [Donating](./donate) goes directly to development and maintenance, and [contributing translations](./dev/contributing/translation) requires no coding.
 </Callout>
 
 <Cards>
-  <Card title="Getting Started" href="./getting-started/install" description="Installation, browser extension pairing, and your first download." />
-  <Card title="Developer" href="./dev" description="Environment setup, architecture, and contributing." />
-  <Card title="Test Results" href="./benchmark" description="Speed, takeover, and media sniffing data (2026-07-30)." />
-  <Card title="Contribute Translation" href="./dev/contributing/translation" description="Help translate Ghost Downloader on Crowdin." />
+  <Card title="Getting Started" href="./getting-started/install" description="Install, pair the extension, first download." />
+  <Card title="Downloads" href="./downloads/files" description="Files, videos, torrents, live streams, eD2k." />
+  <Card title="Browser Extension" href="./browser-extension/media-sniffing" description="Sniffing, interception, Cat Catch, batch images." />
+  <Card title="Power User" href="./power-user/editing-tasks" description="Edit tasks, batch, TLS fingerprint, proxy." />
+  <Card title="Troubleshooting" href="./troubleshooting/faq" description="Connection issues, download failures, app won't open." />
+  <Card title="Developer" href="./dev" description="Setup, architecture, write a FeaturePack." />
 </Cards>
 
-## Something not working?
+## Feature Comparison at a Glance
 
-<Cards>
-  <Card title="FAQ" href="./troubleshooting/faq" description="Extension not connecting, downloads failing or corrupt, app won't start, and other common fixes." />
-</Cards>
-
-## Feature comparison
-
-`✅` supported · `⚠️` partial · `❌` not supported
+`✅` Supported · `⚠️` Partial · `❌` Not supported
 
 | | GD | IDM | NDM | Gopeed | Motrix | FDM |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -31,14 +27,12 @@ Ghost Downloader is free and open source. Your [donation](./donate) directly fun
 | Free | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | Open source | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
 | Browser download takeover | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| Deep browser–desktop handoff | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
-| Media sniffing | ✅ | ✅ | ⚠️ | ❌ | ❌ | ⚠️ |
+| Browser → desktop deep integration | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ |
+| Resource sniffing | ✅ | ✅ | ⚠️ | ❌ | ❌ | ⚠️ |
 | HLS / m3u8 / DASH | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ |
-| Site-specific handling | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Extensibility (plugins) | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
+| Site specialization | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Extensible (plugins) | ✅ | ❌ | ❌ | ✅ | ❌ | ⚠️ |
 
-Most download managers cover the basics well. Ghost Downloader's edge is the full pipeline from resource discovery in the browser through protocol-specific handling to desktop execution — not just the download itself.
-
-For download speed and media sniffing test data, see [Test Results](./benchmark).
+For measured speeds and sniffing data, see [Benchmark Records](./benchmark).
 
 Sources: [Ghost Downloader](https://github.com/XiaoYouChR/Ghost-Downloader-3), [IDM](https://support.internetdownloadmanager.com/), [NDM](https://neatdownloadmanager.com/index.php/en/), [Gopeed](https://gopeed.com/docs), [Motrix](https://motrix.app/features), [FDM](https://www.freedownloadmanager.org/).

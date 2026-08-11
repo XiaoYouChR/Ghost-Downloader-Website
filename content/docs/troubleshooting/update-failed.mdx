@@ -1,10 +1,32 @@
 ---
 title: Update Failed
-description: What to do when auto-update doesn't work.
+description: Troubleshooting steps when automatic updates do not work.
 ---
 
-GD checks GitHub Releases on startup and downloads updates as a regular task.
+## Update Mechanism
 
-1. **Network** — update check needs GitHub access. Configure a proxy if needed.
-2. **Download fails** — same as any download. Check proxy and retry.
-3. **Manual update** — download the latest installer from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest) and install over the existing version.
+Ghost Downloader fetches the latest release information from GitHub Releases on startup, compares version numbers, and shows an update dialog. After selecting an asset, GD executes the update package as a normal Task.
+
+## Troubleshooting Steps
+
+<Steps>
+<Step>
+### Check Network Connectivity
+
+Update checks require access to the GitHub API. If your network cannot reach GitHub directly, configure a proxy in Settings and restart the application.
+</Step>
+<Step>
+### Update Package Download Fails
+
+The update package is downloaded like a normal Task, so it can hit the same network issues. Confirm the proxy settings are correct, or try reducing the number of threads.
+</Step>
+<Step>
+### Manual Update
+
+If automatic updates keep failing, download the installer for your platform directly from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest) and install it over the existing installation.
+</Step>
+</Steps>
+
+<Callout type="info" title="Didn't get an update notification?">
+Check whether Settings → Application → Check for updates on startup is enabled.
+</Callout>

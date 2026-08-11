@@ -1,0 +1,117 @@
+---
+title: FeaturePack Capabilities
+description: Usage of Parser, Card, BinaryRuntime, PackPage, PackConfig.
+---
+
+A FeaturePack can provide any combination of the following capabilities.
+
+## Parser
+
+URL matching and Task parsing. FeatureService checks each Parser's `match()` in ascending `priority` order; the first one returning `True` takes over.
+
+```python title="Example: FTP Parser"
+class FtpParser(TaskParser):
+    priority = 95
+
+    def match(self, options: TaskOptions) -> bool:
+        return urlparse(options.url).scheme.lower() in {"ftp", "ftps"}
+
+    async def parse(self, options: TaskOptions) -> Task:
+        # Connect to FTP server, get file info, build Task
+        ...
+```
+
+`matchPassive()` is used in passive scenarios like clipboard monitoring; it calls `match()` by default. It can be overridden to be stricter (for example, matching only specific extensions).
+
+## Card
+
+Customize Draft confirmation cards and Task progress cards.
+
+```python title="Example: Register Cards"
+class MyPack(FeaturePack):
+    packId = "my_pack"
+    parsers = [MyParser]
+    taskCards = {MyTask: MyTaskCard}
+    draftCards = {MyTask: MyDraftCard}
+```
+
+- `taskCards` maps Task types to TaskCard subclasses (progress cards displayed in the main window)
+- `draftCards` maps Task types to DraftCard subclasses (cards in the confirmation window)
+- When not registered, default base class cards are used
+
+## BinaryRuntime
+
+Manages external executables (ffmpeg, yt-dlp, etc.).
+
+```python title="Example: Declare Runtime"
+class FfmpegRuntime(BinaryRuntime):
+    name = "ffmpeg"
+    canInstall = True
+    title = "FFmpeg"
+    description = "Audio/video processing tool"
+
+    def path(self) -> str:
+        return shutil.which("ffmpeg") or ""
+
+    async def installTask(self) -> Task:
+        # Return a download + extract Task
+        ...
+```
+
+Declare it in the Pack:
+
+```python
+class MyPack(FeaturePack):
+    def runtimes(self) -> list[BinaryRuntime]:
+        return [FfmpegRuntime()]
+```
+
+The settings page automatically shows an install button for Runtimes with `canInstall = True`.
+
+## PackPage
+
+Adds custom pages to the sidebar (such as a resource store).
+
+```python
+class MyPage(PackPage):
+    icon = FluentIcon.LIBRARY
+    title = "Resource Downloads"
+```
+
+```python
+class MyPack(FeaturePack):
+    def pages(self) -> list[type[PackPage]]:
+        return [MyPage]
+```
+
+## PackConfig
+
+Adds persistent configuration items for a Pack, automatically injected into the global settings system.
+
+```python title="Example: FFmpeg Config"
+class FFmpegConfig(PackConfig):
+    installFolder = ConfigItem("FFmpeg", "InstallFolder", f"{APP_DATA_DIR}/FFmpeg")
+
+    def settingGroups(self, parent: QWidget) -> list[CollapsibleSettingCardGroup]:
+        from app.view.components.setting_card_group import CollapsibleSettingCardGroup
+        from app.view.components.setting_cards import SelectFolderSettingCard
+
+        group = CollapsibleSettingCardGroup(self.tr("FFmpeg"), "ffmpeg", parent)
+        folderCard = SelectFolderSettingCard(
+            ffmpegConfig.installFolder, f"{APP_DATA_DIR}/FFmpeg",
+            self.tr("FFmpeg Install Directory"), group,
+        )
+        runtimeCard = self.createRuntimeCard(ffmpegRuntime, group)
+        folderCard.pathChanged.connect(runtimeCard._onInstallFolderChanged)
+        group.addSettingCards([folderCard, runtimeCard])
+        runtimeCard.refreshStatus()
+        return [group]
+```
+
+```python
+class FFmpegPack(FeaturePack):
+    packId = "ffmpeg"
+    config = FFmpegConfig()
+```
+
+Configuration values are read via `cfg.pack_FFmpegConfig_installFolder.value`. `__init_subclass__` automatically prefixes keys with `pack_{class name}_`, so configuration items with the same name in different Packs do not conflict.

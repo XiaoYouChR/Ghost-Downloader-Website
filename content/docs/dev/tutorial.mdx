@@ -1,0 +1,94 @@
+---
+title: Your First FeaturePack
+description: Create a loadable FeaturePack from scratch.
+---
+
+Use `http_pack` as a template to create a Pack that handles a custom protocol.
+
+<Steps>
+<Step>
+### Create the directory
+
+Create a new directory under `features/`:
+
+```bash
+cp -r features/http_pack features/my_pack
+```
+
+Remove unnecessary files and keep `pack.py`.
+
+</Step>
+<Step>
+### Define the Pack class
+
+```python title="features/my_pack/pack.py" {3,4}
+from app.models.pack import FeaturePack, TaskParser
+
+class MyPack(FeaturePack):
+    packId = "my_pack"
+    parsers = [MyParser]
+```
+
+`packId` is globally unique. `parsers` lists all Parser instances provided by this Pack.
+
+</Step>
+<Step>
+### Implement the Parser
+
+```python title="features/my_pack/pack.py"
+from app.models.task import Task, TaskOptions
+from urllib.parse import urlparse
+
+class MyParser(TaskParser):
+    priority = 40  # Lower number = checked first
+
+    def match(self, options: TaskOptions) -> bool:
+        return urlparse(options.url).hostname == "example.com"
+
+    async def parse(self, options: TaskOptions) -> Task:
+        # Build and return a Task
+        task = HttpTask(
+            name="example.zip",
+            url=options.url,
+            fileSize=0,
+            outputFolder=options.outputFolder,
+        )
+        task.addStep(HttpTaskStep(...))
+        return task
+```
+
+- When `match()` returns `True`, this Parser takes over the URL.
+- `parse()` parses the URL into an executable Task.
+- The lower `priority` is, the earlier it is checked. The HTTP fallback Parser is 100.
+
+</Step>
+<Step>
+### Add manifest.toml
+
+Create `manifest.toml` under `features/my_pack/`:
+
+```toml title="features/my_pack/manifest.toml"
+[pack]
+entry = "pack.py"
+class = "MyPack"
+dependencies = ["http_pack"]
+```
+
+- `entry` - the entry file name
+- `class` - the Pack class name in the entry file
+- `dependencies` - names of other Pack directories it depends on (loaded in topological order, dependencies first)
+
+At startup, `FeatureService.load()` automatically scans the `features/` directory, reads each subdirectory's `manifest.toml`, and loads it. No manual registration is required.
+
+</Step>
+<Step>
+### Test
+
+Start the app and paste an `example.com` link. If the Parser matches correctly, a confirmation window appears.
+
+</Step>
+</Steps>
+
+<Callout type="info">
+Complete API: [API Reference](./api-reference). More capabilities (Card, BinaryRuntime, PackPage): [Capabilities Guide](./capabilities).
+</Callout>

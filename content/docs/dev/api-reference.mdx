@@ -1,0 +1,139 @@
+---
+title: API Reference
+description: Complete interfaces for FeaturePack, TaskParser, PackConfig, and BinaryRuntime.
+---
+
+## FeaturePack
+
+<TypeTable type={{
+  "packId": { type: "str", default: "\"\"", description: "Globally unique identifier", required: true },
+  "config": { type: "PackConfig | None", default: "None", description: "Persistent configuration for the Pack" },
+  "proxySchemes": { type: "set[str] | None", default: "None", description: "Proxy schemes supported by this Pack (e.g., {\"socks5\", \"http\"})" },
+  "parsers": { type: "list[type[TaskParser]]", default: "[]", description: "List of Parser classes provided by this Pack" },
+  "taskCards": { type: "dict[type[Task], type[TaskCard]]", default: "{}", description: "Mapping from Task type to TaskCard subclass" },
+  "draftCards": { type: "dict[type[Task], type[DraftCard]]", default: "{}", description: "Mapping from Task type to DraftCard subclass" },
+}} />
+
+### Methods
+
+<TypeTable type={{
+  "optionCards(task, parent)": { type: "-> list[QWidget]", description: "Option cards at the bottom of the Draft confirmation window (e.g., thread count, proxy selection)" },
+  "editCards(task, parent)": { type: "-> list[QWidget]", description: "Cards for the edit Task dialog, defaults to optionCards" },
+  "runtimes()": { type: "-> list[BinaryRuntime]", description: "External runtimes this Pack depends on" },
+  "fileTypes()": { type: "-> list[FileType]", description: "File types this Pack can associate with (e.g., .torrent)" },
+  "uriSchemes()": { type: "-> list[UriScheme]", description: "URI schemes this Pack can associate with (e.g., magnet:)" },
+  "pages()": { type: "-> list[type[PackPage]]", description: "Custom pages injected into the sidebar" },
+  "activate()": { type: "async", description: "Called after the Pack is loaded" },
+  "deactivate()": { type: "async", description: "Called before the Pack is unloaded" },
+}} />
+
+---
+
+## TaskParser
+
+<TypeTable type={{
+  "priority": { type: "int", default: "100", description: "Matching priority; lower numbers are checked first" },
+  "match(options)": { type: "-> bool", description: "Whether to take over this URL in active scenarios (user pastes a URL, browser push)", required: true },
+  "matchPassive(options)": { type: "-> bool", description: "Whether to take over in passive scenarios (clipboard monitoring), defaults to calling match()" },
+  "parse(options)": { type: "async -> Task", description: "Parses Task Options into an executable Task", required: true },
+}} />
+
+---
+
+## PackConfig
+
+<TypeTable type={{
+  "settingGroups(parent)": { type: "-> list[CollapsibleSettingCardGroup]", description: "Configuration UI for this Pack on the settings page" },
+  "associateFileTypes": { type: "ConfigItem | None", description: "File type association toggle" },
+  "associateUriSchemes": { type: "ConfigItem | None", description: "URI scheme association toggle" },
+  "createRuntimeCard": { type: "Callable | None", description: "Runtime install card factory" },
+}} />
+
+Configuration items are declared as class attributes via `ConfigItem`, automatically injected into the global `cfg`, with key prefix `pack_{ClassName}_{attrName}`.
+
+---
+
+## BinaryRuntime
+
+<TypeTable type={{
+  "name": { type: "str", description: "Runtime name (used for logging and path lookup)" },
+  "canInstall": { type: "bool", default: "False", description: "Whether to show an install button in settings" },
+  "title": { type: "str", description: "Display name" },
+  "description": { type: "str", description: "Display description" },
+  "path()": { type: "-> str", description: "Returns the executable path; empty string means not installed", required: true },
+  "probeVersion()": { type: "async -> str", description: "Runs --version to get the version number" },
+  "isAppManaged()": { type: "-> bool", description: "Whether it is managed by GD itself (rather than installed by the system)" },
+  "fetchLatestVersion()": { type: "async -> str", description: "Fetches the latest version number online" },
+  "isNewer(installed, latest)": { type: "-> bool", description: "Compares version numbers" },
+  "installTask()": { type: "async -> Task", description: "Returns a Task that downloads and installs", required: true },
+  "delete()": { type: "-> None", description: "Deletes the locally installed runtime" },
+}} />
+
+---
+
+## Task
+
+<TypeTable type={{
+  "name": { type: "str", description: "File name (illegal characters are automatically filtered)", required: true },
+  "url": { type: "str", description: "Download URL", required: true },
+  "packId": { type: "str", description: "Identifier of the Pack that created this Task", required: true },
+  "taskId": { type: "str", default: "auto", description: "Unique ID, automatically generated" },
+  "status": { type: "TaskStatus", default: "WAITING", description: "Derived from Task Step status; do not set directly" },
+  "steps": { type: "list[TaskStep]", default: "[]", description: "List of Task Steps" },
+  "outputFolder": { type: "Path", description: "Download target directory" },
+  "fileSize": { type: "int", default: "0", description: "Total size (bytes), 0 = unknown" },
+  "files": { type: "list[TaskFile] | None", default: "None", description: "File list for multi-file Tasks (BT/playlist)" },
+  "category": { type: "str | None", default: "None", description: "Download Category ID" },
+}} />
+
+### Class Attributes
+
+<TypeTable type={{
+  "canEdit": { type: "bool", default: "False", description: "Whether users are allowed to edit Tasks of this type" },
+  "fileType": { type: "type", default: "TaskFile", description: "Selectable File type for multi-file Tasks" },
+  "hasOutputFile": { type: "bool", default: "True", description: "Whether there is an output file after completion (False for install-type Tasks)" },
+}} />
+
+<Callout type="warn">
+Task subclasses automatically register their class name into the deserialization mapping via `__init_subclass__`. Renaming the class will make existing `tasks.jsonl` unrecoverable.
+</Callout>
+
+---
+
+## TaskStep
+
+<TypeTable type={{
+  "stepIndex": { type: "int", description: "Step index", required: true },
+  "fileIndex": { type: "int | None", default: "None", description: "Index of the associated TaskFile (for multi-file Tasks)" },
+  "status": { type: "TaskStatus", default: "WAITING", description: "Step status" },
+  "progress": { type: "float", default: "0", description: "Progress percentage 0-100" },
+  "receivedBytes": { type: "int", default: "0", description: "Received byte count" },
+  "speed": { type: "int", default: "0", description: "Current speed (bytes/second)" },
+  "run(reportSpeed, waitForSpeedLimit)": { type: "async", description: "Executes the download logic", required: true },
+  "outputPath": { type: "property -> str", description: "Output file path for this step" },
+  "deleteFiles()": { type: "-> None", description: "Deletes files produced by this step" },
+}} />
+
+### Class Attributes
+
+<TypeTable type={{
+  "canPause": { type: "bool", default: "True", description: "Whether this step is pausable" },
+}} />
+
+---
+
+## FileType / UriScheme
+
+```python
+@dataclass(frozen=True)
+class FileType:
+    extensions: tuple[str, ...]  # (".torrent",)
+    displayName: str             # "BitTorrent Torrent File"
+    mimeType: str                # "application/x-bittorrent"
+    icon: str                    # Icon resource name
+
+@dataclass(frozen=True)
+class UriScheme:
+    scheme: str       # "magnet"
+    displayName: str  # "Magnet Link"
+```

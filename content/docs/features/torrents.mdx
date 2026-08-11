@@ -1,16 +1,33 @@
 ---
 title: Download Torrents
-description: BitTorrent and Magnet link downloads.
+description: BitTorrent and Magnet downloads.
 ---
 
-Add via magnet link (paste or intercept) or .torrent file (drag into window).
+<Callout type="warn" title="Not supported on Android">
+The Android version does not include BitTorrent functionality.
+</Callout>
 
-Magnet links need a few seconds to fetch the file list from the network.
+## Add
 
-**File selection:** pick which files to download. Can be changed anytime via **right-click → File Selection**.
+- Magnet links — paste or capture from the browser
+- .torrent files — drag into the window or click to import
 
-**Seeding:** automatic after completion. Configure limits in **Settings → BitTorrent**.
+Magnet links require fetching the file list first, which usually takes a few seconds to tens of seconds.
 
-**Proxy:** SOCKS5 only for download traffic (**Settings → Proxy**).
+## File Selection
 
-Android does not support BitTorrent.
+For multi-file torrents, you can select the files you need. You can also change this during download: **Right-click the task → File Selection**.
+
+Unchecked files keep the already downloaded parts; re-checking continues from them.
+
+## Seeding
+
+Seeding starts automatically after download completes. **Settings → BitTorrent** lets you configure the share ratio limit and time limit. You can also stop manually at any time.
+
+## Proxy
+
+**Settings → Proxy** configures a SOCKS5 proxy. Only SOCKS5 applies to download traffic.
+
+## Resume
+
+After pausing or exiting and restarting, continue from the last position.

@@ -1,21 +1,29 @@
 ---
 title: Built-in Feature Packs
-description: Use one table to locate the purpose, dependencies, and source entry point of each built-in Feature Pack.
+description: Overview of the responsibilities, priorities, and capabilities of the 12 built-in FeaturePacks.
 ---
 
-Built-in packs are split by protocol and site capability. When locating a problem, confirm the input type first, then jump into the matching source directory.
+A Parser with a lower priority is matched first. The first Parser whose `match()` returns True handles the URL.
 
-| Pack | Handles | Key Dependencies | Source Entry |
-| --- | --- | --- | --- |
-| `http_pack` | HTTP / HTTPS files | `wreq`, Range, proxy support | `features/http_pack` |
-| `bittorrent_pack` | Magnet links, `.torrent` files | `libtorrent`, trackers, DHT | `features/bittorrent_pack` |
-| `ftp_pack` | FTP / FTPS | `aioftp` | `features/ftp_pack` |
-| `m3u8_pack` | M3U8, MPD | `http_pack`, `disk_pack`, `ffmpeg_pack`, N_m3u8DL-RE | `features/m3u8_pack` |
-| `bili_pack` | Bilibili video pages | `http_pack`, `ffmpeg_pack`, cookies | `features/bili_pack` |
-| `github_pack` | GitHub release / raw / download links | `http_pack`, mirror sites | `features/github_pack` |
-| `ffmpeg_pack` | Runtime installation and media merging | `http_pack`, `disk_pack`, FFmpeg | `features/ffmpeg_pack` |
-| `disk_pack` | Runtime extraction tasks | Local file system, archives | `features/disk_pack` |
+| Pack | packId | Parser | Priority | Capabilities | Runtime |
+|---|---|---|---|---|---|
+| `ed2k_pack` | `ed2k` | ED2kParser | 45 | parser, uriSchemes | External eD2k runtime |
+| `bili_pack` | `bili` | BilibiliParser | 50 | parser, taskCards, draftCards | — |
+| `disk_pack` | `disk` | InstallParser | 55 | parser | — |
+| `ffmpeg_pack` | `ffmpeg` | MergeParser | 60 | parser | FFmpeg, FFprobe |
+| `yt_dlp_pack` | `ytdlp` | YouTubeParser | 70 | parser, taskCards, draftCards | yt-dlp |
+| `m3u8_pack` | `m3u8` | M3U8Parser | 80 | parser, taskCards, draftCards, fileTypes | N_m3u8DL-RE |
+| `bittorrent_pack` | `bt` | TorrentParser | 85 | parser, taskCards, draftCards, fileTypes, uriSchemes | libtorrent (Python) |
+| `huggingface_pack` | `huggingface` | HuggingFaceParser | 85 | parser, taskCards, draftCards | — |
+| `github_pack` | `github` | GitHubParser | 90 | parser, taskCards (reuses HttpTaskCard) | — |
+| `ftp_pack` | `ftp` | FtpParser | 95 | parser, taskCards, draftCards, uriSchemes | — |
+| `http_pack` | `http` | HttpParser | 100 | parser, taskCards | — |
+| `jack_yao` | `jack_yao` | — | — | pages | — |
 
-<Callout type="warn" title="Release Difference">
-The repository still contains `jack_yao`, but `deploy.py` currently keeps it in `FEATURE_PACK_BLACKLIST`, so it is not shipped in official release packages.
+<Callout type="info">
+`jack_yao` only provides an in-app page (resource download directory) and has no Parser. In `deploy.py`, it is in `FEATURE_PACK_BLACKLIST` and is not included in official releases.
+</Callout>
+
+<Callout type="warn">
+On Android builds, `bittorrent_pack`, `ed2k_pack`, and `jack_yao` are stripped (`build_apk.sh` lines 15-17).
 </Callout>

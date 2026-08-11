@@ -1,57 +1,52 @@
 ---
 title: Settings Reference
-description: Per-setting explanation of meaning, allowed values, and when you would change it -- limited to non-obvious options.
+description: Explanations for settings that are not obvious at first glance.
 ---
 
-Only non-obvious settings are listed here. Maximum Concurrent Tasks, Download Path, Download Speed Limit, and other self-explanatory options are not repeated.
+Only settings that are not obvious at first glance are included.
 
-All settings are stored in `UserConfig.json` inside the data directory. See [Where Config and Logs Live](./configuration) for the location.
+All settings are stored in `UserConfig.json` in the data directory. See [Configuration File Location](./configuration).
 
 ## General Download Settings
 
 <TypeTable
   type={{
-    "Pre-allocated Threads": {
-      type: "number",
+    "Preallocated Thread Count": {
+      type: "1 ~ 256",
       default: "8",
-      description: "Number of Subworkers each Task starts with. Range 1 to 256. Higher values increase single-task throughput, provided the server allows it. Above 64, there is a real risk of triggering server-side anti-scraping, which typically manifests as corrupted files or failed hash checks. 8 to 32 is safe for CDNs and major cloud storage; go higher only when the source has no concurrency limits."
+      description: "Number of chunks allocated when a Task starts. For CDN or cloud storage, 8~32 is recommended; exceeding 64 may be blocked by anti-crawling and cause file corruption."
     },
-    "Auto Boost": {
+    "Automatic Speed Boost": {
       type: "boolean",
       default: "true",
-      description: "Monitors each Subworker's throughput at runtime and automatically adds more when it detects uneven speeds. The only reason to turn it off is when the target server is very sensitive to concurrent connections (e.g., consistently returns 429) and you want full manual control over thread count."
+      description: "Automatically increases the number of chunks when bandwidth is not fully utilized during a run. Turn it off when the target server is sensitive to concurrency (frequent 429)."
     },
-    "Minimum Redistribution Size": {
-      type: "number",
-      default: "512 (KB)",
-      description: "A Subworker's remaining workload must exceed this value before it can be split to another completed or newly added Subworker. Range 64 to 102400 KB. Increase it to reduce overhead from frequent splits on small files. Decrease it for more even load balancing when bandwidth fluctuates."
+    "Minimum Reallocation Size": {
+      type: "64 ~ 102400 KB",
+      default: "512",
+      description: "A chunk is split only when its remaining work exceeds this value. Increasing it reduces overhead for small files; decreasing it makes the load more even."
     },
-    "Verify SSL Certificates": {
+    "Verify SSL Certificate": {
       type: "boolean",
       default: "false",
-      description: "When enabled, the server's certificate chain is validated. Disabled by default because some corporate proxies and campus networks inject self-signed certificates that break downloads. Enable it on trusted networks if you want to prevent MITM attacks. Requires a restart to take effect."
+      description: "Validates the server certificate chain. Disabled by default because campus/enterprise proxies often inject self-signed certificates. Restart required after changing."
     },
-    "Preserve file modification time": {
+    "Preserve File Modification Time": {
       type: "boolean",
       default: "false",
-      description: "Sets the downloaded file's modification timestamp to the server's Last-Modified value. Useful if you sort files by date or run incremental backups. Has no effect when the server does not return a Last-Modified header."
-    },
-    "Delete local files on task removal": {
-      type: "boolean",
-      default: "false",
-      description: "Controls the default state of the \"Also delete downloaded files\" checkbox in the delete-task confirmation dialog. It remembers your last choice. When true, every delete confirmation defaults to also removing the file from disk -- accidental deletions will lose data, so be careful. This setting has no standalone UI entry; it only appears in the delete confirmation dialog."
+      description: "Uses the server's Last-Modified header to set the file modification time after the download completes. Has no effect when the server does not return this header."
     },
   }}
 />
 
-## Client Profile
+## Emulated Identity
 
 <TypeTable
   type={{
-    "clientProfile": {
-      type: "string",
-      default: '"auto"',
-      description: "Determines the TLS fingerprint and HTTP/2 parameters used for download requests. auto: matches the browser fingerprint based on the link's origin. chrome / edge / firefox / safari / okhttp etc.: locks to the latest version fingerprint of that browser family. raw: no emulation, sends requests as-is -- use when a server depends on non-standard TLS behavior. If a download returns 403 and you are sure the link is valid, switching clientProfile often fixes it."
+    "Client Profile": {
+      type: "auto / chrome / edge / firefox / safari / raw",
+      default: "auto",
+      description: "TLS fingerprint used for download requests. auto matches automatically based on the source. Switching usually resolves a 403. raw disables emulation."
     },
   }}
 />
@@ -61,14 +56,14 @@ All settings are stored in `UserConfig.json` inside the data directory. See [Whe
 <TypeTable
   type={{
     "Service Port": {
-      type: "number",
+      type: "1024 ~ 65535",
       default: "14370",
-      description: "The port the browser extension uses to communicate with the desktop client. Range 1024 to 65535. Only change this if 14370 is occupied by another program. After changing, you must update the port in the extension's settings to match."
+      description: "Port the extension uses to connect to the desktop app. Change it only when occupied, then sync in the extension settings."
     },
-    "Enter draft mode when intercepting downloads": {
+    "Enter Draft Mode on Capture": {
       type: "boolean",
       default: "false",
-      description: "When enabled, downloads intercepted by the browser extension are not started immediately. Instead, a Task Draft is created and a window pops up so you can change the file name, save path, or toggle Selectable Files. Useful if you frequently rename files or pick directories. When disabled, intercepted downloads start immediately with current defaults."
+      description: "On: captured downloads first show a confirmation dialog, allowing the name and path to be changed. Off: start directly with the default configuration."
     },
   }}
 />
@@ -77,27 +72,27 @@ All settings are stored in `UserConfig.json` inside the data directory. See [Whe
 
 <TypeTable
   type={{
-    "closeMode": {
-      type: '"Ask" | "Background" | "Quit"',
-      default: '"Ask"',
-      description: "Ask: shows a dialog every time you close the window. Background: the window closes but the program keeps running in the tray / menu bar; in-progress Tasks are not interrupted. Quit: exits the program immediately. Pick Background or Quit if you do not want to be asked every time."
+    "When Closing Main Window": {
+      type: "Ask / Background Running / Exit",
+      default: "Ask",
+      description: "Background Running = closing the window does not stop downloads. Choose a fixed behavior if you do not want to be asked every time."
     },
-    "Monitor Clipboard": {
+    "Clipboard Monitoring": {
       type: "boolean",
       default: "true",
-      description: "Watches the system clipboard for URLs. When a supported link is detected, the add-task dialog pops up automatically. Turn it off if you copy links frequently but do not want the popup every time."
+      description: "Automatically pops up the Add Task dialog when a link is detected in the clipboard. Turn it off if you copy links often but do not want to be interrupted."
     },
   }}
 />
 
-## Download Categorization
+## Download Categories
 
 <TypeTable
   type={{
-    "Enable Categorization": {
+    "Enable Download Categories": {
       type: "boolean",
       default: "false",
-      description: "When enabled, new Tasks are automatically sorted into Categories (e.g., Video, Audio, Documents) based on file extension, and each Category can route files to a different folder. Edit rules under Settings → Download Categorization. Only affects Tasks created after enabling; existing Tasks are not re-categorized."
+      description: "New Tasks are automatically categorized by file extension and distributed to different folders. Affects only Tasks created afterward."
     },
   }}
 />

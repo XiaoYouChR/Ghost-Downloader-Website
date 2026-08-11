@@ -1,62 +1,33 @@
 ---
-title: Editing a Task
-description: Modify URL, request headers, proxy, identity presets, and file selection.
+title: Edit Task
+description: Modify options for downloading or waiting tasks.
 ---
 
-Right-click a task card → "Edit Task Options..." (available while the task has not completed). The options shown depend on the task's protocol.
+**Right-click task → Edit task options** (available when the task is not complete).
 
-## Changing the URL
+## Editable options
 
-After modifying the URL field and clicking "Apply", Ghost Downloader re-parses the new URL.
-
-- If the new URL's content is compatible with the original (same file size and structure), existing download progress is preserved.
-- If the content differs and the task already has download progress, a confirmation dialog appears: "The new URL differs from the original; x of existing data will be cleared. Continue?" Confirming deletes the downloaded data and restarts the task from scratch.
-- If the new URL fails to parse, a "Link Parsing Failed" error appears and the task is not modified.
-
-## Editing Request Headers
-
-Two editing modes, toggled via the toolbar:
-
-- **Table view** — one header per row, split into Name and Value columns.
-- **Text view** — free-form text, one `Name: Value` pair per line. You can also paste a cURL command directly (only the first command is imported).
+| Item | Description |
+|---|---|
+| URL | Automatically re-parsed after modification. Progress is retained if the content matches, otherwise prompts to re-download. |
+| Filename | Change directly. |
+| Download directory | Change directly. |
+| Subworkers | Increase or decrease takes effect immediately. |
+| Proxy | Overrides global proxy settings. |
+| Client fingerprint | Switches browser emulated identity. See [TLS fingerprint](./tls-fingerprint). |
+| Request headers | Edit row by row in table view, or paste in text view (pasting cURL commands is supported). |
 
 <Callout type="warn">
-When the Client Profile is set to anything other than "No Emulation (Send As-Is)", your manually set `User-Agent` and `sec-ch-ua` headers will not take effect — they are overridden by values corresponding to the TLS fingerprint. To have full control over these two headers, set the Client Profile to "No Emulation (Send As-Is)".
+When client fingerprint emulation is enabled, a manually set User-Agent will not take effect. To fully customize request headers, set the fingerprint to "No emulation".
 </Callout>
 
-## Request Header Presets
+## Request header presets
 
-If you frequently need different request headers for different sites, save presets under Settings → "Request Header Presets". Each preset contains a name and a set of headers. When creating a new task, the request headers start from the selected preset.
+Common request header combinations can be saved as presets: **Settings → Request header presets → Add**. New tasks automatically start from the preset.
 
-## Proxy
+## File selection
 
-Ghost Downloader provides three proxy modes under Settings → "Proxy": No Proxy, Auto-detect System Proxy, and Use Custom Proxy (socks4, socks5, socks5h, http, https).
+Multi-file tasks such as torrents and FTP directories can have their selections changed at any time, in any state.
 
-### Proxy Protocol Support Varies by Download Method
-
-| Download Method | Supported Proxy Protocols |
-|----------------|--------------------------|
-| HTTP           | socks4, socks5, socks5h, http, https |
-| M3U8           | socks4, socks5, socks5h, http, https |
-| BT             | socks5 |
-| FTP            | socks4, socks5 |
-
-**If you use multiple download methods and need a proxy, SOCKS5 is the only protocol that works with all of them.**
-
-## Identity Presets
-
-Under Settings → "Client Profile", you can configure different TLS fingerprint and User-Agent combinations per domain.
-
-The global default profile applies when no preset matches. Each site-specific preset contains:
-
-- **Match Host** — enter a domain and press Enter. Supports exact matches (`pcs.baidu.com`) and wildcards (`*.pcs.baidu.com` matches all subdomains). At least one Host is required.
-- **TLS Fingerprint** — choose a browser fingerprint to emulate, or "Follow Global Default".
-- **User-Agent** — leave empty to auto-generate based on the TLS fingerprint.
-
-## File Selection
-
-Multi-file tasks (torrents, FTP directories, etc.) let you check which files to download. Selection can be changed in any task state.
-
-- Unchecking a file does not delete its downloaded data. Re-checking resumes from where it left off.
-- Checking a new file on a completed task makes it start downloading again automatically.
-- If the unchecked file is currently downloading, Ghost Downloader stops that file's download; other files are not affected.
+- Unchecking does not delete downloaded data; re-selecting resumes from the breakpoint.
+- A completed task automatically revives after selecting new files.

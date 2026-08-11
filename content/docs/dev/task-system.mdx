@@ -1,25 +1,57 @@
 ---
 title: Task System
-description: How TaskService, Task, TaskStep, and taskRecorder work together.
+description: State machine rules and scheduling mechanism.
 ---
 
-The task system revolves around two key files: `app/services/task_service.py` and `app/models/task.py`.
+[Architecture Overview](./overview) describes the complete task lifecycle. This page digs into the internals of the state machine.
 
-| Concept | Role | What to Watch When Changing It |
-| --- | --- | --- |
-| `TaskService` | AsyncIO scheduler running in a background thread. | Do not operate on QWidget directly from it. |
-| `Task` | A download or processing task. | New fields must stay compatible with persistence. |
-| `TaskStep` | A sub-progress unit, such as an HTTP chunk or media-processing stage. | The UI and extension use it to compute total progress. |
-| `taskRecorder` | Persists and restores task history. | Structural changes must keep old records readable. |
+Source: `app/services/task_service.py`, `app/models/task.py`.
 
-## Scheduling Flow
+## State Derivation
 
-1. The UI or extension submits a URL.
-2. `TaskService` runs parsing logic and creates a `Task`.
-3. The task enters the queue and is controlled by the maximum concurrency limit.
-4. Running tasks update `TaskStep`.
-5. Completion, pause, or failure is written back to the recorder.
+The task state is not a directly set value; it is aggregated from the states of all steps.
 
-<Callout type="info" title="When a Change Is Risky">
-If you change state enums, task serialization, pause/resume behavior, or stage progress, that affects the UI, the browser extension, and historical task recovery. The risk is higher than a normal internal Feature Pack change.
+![Task state machine](/images/docs/state-machine.svg)
+
+| Transition | Trigger |
+|------|------|
+| → WAITING | Enqueue, restore saved task, restart |
+| WAITING → RUNNING | Scheduler assigns to an async thread |
+| RUNNING → COMPLETED | All steps finish |
+| RUNNING → FAILED | Any step permanent error |
+| RUNNING → PAUSED | User pauses |
+| PAUSED / FAILED → WAITING | User restarts |
+| COMPLETED → WAITING | Completed task has newly selected incomplete files |
+
+**Derivation rules** (in priority order): any step FAILED → FAILED. All COMPLETED → COMPLETED. Any RUNNING → RUNNING. All PAUSED → PAUSED. Otherwise → WAITING.
+
+When setting a task state, first push the state to all incomplete steps, then re-derive from the steps. Directly writing the task's state field has no effect; it is overwritten on the next step state change.
+
+For a three-step task (download video → download audio → mux), when the second step fails: the first step is COMPLETED (stays COMPLETED), the second step FAILED, and the third step is still WAITING. The derived result is FAILED. When the user restarts, the first step is skipped, and the second step resets its progress to zero and executes again.
+
+## Step Iteration
+
+During execution, iteration proceeds in step-number order. The iterator re-checks the task state before fetching the next step. If a previous step failure caused the task state to become FAILED, iteration terminates immediately. This is a single error boundary: failure of any step prevents subsequent steps from executing.
+
+Completed and unselected steps are skipped; only steps in the WAITING state execute.
+
+<Callout type="warn">
+Cancellation (pause) and failure have different exception paths. Cancellation propagates through CancelledError; steps catch it internally and mark themselves as PAUSED. Failure propagates through TaskError; steps catch it internally, mark themselves as FAILED, and record the error message. Both exceptions eventually abort step iteration, but they affect subsequent recovery differently: a PAUSED step resumes from a breakpoint, while a FAILED step executes from the beginning.
 </Callout>
+
+## Scheduling
+
+The waiting queue is an ordered list. The scheduler loops and checks: when the number of RUNNING tasks is less than the maximum concurrency, it takes a task from the queue head and submits it to an async thread.
+
+When the user adjusts the maximum concurrency, if the number of RUNNING tasks exceeds the new limit, the excess tasks are cancelled and return to the waiting queue; only pausable steps are cancelled. Non-pausable steps (such as FFmpeg muxing) continue running until completion.
+
+## Operation Chains
+
+The core pattern for all mutation operations: cancel the run → callback → follow-up action. Callback timing depends on whether the task is running; this is an inevitable result of async bridging. See [Architecture Overview](./overview#mutation-operations).
+
+| Operation | What happens after cancellation |
+|------|-------------|
+| Re-download | Delete output files and progress files → Reset all steps to WAITING → Reschedule |
+| Edit | Optionally delete files → Replace parameters (URL / steps / file sizes; task ID unchanged) → Apply new options → Reschedule |
+| Selection change | Update selection list → If a COMPLETED task has newly selected incomplete files: Reschedule |
+| Delete | Optionally delete output files → Remove from memory and persistence |

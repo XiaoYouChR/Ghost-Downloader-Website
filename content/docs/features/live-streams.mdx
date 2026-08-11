@@ -1,61 +1,43 @@
 ---
 title: Recording Live Streams
-description: Record HLS/DASH live streams with real-time decryption, including on Android.
+description: Record HLS/DASH live streams.
 ---
 
-Ghost Downloader can record any live stream distributed via HLS (M3U8) or DASH (MPD). Recording is powered by the N_m3u8DL-RE runtime -- one-click install in Settings on desktop, built-in on Android.
+## Start Recording
 
-## Starting a Recording
+Paste the live stream's .m3u8 or .mpd link. GD automatically recognizes it as a live stream.
 
-Paste the live stream's M3U8 or MPD manifest URL into the app. The app automatically detects whether the manifest is a live stream (HLS checks for a missing `#EXT-X-ENDLIST`; DASH checks for `type="dynamic"`).
-
-If the manifest is a multi-bitrate master playlist, the Task Draft card shows a resolution dropdown to pick a specific bitrate tier.
-
-The Task Draft card for a live Task also shows a recording duration limit -- three spinboxes for hours, minutes, and seconds. Leave them at zero for unlimited duration (record until manually stopped).
+If multiple qualities are available, resolutions can be selected in the confirmation window. You can also set a recording duration limit (leave empty = unlimited).
 
 ## During Recording
 
-Once recording starts, the task card shows real-time status:
+The task card shows the recorded duration and speed.
 
-- Elapsed recording time and duration limit (if set)
-- Current status: "Recording" or "Waiting" (waiting for the next manifest refresh)
-- Live download speed
+<Callout type="warn">
+Live stream recording does not support pausing. Stopping ends the recording; it cannot be resumed.
+</Callout>
 
-Live recording **does not support pausing**. The recording process continuously fetches the manifest, downloads new segments, and merges them in real time. The start/stop button on the task card changes to a confirmation icon during recording; clicking it terminates the process and finalizes the recorded content.
+## Stop Recording
 
-### Real-time Decryption
+Recording ends in the following cases:
 
-If the live stream uses AES-128 or other encryption, N_m3u8DL-RE can decrypt MP4 segments on the fly (Settings → M3U8 Download → **MP4 Real-time Decryption**, on by default). You can also provide decryption keys manually in KID:KEY format on the Task Draft card, or point to a KEY text file.
+- Clicking the stop button
+- Reaching the set duration limit
+- The live stream itself ends
 
-The decryption engine defaults to FFmpeg but can be switched to MP4Decrypt or Shaka Packager (you must provide the executable path yourself).
+After stopping, the recorded content is automatically merged into a complete file.
 
-## When Recording Ends
+## Encrypted Live Streams
 
-Recording ends when:
+If the live stream is encrypted, GD decrypts it automatically, no extra steps needed.
 
-1. The configured duration limit is reached
-2. The user clicks the stop button
-3. The live stream ends (manifest is marked as endlist)
-4. The app exits
+**Settings → M3U8 Download → MP4 Real-time Decryption** is enabled by default.
 
-In the first three cases, recorded content is merged into a complete file. In the fourth case (app exit or crash), the app marks the unfinished live recording as completed on next launch -- because live streams cannot be resumed from a checkpoint, the downloaded segments are the final result.
+## Runtime Requirements
 
-The output format is `.ts` (MPEG-TS). Unlike VOD Tasks, it is not automatically remuxed to MP4 or MKV.
+The recording feature requires N_m3u8DL-RE and ffmpeg. Install them in **Settings** before first use. The Android version has them built in.
 
-## Related Settings
+## Limitations
 
-Options related to live recording under Settings → M3U8 Download:
-
-| Setting | Effect |
-|---|---|
-| Keep original segments for live streams | Retains downloaded raw segment files even after real-time merging |
-| Live Pipe Remux | Pipes data to FFmpeg for real-time remuxing into a container during recording |
-| Correct VTT subtitles for live streams | Adjusts VTT subtitle timeline based on audio start time |
-| Live refresh wait time | Seconds between manifest fetches; 0 for auto |
-| Live segment fetch count | Max segments fetched per refresh; 0 for auto |
-
-## Known Limitations
-
-- Live recording does not support pause and resume. Stopping finalizes the recording; it cannot be continued.
-- Output is fixed to `.ts` format. To convert to MP4, use FFmpeg to remux manually.
-- If network connectivity is lost during recording for longer than the segment validity period, that portion of the recording will be missing.
+- The output format is `.ts`. If MP4 is needed, convert manually.
+- Network interruptions exceeding a certain duration will cause missing segments in the recording.

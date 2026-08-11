@@ -1,98 +1,90 @@
 ---
-title: Test Results
-description: Raw data from running Ghost Downloader against IDM, Motrix Next, and Gopeed on 2026-07-30.
+title: Benchmark Data
+description: 2026-07-30, single-run benchmark of GD / IDM / Motrix Next / Gopeed.
 ---
 
-This is a test log, not a benchmark. All numbers come from a single run on one machine over a home connection. Losses are included.
+Single run, one machine, one residential broadband connection. Losing entries are included.
 
 ## Environment
 
 | | |
-| --- | --- |
+|---|---|
 | Date | 2026-07-30 |
-| System | Windows 11 |
-| Network | China Telecom Chongqing, 1000 Mbps, IPv6, no proxy |
-| Method | One run per item, no averaging |
+| OS | Windows 11 |
+| Network | Chongqing Telecom 1000 Mbps, IPv6, no proxy |
+| Method | Each entry run once, no averaging |
 
-| Application | Version | Released |
-| --- | --- | --- |
-| Ghost Downloader | `4.2.2` | 2026-07-29 |
-| Internet Download Manager | `6.43 Build 7` | 2026-07-22 |
-| Motrix Next | `v3.9.6` | 2026-06-21 |
-| Gopeed | `v1.9.3` | 2026-03-18 |
+| Software | Version |
+|---|---|
+| Ghost Downloader | 4.2.2 (2026-07-29) |
+| IDM | 6.43 Build 7 (2026-07-22) |
+| [Motrix Next](https://github.com/AnInsomniacy/motrix-next) | v3.9.6 (2026-06-21) |
+| Gopeed | v1.9.3 (2026-03-18) |
 
-Motrix Next means [AnInsomniacy/motrix-next](https://github.com/AnInsomniacy/motrix-next) (rewrite), not [agalwood/Motrix](https://github.com/agalwood/Motrix) (last release May 2023). All on their latest stable release that day; no pre-releases.
-
-## Speed
-
-Default 32 connections except where noted.
+## Speed (default 32 connections)
 
 | File | Size | GD | IDM | Motrix Next | Gopeed |
-| --- | --- | --- | --- | --- | --- |
-| Electron v33.3.1 | 101 MB | `0:01.067` | `0:03.367` | `0:01.400` | `0:02.733` |
-| Qt 6.8.3 source | 949 MB | `0:11.833` | `0:12.800` | `0:17` | anti-bot |
-| Anaconda 2024.10 | 1.03 GB | `0:11.067` | `0:12.667` | `0:12.267` | anti-bot |
-| QQ 9.9.32 | 298 MB | `0:03.567` | `0:08.067` | `0:03.400` | `0:03.767` |
-| QGIS 3.44.12 | 550 MB | `6:14` | `18:21.933` | `15:52.800` | `18:54.733` |
-| OneDrive share | 7.65 GB | `5:59.100` | `33:37.667` | `11:35.800` | anti-bot |
-| **Fastest** | | **5** | 0 | 1 | 0 |
-| **Completed** | | **6/6** | 6/6 | 6/6 | 3/6 |
+|---|---|---|---|---|---|
+| Electron v33.3.1 | 101 MB | **1.07s** | 3.37s | 1.40s | 2.73s |
+| Qt 6.8.3 source | 949 MB | **11.83s** | 12.80s | 17s | ❌ Anti-crawler |
+| Anaconda 2024.10 | 1.03 GB | **11.07s** | 12.67s | 12.27s | ❌ Anti-crawler |
+| QQ 9.9.32 | 298 MB | 3.57s | 8.07s | **3.40s** | 3.77s |
+| QGIS 3.44.12 | 550 MB | **6m14s** | 18m22s | 15m53s | 18m55s |
+| OneDrive shared | 7.65 GB | **5m59s** | 33m38s | 11m36s | ❌ Anti-crawler |
+| Fastest count | | **5** | 0 | 1 | 0 |
+| Completed count | | 6/6 | 6/6 | 6/6 | 3/6 |
 
-The gap depends on where the bottleneck is. When the server saturates the gigabit link, everyone is close (Qt and Anaconda: only 1.08–1.14× faster). When the server or route is the constraint, the difference shows up: QGIS 550 MB at equal 32 connections, IDM 18 min, GD 6 min 14 s — roughly 2.95×.
+<Callout type="info">
+In the OneDrive row, GD and Motrix Next used 128 connections; IDM and Gopeed used 32, so the conditions were unequal. GD lost one QQ entry (by 0.17s).
+</Callout>
 
-The OneDrive row used 128 connections for GD and Motrix Next vs 32 for IDM and Gopeed, so it is excluded from conclusions. GD vs Motrix Next on that row is like-for-like: `5:59` vs `11:35`.
-
-GD lost one: QQ 9.9.32, Motrix Next `3.400`s vs GD `3.567`s, 0.167 s margin.
-
-Gopeed hit anti-bot on three of six and did not complete them.
-
-## Browser Download Takeover
+## Browser download takeover
 
 | Site | GD | IDM | Motrix Next | Gopeed |
-| --- | --- | --- | --- | --- |
-| Claude.ai | ✅ | skipped | ✅ | anti-bot |
+|---|---|---|---|---|
+| Claude.ai | ✅ | Not intercepted | ✅ | ❌ Anti-crawler |
 | Lanzou Cloud | ✅ | ✅ | ✅ | ✅ |
-| Quark Drive | ✅ | ✅ | ✅ | ✅ |
-| 123 Drive | ✅ | ✅ | ✅ | ✅ |
-| **Rate** | **4/4** | 3/4 | **4/4** | 3/4 |
+| Quark Netdisk | ✅ | ✅ | ✅ | ✅ |
+| 123 Netdisk | ✅ | ✅ | ✅ | ✅ |
+| Success rate | **4/4** | 3/4 | **4/4** | 3/4 |
 
-4/4 is not unique to GD — Motrix Next also scored 4/4. Four samples is small.
+Sample size is small; GD and Motrix Next are tied.
 
-## Media Sniffing
-
-GD vs IDM only; Motrix Next and Gopeed do not focus on page media sniffing. 23 sites.
+## Media sniffing (23 sites, GD vs IDM)
 
 | Site | GD | IDM |
-| --- | --- | --- |
-| Bilibili | any quality | 720p max |
+|---|---|---|
+| Bilibili | Any quality | Up to 720P |
 | Youku | ❌ | ✅ |
 | Tencent Video | ❌ | ✅ |
 | iQiyi | ❌ | ❌ |
 | Douyin | ✅ | ✅ |
 | Weibo | ✅ | ✅ |
 | AcFun | ✅ | ✅ |
-| MOOC China | ✅ | ✅ |
+| China University MOOC | ✅ | ✅ |
 | XuetangX | ✅ | ✅ |
 | YouTube | ✅ | ✅ |
 | Vimeo | ✅ | ✅ |
 | Dailymotion | ✅ | ✅ |
 | TED | ✅ | ✅ |
-| X (Twitter) | manual | ✅ |
+| X (Twitter) | Manual selection | ✅ |
 | Instagram | ✅ | ✅ |
 | CNN | ✅ | ✅ |
 | NHK World | ✅ | ✅ |
 | Reuters | ✅ | ✅ |
 | Framatube | ✅ | ✅ |
-| Archive.org | manual | ❌ |
+| Archive.org | Manual selection | ❌ |
 | Bitmovin | ✅ | ✅ |
-| KankanLive (M3U8) | ✅ | ❌ |
+| Kankan Live (M3U8) | ✅ | ❌ |
 | NNYY Video | ✅ | TS only |
-| **Full support** | **18** | **18** |
-| **Partial** | 2 | 2 |
-| **Not supported** | 3 | 3 |
+| **Fully supported** | **18** | **18** |
+| Partial | 2 | 2 |
+| Not supported | 3 | 3 |
 
-The totals are identical; the wins and losses differ. GD cannot sniff Youku or Tencent Video; IDM can. GD wins on Bilibili quality (no 720p cap), KankanLive M3U8 streams, and NNYY finished files vs raw TS segments. For mainland Chinese long-form video platforms, IDM covers more. For live streams and high-quality Bilibili, GD covers more.
+<Callout type="warn">
+GD cannot sniff Youku or Tencent Video (DRM encrypted); IDM can. GD wins on Bilibili unlimited quality, M3U8 live streams, and NNYY getting the finished file directly instead of TS segments. Use case determines the winner.
+</Callout>
 
-## Reproducing
+## Reproduction
 
-Links and file names are in the tables. Results vary with time of day and routing; connection counts must match; disable speed limits beforehand.
+Links and file names are in the table above. Note: results are sensitive to time of day and network route; the same link can differ by several times at a different time. Before testing, make sure the connection count is the same and disable speed limiting.

@@ -1,96 +1,60 @@
 ---
 title: FAQ
-description: Common problems and quick fixes.
+description: Quick fixes.
 ---
+
+Frequent issues have dedicated pages: [Extension connection issues](./extension-connection) · [Update failed](./update-failed) · [Corrupted downloads](./corrupted-downloads) · [Platform issues](./platform-issues)
+
+Below are other common issues.
 
 ## Browser Extension
 
 <Accordions>
-<Accordion title='"Protocol version mismatch"'>
-Desktop app and extension are different versions. Update both to the latest. If the store extension hasn't updated yet, go to Settings → Browser Extension → Install to Chromium Browser → **One-Click Install**.
+<Accordion title="Protocol version mismatch">
+The desktop and extension versions are not from the same generation. Update both to the latest version. If the store version of the extension is not updated, use **Settings → Browser Extension → One-click Install**.
 </Accordion>
 
-<Accordion title='"Invalid pairing token"'>
-Click **Auto Pair** in the extension popup. The desktop app will show a pairing request — click **Allow**.
+<Accordion title="Invalid pairing token">
+In the extension, click **Auto Pair**, and when the desktop shows a request, click Allow.
 </Accordion>
 
-<Accordion title="Extension shows disconnected, but the app is running">
-1. Check that Settings → Browser Extension → **Enable Browser Extension** is on.
-2. If the port is occupied, change it in Settings → Browser Extension → **Service Port** and restart the app.
-3. Windows / Linux: make sure Settings → Browser Extension → **Allow browser extension to wake** is on.
+<Accordion title="An extra canceled entry appears in Firefox's download manager">
+Normal. Firefox's interception mechanism creates a download entry before canceling it, so the Firefox download manager shows a "Canceled" record. The file is not actually downloaded twice. Ignore it.
 </Accordion>
 
-<Accordion title="Clicked Auto Pair but nothing happened on the desktop">
-The dialog may be behind other windows — check the taskbar. If it still doesn't show, the port may not match: check Settings → Browser Extension → **Service Port**.
-</Accordion>
-
-<Accordion title="Firefox downloads the file twice">
-Firefox extensions can't cancel a download before it starts. The browser saves one copy, Ghost Downloader saves another. Delete the browser's copy after downloading.
-</Accordion>
-
-<Accordion title="Android can't take over browser downloads">
-Most Android browsers don't support extensions. Copy the link and paste it into Ghost Downloader, or use the system share menu.
+<Accordion title="Cannot take over browser downloads on Android">
+Most Android browsers do not support extensions. Copy the link and paste it in GD, or use the system share menu.
 </Accordion>
 </Accordions>
 
-## Downloads
+## Download
 
 <Accordions>
-<Accordion title="File downloaded but won't open / checksum fails">
-Too many threads triggered anti-bot protection. Go to Settings → Download → **Pre-allocated Threads**, lower it to 8 or less. Turn off **Auto Speed Boost**. Re-download the file.
+<Accordion title="Download stalls at the last few KB, speed drops to zero">
+Pause and resume. When it recurs, set **Settings → General Download Settings → Minimum Reallocation Size** to 2048 KB or higher.
 </Accordion>
 
-<Accordion title="Download stuck near the end, speed drops to zero">
-Pause the task and resume it. If it keeps happening, raise Settings → Download → **Minimum Reallocation Size** to 2048 KB or higher.
+<Accordion title="Download fails immediately with a server error">
+**Right-click the task → Edit**, and check whether the link has expired or requires cookies. For 403 / Cloudflare blocks, try a different client profile.
 </Accordion>
 
-<Accordion title="Download fails with a server error">
-Right-click the task → **Edit Task Options**. Check if the URL has expired or needs specific headers (cookie, referer). For 503 / Cloudflare errors, try switching Settings → Download → **Client Profile** to a different fingerprint.
-</Accordion>
-
-<Accordion title="SSL handshake failure / certificate error">
-Go to Settings → Download → **Verify SSL Certificate** and turn it off (it's off by default). If it's already off, the issue is likely the TLS fingerprint — try switching **Client Profile**.
+<Accordion title="SSL handshake failed">
+Make sure **Settings → General Download Settings → Verify SSL Certificate** is off (off by default). If that does not work, switch the client profile.
 </Accordion>
 </Accordions>
 
-## Install and Startup
+## Installation and Startup
 
 <Accordions>
-<Accordion title="Windows: Smart App Control blocks installation or launch">
-Use the portable version (.zip) from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases). If it's still blocked, turn off Smart App Control: Windows Settings → Privacy & Security → App & Browser Control → Smart App Control → **Off**.
-
-<Callout type="warn">
-Smart App Control cannot be re-enabled once turned off without resetting Windows.
-</Callout>
-</Accordion>
-
-<Accordion title='macOS: "Ghost Downloader is damaged"'>
-Open Terminal and run:
-
-```bash
-sudo xattr -rd com.apple.quarantine /Applications/Ghost\ Downloader.app
-```
-
-Or double-click the "Fix Damaged App" script inside the DMG.
-</Accordion>
-
-<Accordion title='Linux (Arch/KDE): buttons like "Install Extension" do nothing'>
-The `ghost-downloader-bin` package bundles its own Qt, which conflicts with the system version. Switch to:
+<Accordion title="Linux (Arch/KDE): clicking does nothing">
+The Qt bundled with `ghost-downloader-bin` conflicts with the system. Switch to:
 
 ```bash
 paru -S ghost-downloader-git
 ```
 </Accordion>
 
-<Accordion title="In-app update fails / shows an error dialog">
-Download the latest version directly from [GitHub Releases](https://github.com/XiaoYouChR/Ghost-Downloader-3/releases) and install over the current version. This also applies when Android's "Check for Updates" does nothing.
-</Accordion>
-</Accordions>
-
-## Runtimes
-
-<Accordions>
-<Accordion title="One-click install for M3U8 / YouTube / FFmpeg / eD2k fails">
-The installer downloads from GitHub, which is often unreachable in mainland China. Check your network or use a proxy, then try again.
+<Accordion title="Runtime (yt-dlp / FFmpeg / eD2k) installation failed">
+Downloads come from GitHub. If your network cannot reach it, enable a proxy and retry.
 </Accordion>
 </Accordions>

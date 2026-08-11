@@ -1,63 +1,38 @@
 ---
-title: TLS Fingerprint and Identity Presets
-description: Why Ghost Downloader can download from sites that block other downloaders, and when to manually change the client profile.
+title: TLS Fingerprint
+description: Why some sites can only be downloaded using GD, and how to switch.
 ---
 
-## Why ordinary downloaders get blocked
+## Why other downloaders are blocked
 
-Modern CDNs and anti-bot systems (Cloudflare, Akamai, etc.) look beyond the User-Agent string. They inspect the TLS ClientHello message during the handshake — cipher suite order, extension list, ALPN negotiation — and these combinations form a fingerprint. The ClientHello produced by common scripting HTTP libraries (Python requests, Go net/http, curl defaults) differs visibly from a real browser, and servers use that to reject requests or serve challenge pages.
+Some sites inspect the network fingerprint of download tools. The fingerprint of ordinary downloaders differs significantly from a real browser, so they are directly rejected (403) or shown a verification page.
 
-Ghost Downloader uses the wreq library to fully reproduce a real browser's handshake behavior at the TLS layer: cipher suites, extension order, and HTTP/2 frame settings are all constructed to match the target browser's actual implementation. The server sees a normal browser connection, not a download tool.
+GD can emulate a real browser's network fingerprint, making the server think it is a normal browser request.
 
-## Global default: Client Profile
+## Global Settings
 
-General Download Settings → Client Profile controls which browser's TLS fingerprint Ghost Downloader uses when making requests.
+**Settings → General Download Settings → Emulate Identity**
 
-| Option | Behavior |
+| Option | Effect |
 |---|---|
-| Auto (Match Source) | **Default.** Tasks captured by the browser extension carry the source browser's User-Agent. Ghost Downloader parses it and matches the closest fingerprint profile. Manually added tasks have no source User-Agent and fall back to the latest Chrome fingerprint. |
-| No Emulation (Send As-Is) | No emulated fingerprint is constructed; the TLS handshake uses wreq's native behavior. User-Agent and sec-ch-ua in request headers are sent as-is. Use only when the target site explicitly requires a specific request signature. |
-| Chrome / Edge / Firefox / Safari / Opera / OkHttp (Latest) | Locks to the latest version fingerprint of that browser family. The dropdown submenu lets you pick a specific version (e.g. Chrome136, Firefox148). |
+| Automatic | Default. Tasks from the extension automatically match the source browser; manually added ones use the latest Chrome. |
+| No emulation | Disables fingerprint emulation. Use only when you need to fully customize request headers. |
+| Specific browser | Locks to Chrome / Edge / Firefox / Safari, etc. (specific version selectable). |
 
-Mobile browser fingerprint families are also available: Firefox Android, Safari iOS, Safari iPad. When the source User-Agent indicates a mobile device, auto mode matches the corresponding mobile fingerprint.
+## Per-Domain Switching
 
-## Identity Presets: automatic switching by domain
+When a specific site requires a different fingerprint, create an identity preset:
 
-Some sites require a specific TLS fingerprint and User-Agent combination. Ghost Downloader ships with one built-in preset:
+**Settings → Identity Presets → Add**
 
-| Name | TLS Fingerprint | User-Agent | Match Host |
-|---|---|---|---|
-| Baidu Netdisk Client | No Emulation (Send As-Is) | `pan.baidu.com` | `*.pcs.baidu.com` |
+Fill in the matched domain (supports `*.example.com` wildcards), select a fingerprint, and save. Tasks that match a preset automatically use the preset fingerprint.
 
-When a task's download URL host matches an identity preset, Ghost Downloader automatically uses that preset's TLS fingerprint and User-Agent instead of the global default. Tasks where the client profile has already been set manually are not affected.
+Presets are matched in list order; drag to adjust priority.
 
-### Adding a custom preset
+## When to Adjust
 
-General Download Settings → Client Profile → Add Preset. Fill in:
+Keep it on "Automatic" for daily use. Switch manually in the following cases:
 
-- **Preset Name**: any label you like.
-- **Match Host**: type a domain and press Enter to add it. Supports exact matches (`pcs.baidu.com`) and wildcards (`*.pcs.baidu.com`, matching all subdomains). A preset requires at least one host.
-- **TLS Fingerprint**: pick a browser fingerprint, or select Follow Global Default.
-- **User-Agent**: leave empty to auto-generate based on the TLS fingerprint. A value entered here overrides the auto-generated one.
-
-Presets can be temporarily disabled with a toggle without deleting them.
-
-### Priority
-
-Identity presets are matched top-to-bottom in list order; the first match wins. If you need different presets for different subdomains of the same domain, put the more specific host higher in the list.
-
-## When to change these settings manually
-
-In most cases, the default Auto (Match Source) works fine. Manual intervention is needed in these scenarios:
-
-**Downloads blocked with 403 or Cloudflare challenge**: right-click the task → Edit Task Options and switch the client profile from auto to a specific browser version. Some WAFs pass the latest Chrome fingerprint but block older versions. If changing the fingerprint still does not help, also lower Pre-allocated Threads to below 4 — high concurrency is itself an anti-bot signal. See [FAQ](../../troubleshooting/faq).
-
-**Sites requiring client impersonation (e.g. Baidu Netdisk)**: the built-in "Baidu Netdisk Client" preset covers this. For other sites that require a specific User-Agent to obtain a direct download link, add a custom identity preset.
-
-**Tasks received via Aria2 RPC**: Aria2 RPC does not carry browser information. By default, these tasks use No Emulation (Send As-Is). If the target site has TLS detection, enable Aria2 RPC Compatibility → Spoof Browser Fingerprint.
-
-## How Client Profile interacts with request headers
-
-When a client profile is active (i.e. anything other than No Emulation (Send As-Is)), the `User-Agent` and `sec-ch-ua` family of headers are auto-generated by the TLS fingerprint emulation layer. Values you set manually for these headers in the request header editor **will not take effect**. If you need full control over all request headers, set the client profile to No Emulation (Send As-Is).
-
-Other headers (`Cookie`, `Referer`, `Accept`, etc.) are unaffected and always sent as-is. To edit headers on a single task, see [Editing Tasks](./editing-tasks).
+- A Task is rejected with 403 → **Right-click the Task → Edit** → switch to a different browser fingerprint
+- The same site is repeatedly blocked → create an identity preset for that domain
+- Speed is unusually slow → try changing the fingerprint and reducing the subworker count

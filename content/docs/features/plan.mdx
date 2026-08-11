@@ -1,15 +1,25 @@
 ---
-title: Post-Completion Actions
-description: Shut down, restart, or sleep after all downloads finish.
+title: Post-completion Action
+description: Automatically shut down, restart, hibernate, or open a file after all tasks complete.
 ---
 
-Click the clock icon in the toolbar.
+Click the clock icon in the toolbar to set the action to execute after all tasks complete.
 
-| Action | Effect |
-|---|---|
-| Shutdown | Power off |
-| Restart | Reboot |
-| Sleep | Hibernate |
-| Open File | Open a specified file |
+## Available Actions
 
-Triggers after all running/queued tasks complete. Click the clock icon again to cancel.
+| Action | Description |
+| --- | --- |
+| Shut down | Shuts down the computer |
+| Restart | Restarts the computer |
+| Hibernate | Enters hibernation |
+| Open file | Opens the specified file |
+
+When Open file is selected, the target file path must be specified.
+
+## Trigger Condition
+
+The action executes automatically after all currently RUNNING and WAITING tasks have completed.
+
+## Cancel
+
+Click the clock icon again to clear the set action.
