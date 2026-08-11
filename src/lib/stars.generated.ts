@@ -2,4 +2,4 @@
 // Seed for the top bar's star count; the browser refreshes it. Regenerate with
 // `pnpm stars` (`pnpm build` does it for you).
 
-export const githubStars = 7832;
+export const githubStars = 8167;
