@@ -51,6 +51,8 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
             id="06"
             label="Live M3U8 stream being recorded"
             alt={copy.live.alt}
+            srcLight="/shots/light/shot-06.webp"
+            srcDark="/shots/dark/shot-06.webp"
             aspect="16 / 10"
           />
           <div>
@@ -68,6 +70,8 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
             id="07"
             label="Quality picker showing 4K and HDR options"
             alt={copy.parsers.alt}
+            srcLight="/shots/light/shot-07.webp"
+            srcDark="/shots/dark/shot-07.webp"
             aspect="16 / 10"
           />
           <div>
@@ -95,9 +99,9 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
         </div>
         <div className="relative mx-auto w-full max-w-[22rem]" style={{ aspectRatio: '4 / 5' }}>
           {([
-            { id: '12', label: 'Android completion notification', alt: copy.android.alts[2], left: '0%', rotate: -7, z: 0 },
-            { id: '11', label: 'Android download list', alt: copy.android.alts[1], left: '50%', rotate: 7, z: 1 },
-            { id: '10', label: 'Android app recording a live stream', alt: copy.android.alts[0], left: '25%', rotate: 0, z: 2 },
+            { id: '12', label: 'Android completion notification', alt: copy.android.alts[2], left: '0%', rotate: -7, z: 0, srcLight: '/shots/light/shot-12.webp', srcDark: '/shots/dark/shot-12.webp' },
+            { id: '11', label: 'Android download list', alt: copy.android.alts[1], left: '50%', rotate: 7, z: 1, srcLight: '/shots/light/shot-11.webp', srcDark: '/shots/dark/shot-11.webp' },
+            { id: '10', label: 'Android app recording a live stream', alt: copy.android.alts[0], left: '25%', rotate: 0, z: 2, srcLight: '/shots/light/shot-10.webp', srcDark: '/shots/dark/shot-10.webp' },
           ] as const).map((card) => (
             <div
               key={card.id}
@@ -110,7 +114,7 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
                 zIndex: card.z,
               }}
             >
-              <Shot id={card.id} label={card.label} alt={card.alt} aspect="9 / 16" />
+              <Shot id={card.id} label={card.label} alt={card.alt} srcLight={card.srcLight} srcDark={card.srcDark} aspect="9 / 16" />
             </div>
           ))}
         </div>

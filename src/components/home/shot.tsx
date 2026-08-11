@@ -8,30 +8,58 @@ type ShotProps = {
   label: string;
   /** Alt text for the finished screenshot. */
   alt: string;
-  /** Path under `public/`. Leave unset until the screenshot exists. */
-  src?: string;
-  /** CSS aspect ratio, e.g. `16 / 10`. */
+  /** Light-theme asset path under `public/`. */
+  srcLight?: string;
+  /** Dark-theme asset path under `public/`. */
+  srcDark?: string;
+  /** CSS aspect ratio. Forces `object-cover` cropping when set with images. */
   aspect?: string;
   className?: string;
   priority?: boolean;
 };
 
-/**
- * A framed product screenshot.
- *
- * Until the real asset lands, this renders a labelled placeholder at the same
- * dimensions, so page rhythm can be judged before the screenshots exist.
- * Dropping in `src` is the only change needed to go live.
- */
 export function Shot({
   id,
   label,
   alt,
-  src,
-  aspect = '16 / 10',
+  srcLight,
+  srcDark,
+  aspect,
   className,
   priority = false,
 }: ShotProps) {
+  const hasImage = srcLight && srcDark;
+
+  if (hasImage) {
+    const imgClass = aspect
+      ? 'h-full w-full object-cover'
+      : 'w-full';
+
+    return (
+      <figure
+        className={cn('overflow-hidden rounded-lg', className)}
+        style={aspect ? { aspectRatio: aspect } : undefined}
+      >
+        {/* eslint-disable @next/next/no-img-element -- static export, images unoptimized */}
+        <img
+          src={srcLight}
+          alt={alt}
+          className={cn(imgClass, 'dark:hidden')}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+        <img
+          src={srcDark}
+          alt={alt}
+          className={cn('hidden', imgClass, 'dark:block')}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+        {/* eslint-enable @next/next/no-img-element */}
+      </figure>
+    );
+  }
+
   return (
     <figure
       className={cn(
@@ -40,28 +68,17 @@ export function Shot({
         'dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_24px_48px_-24px_rgba(0,0,0,0.8)]',
         className,
       )}
-      style={{ aspectRatio: aspect }}
+      style={{ aspectRatio: aspect ?? '16 / 10' }}
     >
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element -- static export, images unoptimized
-        <img
-          src={src}
-          alt={alt}
-          className="h-full w-full object-cover"
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
-          <GhostMark className="h-10 w-10 text-ink-faint/25" />
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-[11px] tracking-[0.14em] text-accent uppercase">
-              Shot {id}
-            </span>
-            <span className="max-w-[32ch] text-sm text-ink-faint">{label}</span>
-          </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+        <GhostMark className="h-10 w-10 text-ink-faint/25" />
+        <div className="flex flex-col gap-1">
+          <span className="font-mono text-[11px] tracking-[0.14em] text-accent uppercase">
+            Shot {id}
+          </span>
+          <span className="max-w-[32ch] text-sm text-ink-faint">{label}</span>
         </div>
-      )}
+      </div>
     </figure>
   );
 }

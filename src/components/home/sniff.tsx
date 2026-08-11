@@ -11,6 +11,8 @@ type Beat = {
   title: string;
   body: string;
   alt: string;
+  srcLight?: string;
+  srcDark?: string;
 };
 
 type SniffCopy = {
@@ -37,7 +39,10 @@ export function Sniff({ copy }: { copy: SniffCopy }) {
               id={beat.shotId}
               label={beat.shotLabel}
               alt={beat.alt}
+              srcLight={beat.srcLight}
+              srcDark={beat.srcDark}
               aspect="4 / 3"
+              className="shadow-[0_4px_12px_rgba(0,0,0,0.12),0_20px_48px_-8px_rgba(0,0,0,0.25)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.5),0_24px_56px_-8px_rgba(0,0,0,0.7)]"
             />
             <div>
               <h3 className="flex items-baseline gap-2.5 font-display text-lg font-semibold tracking-[-0.015em] text-ink">

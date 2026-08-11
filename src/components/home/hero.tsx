@@ -75,7 +75,8 @@ export function Hero({ copy, docsHref }: { copy: HeroCopy; docsHref: string }) {
             id="01"
             label="Desktop app: mixed task states across several protocols"
             alt={copy.shotAlt}
-            aspect="16 / 10"
+            srcLight="/shots/light/shot-01.webp"
+            srcDark="/shots/dark/shot-01.webp"
             priority
           />
         </div>

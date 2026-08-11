@@ -107,6 +107,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               title: t('sniff.beat1.title'),
               body: t('sniff.beat1.body'),
               alt: t('sniff.beat1.alt'),
+              srcLight: '/shots/light/shot-02.webp',
+              srcDark: '/shots/dark/shot-02.webp',
             },
             {
               step: '2',
@@ -115,6 +117,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               title: t('sniff.beat2.title'),
               body: t('sniff.beat2.body'),
               alt: t('sniff.beat2.alt'),
+              srcLight: '/shots/light/shot-03.webp',
+              srcDark: '/shots/dark/shot-03.webp',
             },
             {
               step: '3',
@@ -123,6 +127,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               title: t('sniff.beat3.title'),
               body: t('sniff.beat3.body'),
               alt: t('sniff.beat3.alt'),
+              srcLight: '/shots/light/shot-04.webp',
+              srcDark: '/shots/dark/shot-04.webp',
             },
           ],
         }}
