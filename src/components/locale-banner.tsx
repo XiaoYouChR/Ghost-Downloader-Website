@@ -23,7 +23,7 @@ export function LocaleBanner() {
     serverSnapshot,
   );
   const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem('locale-banner-dismissed') === '1',
+    () => typeof localStorage !== 'undefined' && localStorage.getItem('locale-banner-dismissed') === '1',
   );
 
   if (!prefersChinese || dismissed) return null;
