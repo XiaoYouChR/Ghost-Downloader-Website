@@ -137,3 +137,22 @@ jobs:
               -o StrictHostKeyChecking=yes \
               "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
               "test -f '${{ secrets.DEPLOY_PATH }}/index.html' && test -f '${{ secrets.DEPLOY_PATH }}/zh/index.html'"
+
+      - name: Ping IndexNow
+        run: |
+          node -e "
+            const fs = require('fs');
+            const xml = fs.readFileSync('./deploy/sitemap.xml', 'utf8');
+            const urls = [...xml.matchAll(/<loc>(.+?)<\/loc>/g)].map(m => m[1]);
+            console.log('Submitting', urls.length, 'URLs to IndexNow');
+            fetch('https://api.indexnow.org/indexnow', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                host: 'gd.xychr.com',
+                key: '87336ca9c47a4686a302cba642b5a354',
+                keyLocation: 'https://gd.xychr.com/87336ca9c47a4686a302cba642b5a354.txt',
+                urlList: urls
+              })
+            }).then(r => console.log('IndexNow response:', r.status));
+          "
