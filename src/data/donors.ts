@@ -10,6 +10,7 @@ export interface Donor {
 }
 
 export const donors: Donor[] = [
+  { name: '缘', amount: 50, at: '2026-08-20', channel: 'wechat'},
   { name: '白板', amount: NaN, at: '2026-08-14', channel: 'wechat', message: '原道耳机: 早知道, 还是原道'},
   { name: '', amount: 100, at: '2026-08-14', channel: 'alipay', anonymous: true},
   { name: 'XUESHENG', amount: 20, at: '2026-08-13', channel: 'alipay' },
