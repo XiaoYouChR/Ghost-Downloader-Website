@@ -37,6 +37,12 @@
      travels through, or it reads as a line flickering rather than an object
      moving — but neutral, because it has not got through yet. */
   --gd-pulse-dim: rgba(17, 19, 21, 0.5);
+  /* Every product shot wears this one shadow. Screenshots are raw grabs with
+     no baked shadow, so the hairline stands in for the window edge macOS
+     would draw. */
+  --gd-shot-shadow:
+    0 0 0 1px rgba(17, 19, 21, 0.08), 0 2px 4px rgba(17, 19, 21, 0.04),
+    0 12px 24px -8px rgba(17, 19, 21, 0.1), 0 32px 64px -24px rgba(17, 19, 21, 0.18);
 }
 
 .dark {
@@ -56,6 +62,9 @@
   --gd-field-line: rgba(237, 238, 240, 0.22);
   --gd-contour: rgba(147, 180, 255, 0.28);
   --gd-pulse-dim: rgba(237, 238, 240, 0.45);
+  --gd-shot-shadow:
+    0 0 0 1px rgba(237, 238, 240, 0.1), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 12px 24px -8px rgba(0, 0, 0, 0.5), 0 32px 64px -24px rgba(0, 0, 0, 0.7);
 }
 
 @theme inline {
@@ -71,6 +80,8 @@
   --color-accent-hover: var(--gd-accent-hover);
   --color-accent-contrast: var(--gd-accent-contrast);
   --color-accent-wash: var(--gd-accent-wash);
+
+  --shadow-shot: var(--gd-shot-shadow);
 
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;

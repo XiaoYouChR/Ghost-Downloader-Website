@@ -32,3 +32,9 @@ served.css
 zed.png
 # debug screenshots
 /*.png
+
+# screenshot pipeline: raw grabs, review renders, device logs
+scripts/shots/out/
+scripts/shots/review/
+scripts/shots/logs/
+scripts/shots/android_state_before.txt

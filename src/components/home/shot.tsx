@@ -14,6 +14,8 @@ type ShotProps = {
   srcDark?: string;
   /** CSS aspect ratio. Forces `object-cover` cropping when set with images. */
   aspect?: string;
+  /** Corner radius of the captured surface: a desktop window or a phone screen. */
+  frame?: 'window' | 'phone';
   className?: string;
   priority?: boolean;
 };
@@ -25,6 +27,7 @@ export function Shot({
   srcLight,
   srcDark,
   aspect,
+  frame = 'window',
   className,
   priority = false,
 }: ShotProps) {
@@ -37,7 +40,11 @@ export function Shot({
 
     return (
       <figure
-        className={cn('overflow-hidden rounded-lg', className)}
+        className={cn(
+          'overflow-hidden shadow-shot',
+          frame === 'phone' ? 'rounded-[1.25rem]' : 'rounded-[10px]',
+          className,
+        )}
         style={aspect ? { aspectRatio: aspect } : undefined}
       >
         {/* eslint-disable @next/next/no-img-element -- static export, images unoptimized */}

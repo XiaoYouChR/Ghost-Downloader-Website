@@ -23,20 +23,20 @@ export const zh: CopyTable = {
   'hero.cta.linux': '下载 Linux 版',
   'hero.cta.android': '下载 Android 版',
   'hero.ctaSecondary': '查看文档',
-  'hero.shotAlt': 'Ghost Downloader 同时运行多个下载任务',
+  'hero.shotAlt': 'Ghost Downloader 同时下载文件、录制直播，另有任务在排队',
 
   'resilience.title': '快在刀刃上。',
   'resilience.body':
-    '好网谁都快。限速、拥堵、半残——别人卡住的地方，我们拉开差距。',
-  'resilience.stat1.value': '2.5×',
-  'resilience.stat1.label': '弱网环境下的速度提升',
-  'resilience.stat2.value': '100%',
-  'resilience.stat2.label': '测试下载全部完成',
-  'resilience.stat3.value': '0',
-  'resilience.stat3.label': '被反爬拦截的下载数',
+    '好网快是本分，烂网快才是本事。',
+  'resilience.stat1.value': '2.9×',
+  'resilience.stat1.label': '至高提速，服务器或链路受限',
+  'resilience.stat2.value': '6/6',
+  'resilience.stat2.label': '测试全部完成',
+  'resilience.stat3.value': '5/6',
+  'resilience.stat3.label': '项测试最快',
   'resilience.note':
-    '六项真实下载测试，连接数对等。Ghost Downloader 全部完成，五项最快。',
-  'resilience.noteLink': '查看完整对比测试',
+    '单次测量，家庭宽带，连接数对等。',
+  'resilience.noteLink': '查看实测记录',
 
   'sniff.title': '所见即所得。',
   'sniff.body':
@@ -47,8 +47,8 @@ export const zh: CopyTable = {
   'sniff.beat1.alt': '视频页面上显示的下载按钮',
   'sniff.beat2.title': '页面资源一目了然',
   'sniff.beat2.body':
-    '视频、音频、图片、HLS 和 DASH 流——打开弹窗，按需取用。',
-  'sniff.beat2.alt': '扩展弹窗列出嗅探到的媒体资源',
+    '视频、音频、图片、HLS 与 DASH 流，扩展窗口一并列出，点一下即可下载。',
+  'sniff.beat2.alt': '扩展窗口列出页面上的媒体资源',
   'sniff.beat3.title': '直达桌面应用',
   'sniff.beat3.body':
     '无需在窗口间复制链接。扩展负责侦察，桌面引擎负责下载。',
@@ -71,12 +71,12 @@ export const zh: CopyTable = {
   'protocols.ed2k.note': '经典电驴网络',
   'protocols.live.title': '直播实时录制',
   'protocols.live.body':
-    'M3U8 流媒体实时解密录制——桌面端和安卓端均支持。',
+    'M3U8 直播边播边录，实时解密。桌面端与安卓端都能用。',
   'protocols.live.alt': 'Ghost Downloader 正在录制 M3U8 直播流',
   'protocols.parsers.title': '专属解析引擎',
   'protocols.parsers.body':
-    'YouTube 和哔哩哔哩最高支持 4K HDR，含字幕和播放列表。GitHub Release 和 HuggingFace 模型支持镜像加速。',
-  'protocols.parsers.alt': '画质选择对话框，显示 4K 和 HDR 选项',
+    'YouTube 与哔哩哔哩框选片段、最高 4K HDR、字幕、播放列表与合集分 P。GitHub 与 HuggingFace 镜像加速。',
+  'protocols.parsers.alt': '添加任务对话框，框选片段并预览缩略图，画质菜单选中真彩 HDR',
 
   'protocols.android.title': '换壳不换芯。',
   'protocols.android.body':
@@ -85,14 +85,14 @@ export const zh: CopyTable = {
   'protocols.android.alt2': 'Ghost Downloader 安卓端下载列表',
   'protocols.android.alt3': 'Ghost Downloader 安卓端完成通知',
 
-  'download.windows.subtitle': 'Exe / Zip · x64 · arm64',
-  'download.macos.subtitle': 'Apple Silicon / Intel · macOS 13+',
-  'download.linux.subtitle': 'AppImage / Deb / Tar.xz · x64 · arm64',
-  'download.android.subtitle': 'APK · Android 10+',
+  'download.windows.subtitle': 'Exe / Zip，x64',
+  'download.macos.subtitle': 'Apple Silicon / Intel，macOS 13+',
+  'download.linux.subtitle': 'AppImage / Deb / Tar.xz，x64 / arm64',
+  'download.android.subtitle': 'APK，Android 9+',
   'download.title.prefix': '下载',
   'download.title.brand': 'Ghost Downloader',
   'download.subtitle': '五合一。免费，开源。',
-  'download.unavailable': '正在加载发布资源——请前往 GitHub Releases 页面。',
+  'download.unavailable': '发布资源加载中，可先前往 GitHub Releases 下载。',
   'download.viewReleases': '查看所有版本',
   'download.installer': '安装版',
   'download.portable': '便携版',

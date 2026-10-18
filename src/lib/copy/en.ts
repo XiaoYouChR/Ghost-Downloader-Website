@@ -27,20 +27,20 @@ export const en = {
   'hero.cta.linux': 'Download for Linux',
   'hero.cta.android': 'Download for Android',
   'hero.ctaSecondary': 'Documentation',
-  'hero.shotAlt': 'Ghost Downloader running several downloads at once',
+  'hero.shotAlt': 'Ghost Downloader downloads files, records a live stream, and queues a task at the same time.',
 
   'resilience.title': 'Fast where it matters.',
   'resilience.body':
-    'Every downloader is fast on a good connection. Throttled, congested, half-broken — where others stall, we pull away.',
-  'resilience.stat1.value': '2.5×',
-  'resilience.stat1.label': 'faster on constrained networks',
-  'resilience.stat2.value': '100%',
-  'resilience.stat2.label': 'of test downloads completed',
-  'resilience.stat3.value': '0',
-  'resilience.stat3.label': 'downloads lost to anti-bot checks',
+    'Every downloader is fast on a good connection. The real test is a bad one.',
+  'resilience.stat1.value': '2.9×',
+  'resilience.stat1.label': 'faster at most, when the server or the link is the bottleneck',
+  'resilience.stat2.value': '6/6',
+  'resilience.stat2.label': 'test downloads completed',
+  'resilience.stat3.value': '5/6',
+  'resilience.stat3.label': 'tests where it was fastest',
   'resilience.note':
-    'Measured across six real-world downloads at matched connection counts. Ghost Downloader finished every one, and finished first in five.',
-  'resilience.noteLink': 'Read the benchmark',
+    'One run each, home broadband, equal connection counts.',
+  'resilience.noteLink': 'Read the test log',
 
   'sniff.title': 'See it. Sniff it. Download it.',
   'sniff.body':
@@ -75,13 +75,13 @@ export const en = {
   'protocols.ed2k.note': 'The old network, still served',
   'protocols.live.title': 'Record live streams as they air',
   'protocols.live.body':
-    'M3U8 capture with real-time decryption — on the desktop and on Android.',
+    'Records M3U8 live streams as they play, with real-time decryption. Works on desktop and Android.',
   'protocols.live.alt': 'Ghost Downloader recording a live M3U8 stream',
   'protocols.parsers.title': 'Purpose-built parsers',
   'protocols.parsers.body':
-    'YouTube and Bilibili up to 4K HDR, with subtitles and playlists. GitHub releases and HuggingFace models with mirror acceleration.',
+    'YouTube and Bilibili with clip selection, up to 4K HDR, subtitles, playlists and multi-part episodes. GitHub and HuggingFace with mirror acceleration.',
   'protocols.parsers.alt':
-    'Quality selection dialog showing 4K and HDR options',
+    'Add-task dialog. The clip range shows a thumbnail, and the quality menu has HDR selected.',
 
   'protocols.android.title': 'Same engine on your phone',
   'protocols.android.body':
@@ -90,14 +90,14 @@ export const en = {
   'protocols.android.alt2': 'Ghost Downloader download list on Android',
   'protocols.android.alt3': 'Ghost Downloader completion notification on Android',
 
-  'download.windows.subtitle': 'Exe / Zip · x64 · arm64',
-  'download.macos.subtitle': 'Apple Silicon / Intel · macOS 13+',
-  'download.linux.subtitle': 'AppImage / Deb / Tar.xz · x64 · arm64',
-  'download.android.subtitle': 'APK · Android 10+',
+  'download.windows.subtitle': 'Exe / Zip, x64',
+  'download.macos.subtitle': 'Apple Silicon / Intel, macOS 13+',
+  'download.linux.subtitle': 'AppImage / Deb / Tar.xz, x64 / arm64',
+  'download.android.subtitle': 'APK, Android 9+',
   'download.title.prefix': 'Get',
   'download.title.brand': 'Ghost Downloader',
   'download.subtitle': 'Five tools in one. Free and open source.',
-  'download.unavailable': 'Release assets are loading — open GitHub releases.',
+  'download.unavailable': 'Release files are loading. You can download them from GitHub Releases now.',
   'download.viewReleases': 'All releases',
   'download.installer': 'Installer',
   'download.portable': 'Portable',

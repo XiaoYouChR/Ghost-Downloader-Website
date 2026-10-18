@@ -97,7 +97,7 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
             {copy.android.body}
           </p>
         </div>
-        <div className="relative mx-auto w-full max-w-[22rem]" style={{ aspectRatio: '4 / 5' }}>
+        <div className="relative mx-auto w-full max-w-[22rem]" style={{ aspectRatio: '5 / 7' }}>
           {([
             { id: '12', label: 'Android completion notification', alt: copy.android.alts[2], left: '0%', rotate: -7, z: 0, srcLight: '/shots/light/shot-12.webp', srcDark: '/shots/dark/shot-12.webp' },
             { id: '11', label: 'Android download list', alt: copy.android.alts[1], left: '50%', rotate: 7, z: 1, srcLight: '/shots/light/shot-11.webp', srcDark: '/shots/dark/shot-11.webp' },
@@ -114,7 +114,7 @@ export function Protocols({ copy }: { copy: ProtocolsCopy }) {
                 zIndex: card.z,
               }}
             >
-              <Shot id={card.id} label={card.label} alt={card.alt} srcLight={card.srcLight} srcDark={card.srcDark} aspect="9 / 16" />
+              <Shot id={card.id} label={card.label} alt={card.alt} srcLight={card.srcLight} srcDark={card.srcDark} frame="phone" />
             </div>
           ))}
         </div>
