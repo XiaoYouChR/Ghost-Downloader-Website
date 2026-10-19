@@ -15,7 +15,7 @@
 ## Product Positioning
 
 - **Tagline (EN)**: "The only downloader you need."
-- **Tagline (ZH)**: "你唯一需要的下载器。"
+- **Tagline (ZH)**: "下载器的集大成者。"
 - **One-line positioning**: Ghost Downloader is the first downloader that is simultaneously the fastest, most complete in protocol coverage, most reliable against anti-bot, and truly cross-platform — replacing the need for multiple tools.
 - **"AI-powered" is deliberately removed** from all marketing. It was a 2025-era buzzword that no longer differentiates.
 
