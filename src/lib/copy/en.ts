@@ -18,7 +18,7 @@ export const en = {
 
   'hero.title': 'The only downloader you need.',
     'hero.subtitle':
-    'A downloader that sniffs page media, records live streams, and replaces five tools. Fast, free, and open source.',
+    'Every protocol runs on the engine built for it.',
   // `ctaPrimary` is the static-HTML fallback and must stand alone as a CTA; the
   // `cta.*` labels replace it once the client can see the platform.
   'hero.ctaPrimary': 'Download',
@@ -31,15 +31,15 @@ export const en = {
 
   'resilience.title': 'Fast where it matters.',
   'resilience.body':
-    'Every downloader is fast on a good connection. The real test is a bad one.',
+    'Every downloader is fast on a good connection. The real test is a bad one. Smart chunking, no merge step. Real-browser TLS fingerprints, so anti-bot checks let it through.',
   'resilience.stat1.value': '2.9×',
-  'resilience.stat1.label': 'faster at most, when the server or the link is the bottleneck',
+  'resilience.stat1.label': 'faster at best, on a throttled server or link',
   'resilience.stat2.value': '6/6',
   'resilience.stat2.label': 'test downloads completed',
   'resilience.stat3.value': '5/6',
   'resilience.stat3.label': 'tests where it was fastest',
   'resilience.note':
-    'One run each, home broadband, equal connection counts.',
+    'Every downloader ran with the same connection count.',
   'resilience.noteLink': 'Read the test log',
 
   'sniff.title': 'See it. Sniff it. Download it.',
@@ -47,7 +47,7 @@ export const en = {
     'The extension watches the page, finds the stream behind the player, hands it to the desktop app, and gets out of the way.',
   'sniff.beat1.title': 'A button where you are already looking',
   'sniff.beat1.body':
-    'A download control sits on the video itself. No quality cap, no 720p ceiling.',
+    'A download button sits on the video itself. No quality cap, no 720p ceiling.',
   'sniff.beat1.alt': 'Download button shown on a video page',
   'sniff.beat2.title': 'Everything on the page, listed',
   'sniff.beat2.body':
@@ -55,12 +55,12 @@ export const en = {
   'sniff.beat2.alt': 'Extension popup listing sniffed media resources',
   'sniff.beat3.title': 'Straight into the desktop app',
   'sniff.beat3.body':
-    'No copying links between windows. The extension scouts, the desktop engine does the work.',
+    'No copying links. Your cookies and headers come along, so logged-in downloads just work.',
   'sniff.beat3.alt': 'A sniffed task appearing in the desktop app',
 
   'protocols.title': 'One app instead of five.',
   'protocols.body':
-    'Most people juggle a download manager, a torrent client, a stream ripper, a video parser, and a command-line tool. Ghost Downloader replaces all of them.',
+    'Most people juggle a download manager, a torrent client, an eD2k client, a stream recorder, and a video parser. Ghost Downloader replaces all five.',
   'protocols.http.name': 'HTTP',
   'protocols.http.note': 'Smart chunking, no merge step',
   'protocols.torrent.name': 'BitTorrent',
@@ -75,29 +75,29 @@ export const en = {
   'protocols.ed2k.note': 'The old network, still served',
   'protocols.live.title': 'Record live streams as they air',
   'protocols.live.body':
-    'Records M3U8 live streams as they play, with real-time decryption. Works on desktop and Android.',
+    'M3U8 live streams, decrypted in real time. Works on desktop and Android.',
   'protocols.live.alt': 'Ghost Downloader recording a live M3U8 stream',
   'protocols.parsers.title': 'Purpose-built parsers',
   'protocols.parsers.body':
-    'YouTube and Bilibili with clip selection, up to 4K HDR, subtitles, playlists and multi-part episodes. GitHub and HuggingFace with mirror acceleration.',
+    'YouTube and Bilibili with clip selection, any quality (4K HDR included), subtitles, playlists and multi-part episodes. GitHub and HuggingFace with mirror acceleration.',
   'protocols.parsers.alt':
     'Add-task dialog. The clip range shows a thumbnail, and the quality menu has HDR selected.',
 
   'protocols.android.title': 'Same engine on your phone',
   'protocols.android.body':
-    'Live M3U8 recording and background downloads. Everything the desktop does, your phone does too.',
+    'Live M3U8 recording and background downloads, just like on the desktop.',
   'protocols.android.alt1': 'Ghost Downloader recording a live stream on Android',
   'protocols.android.alt2': 'Ghost Downloader download list on Android',
   'protocols.android.alt3': 'Ghost Downloader completion notification on Android',
 
-  'download.windows.subtitle': 'Exe / Zip, x64',
-  'download.macos.subtitle': 'Apple Silicon / Intel, macOS 13+',
-  'download.linux.subtitle': 'AppImage / Deb / Tar.xz, x64 / arm64',
-  'download.android.subtitle': 'APK, Android 9+',
+  'download.windows.subtitle': 'Exe / Zip · x64',
+  'download.macos.subtitle': 'Apple silicon / Intel · macOS 13+',
+  'download.linux.subtitle': 'AppImage / Deb / Tar.xz · x64 / arm64',
+  'download.android.subtitle': 'APK · Android 9+',
   'download.title.prefix': 'Get',
   'download.title.brand': 'Ghost Downloader',
-  'download.subtitle': 'Five tools in one. Free and open source.',
-  'download.unavailable': 'Release files are loading. You can download them from GitHub Releases now.',
+  'download.subtitle': 'The last downloader you\'ll install.',
+  'download.unavailable': 'Couldn\'t load the latest release. Grab it from GitHub Releases.',
   'download.viewReleases': 'All releases',
   'download.installer': 'Installer',
   'download.portable': 'Portable',

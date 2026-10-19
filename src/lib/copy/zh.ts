@@ -16,7 +16,7 @@ export const zh: CopyTable = {
 
   'hero.title': '下载器的集大成者。',
   'hero.subtitle':
-    '网页视频一键下载，直播边播边录。HTTP、磁力、M3U8、eD2k，一网打尽。免费且开源。',
+    '集百家之长而守一家之专，每一种协议都交给最懂它的引擎。',
   'hero.ctaPrimary': '免费下载',
   'hero.cta.windows': '下载 Windows 版',
   'hero.cta.macos': '下载 macOS 版',
@@ -31,7 +31,7 @@ export const zh: CopyTable = {
   'resilience.stat1.value': '2.9×',
   'resilience.stat1.label': '服务器或线路受限时最高提速',
   'resilience.stat2.value': '6/6',
-  'resilience.stat2.label': '项测试全部完成下载',
+  'resilience.stat2.label': '项测试完成下载',
   'resilience.stat3.value': '5/6',
   'resilience.stat3.label': '项测试速度领先',
   'resilience.note':
@@ -40,12 +40,12 @@ export const zh: CopyTable = {
 
   'sniff.title': '一触即发。',
   'sniff.body':
-    '浏览器扩展找出页面上的所有媒体。在扩展中点一下，或者照常下载，桌面端都会无缝接管。',
+    '浏览器扩展找出页面上的所有媒体。在扩展中点一下，或者照常下载，桌面端都会接管。',
   'sniff.beat1.title': '按钮跟随视频',
   'sniff.beat1.body':
     '下载按钮显示在视频画面上，任意画质随心选。',
   'sniff.beat1.alt': '视频页面上显示的下载按钮',
-  'sniff.beat2.title': '页面媒体一览无余',
+  'sniff.beat2.title': '页面媒体一目了然',
   'sniff.beat2.body':
     '视频、音频、图片，以及 HLS 与 DASH 流，在扩展窗口中一并列出，点击即可下载。',
   'sniff.beat2.alt': '扩展窗口列出页面上的媒体资源',
@@ -56,7 +56,7 @@ export const zh: CopyTable = {
 
   'protocols.title': '合而不同。',
   'protocols.body':
-    '集大成，而不失其专。下载工具、BT 客户端、直播录制、视频解析，过去各需一款软件，如今合于一处，每一项都不打折扣。',
+    '下载工具、BT 客户端、电驴客户端、直播录制、视频解析，过去各需一款软件，如今合于一处，每一项都不打折扣。',
   'protocols.http.name': 'HTTP',
   'protocols.http.note': '智能分块，无需合并',
   'protocols.torrent.name': 'BitTorrent',
@@ -85,13 +85,13 @@ export const zh: CopyTable = {
   'protocols.android.alt2': 'Ghost Downloader Android 端下载列表',
   'protocols.android.alt3': 'Ghost Downloader Android 端完成通知',
 
-  'download.windows.subtitle': 'Exe / Zip，x64',
-  'download.macos.subtitle': 'Apple Silicon / Intel，macOS 13+',
-  'download.linux.subtitle': 'AppImage / Deb / Tar.xz，x64 / arm64',
-  'download.android.subtitle': 'APK，Android 9+',
+  'download.windows.subtitle': 'Exe / Zip · x64',
+  'download.macos.subtitle': 'Apple 芯片 / Intel · macOS 13+',
+  'download.linux.subtitle': 'AppImage / Deb / Tar.xz · x64 / arm64',
+  'download.android.subtitle': 'APK · Android 9+',
   'download.title.prefix': '下载',
   'download.title.brand': 'Ghost Downloader',
-  'download.subtitle': '免费开源，四个平台通用。',
+  'download.subtitle': '一劳永逸。下载器，有这一个就够了。',
   'download.unavailable': '暂未获取到版本信息，请前往 GitHub Releases 下载。',
   'download.viewReleases': '查看所有版本',
   'download.installer': '安装版',
@@ -99,15 +99,15 @@ export const zh: CopyTable = {
   'download.appImage': 'AppImage',
   'download.deb': 'Deb 包',
   'download.tarXz': 'Tar 压缩包',
-  'download.appleSilicon': 'Apple Silicon',
+  'download.appleSilicon': 'Apple 芯片',
   'download.intel': 'Intel',
   'download.x64': 'x64',
   'download.arm64': 'arm64',
   'download.recommended': '推荐',
   'download.app.title': '客户端',
   'download.extension.title': '浏览器扩展',
-  'download.chrome.subtitle': 'Chrome 应用商店',
-  'download.edge.subtitle': 'Edge 外接程序',
+  'download.chrome.subtitle': 'Chrome 网上应用店',
+  'download.edge.subtitle': 'Edge 加载项',
   'download.firefox.subtitle': 'Firefox 附加组件',
 
   'footer.copyright': '© 2026 晓游. All Rights Reserved.',
