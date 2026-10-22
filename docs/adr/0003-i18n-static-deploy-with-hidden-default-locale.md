@@ -30,15 +30,60 @@ ESA terminates TLS and connects to the origin over HTTP. nginx therefore sees
 server block — nginx emits relative `Location` headers and the browser resolves
 them against the original `https://` scheme.
 
-## Accept-Language negotiation
+## Root redirect for Chinese visitors
 
-Only at `/`. Content pages must never negotiate — Googlebot does not send
-`Accept-Language` and will not discover the alternate version.
+Only at `/`, as two ESA 请求重定向 rules, both static 302 to
+`https://gd.xychr.com/zh/`. The console's expression builder only accepts flat
+`and` chains, and its header operators have no `starts_with`, hence two rules
+and `contains`:
 
-Done at the ESA edge, not at the origin. ESA's rule engine supports
-`http.request.headers["Accept-Language"]` as a matching field, so the redirect
-executes before the request reaches the origin or the CDN cache layer — no
-`Vary` header needed, no cache pollution, no extra round trip.
+```
+i18n-zh:     (http.host eq "gd.xychr.com" and http.request.uri.path eq "/" and http.request.headers["accept-language"] contains "zh" and not http.cookie contains "locale=en")
+i18n-chosen: (http.host eq "gd.xychr.com" and http.request.uri.path eq "/" and http.request.cookies["locale"] eq "zh")
+```
+
+Why it exists: until 2026-07-28 `/` was a Chinese-titled page that
+JS-redirected to `/zh/`, and every Baidu search click in the origin logs landed
+on `/`. Commit 8a6faa5 replaced it with the English home; Baidu clicks stopped
+on 2026-08-11 and `site:gd.xychr.com` went to zero, although Baiduspider kept
+fetching `/zh/` with 200.
+
+- **`contains "zh"` also catches English-first browsers with Chinese as a
+  fallback.** They land on `/zh/`, switch once, and the cookie keeps them on
+  English.
+- **No Baiduspider rule yet.** Whether Baiduspider sends a Chinese
+  `Accept-Language` is unknown; the origin log format records
+  `$http_accept_language` to find out before adding a user-agent rule.
+- **Googlebot and Bingbot are not redirected.** They send no Chinese
+  `Accept-Language` and keep crawling the English `/`, which stays `x-default`.
+  Google's hreflang docs name "auto-redirecting home pages" as an x-default
+  case; its advice against language redirects is about redirecting every page.
+- **`locale` cookie** is written by `LocaleProvider` when the visitor picks a
+  language, so either choice sticks on the next visit to `/`.
+- **Edge, not origin.** The rule runs before the 30-day ESA cache, so `/` needs
+  no `Vary` and the cache stays shared.
+
+The site has no banner on `/`; the redirect replaces it.
+
+hreflang uses `zh`, not `zh-CN`: `zh-CN` targets users located in mainland
+China, and Google sees mainland visitors behind proxies as HK/JP/US. With
+`zh-CN`, a Chinese-UI search from any non-CN region showed neither `/` nor
+`/zh/` in the top 30 (measured 2026-10-22).
+
+## Removed docs pages
+
+The docs tree was reorganised three times. Instead of a per-URL map, any 404
+under `/docs/` or `/zh/docs/` 301s to that docs index:
+
+```nginx
+location /docs/    { error_page 404 = @docs; }
+location @docs     { return 301 /docs/; }
+location /zh/docs/ { error_page 404 = @zhdocs; }
+location @zhdocs   { return 301 /zh/docs/; }
+location = /en     { return 301 /; }
+```
+
+The full server block lives in 1Panel at `/opt/1panel/www/conf.d/gd.conf`.
 
 ## Consequences
 
@@ -52,9 +97,6 @@ executes before the request reaches the origin or the CDN cache layer — no
   generator respects `hideLocale` — English entries use bare paths, Chinese
   entries use `/zh/`. HTML `<link hreflang>` tags are bidirectional in both
   locales.
-- **Baidu requires manual submission.** Unlike Google, Baidu does not
-  proactively discover sitemaps. Register at ziyuan.baidu.com, verify the
-  domain, and submit the sitemap URL.
 
 ## Considered and rejected
 
@@ -70,3 +112,8 @@ executes before the request reaches the origin or the CDN cache layer — no
 - **Accept-Language negotiation at the origin (nginx).** Works, but `/` must
   bypass CDN caching or carry `Vary: Accept-Language`, and every request to `/`
   incurs an origin round trip. ESA edge rules avoid both problems.
+- **A "切换到中文" banner on `/` instead of a redirect** (8a6faa5, 2026-07-28).
+  Search engines saw only an English `/`; Baidu dropped the site two weeks
+  later.
+- **An ESA edge function.** The 请求重定向 rule can match headers and cookies
+  directly, so there is no code to deploy.

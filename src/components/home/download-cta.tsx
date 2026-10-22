@@ -8,8 +8,7 @@ import { primaryAction } from './primitives';
 
 // The platform never changes under us, so there is nothing to subscribe to.
 // `useSyncExternalStore` is still the right tool: it is how React reads a
-// client-only value without a hydration mismatch, and it is already the
-// pattern `locale-banner.tsx` uses to read `navigator.languages`.
+// client-only value without a hydration mismatch.
 const subscribe = () => () => {};
 const clientSnapshot = () => detectPlatform();
 const serverSnapshot = () => null;

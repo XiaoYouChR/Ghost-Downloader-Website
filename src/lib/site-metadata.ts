@@ -108,8 +108,8 @@ export function getAbsoluteUrl(pathname: string) {
 export function getLanguageAlternates(pathname = '/') {
   return {
     'x-default': getAbsoluteUrl(getLocalizedPath(i18n.defaultLanguage, pathname)),
-    'en-US': getAbsoluteUrl(getLocalizedPath('en', pathname)),
-    'zh-CN': getAbsoluteUrl(getLocalizedPath('zh', pathname)),
+    en: getAbsoluteUrl(getLocalizedPath('en', pathname)),
+    zh: getAbsoluteUrl(getLocalizedPath('zh', pathname)),
   };
 }
 
