@@ -110,7 +110,7 @@ URL 直接进入解析器链，创建任务后弹出确认窗口（手动粘贴�
 步骤迭代器在每次取下一个步骤前都会重新检查任务状态。如果上一个步骤失败导致任务状态变为失败，迭代立即终止，不会尝试后续步骤。已完成的步骤的输出文件保留在磁盘上。
 
 <Callout type="info">
-步骤内部的下载机制（分片、加速、续传）见[下载引擎](./download-engine)。浏览器扩展到桌面端的完整通信管道见[浏览器桥接](./browser-bridge)。
+步骤内部的下载机制（分片、加速、续传）见[下载引擎](./download-engine.mdx)。浏览器扩展到桌面端的完整通信管道见[浏览器桥接](./browser-bridge.mdx)。
 </Callout>
 
 ### 暂停与恢复
@@ -178,7 +178,7 @@ JSONL 而非 SQLite。任务的子类多且频繁变化，每个子类的字段�
 |------|----------|
 | 调试下载卡住/速度异常 | 对应功能包的 `task.py` |
 | 调试扩展连不上 | `app/services/browser_service.py` |
-| 加新站点支持 | [从教程开始](./tutorial)，`features/` 下新建功能包 |
+| 加新站点支持 | [从教程开始](./tutorial.mdx)，`features/` 下新建功能包 |
 | 改 UI | `app/view/` 下的对话框和卡片 |
-| 改下载引擎 | [下载引擎](./download-engine) |
-| 改扩展行为 | [浏览器桥接](./browser-bridge) |
+| 改下载引擎 | [下载引擎](./download-engine.mdx) |
+| 改扩展行为 | [浏览器桥接](./browser-bridge.mdx) |

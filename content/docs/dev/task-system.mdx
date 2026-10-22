@@ -3,7 +3,7 @@ title: Task System
 description: State machine rules and scheduling mechanism.
 ---
 
-[Architecture Overview](./overview) describes the complete task lifecycle. This page digs into the internals of the state machine.
+[Architecture Overview](./overview.mdx) describes the complete task lifecycle. This page digs into the internals of the state machine.
 
 Source: `app/services/task_service.py`, `app/models/task.py`.
 
@@ -47,7 +47,7 @@ When the user adjusts the maximum concurrency, if the number of RUNNING tasks ex
 
 ## Operation Chains
 
-The core pattern for all mutation operations: cancel the run → callback → follow-up action. Callback timing depends on whether the task is running; this is an inevitable result of async bridging. See [Architecture Overview](./overview#mutation-operations).
+The core pattern for all mutation operations: cancel the run → callback → follow-up action. Callback timing depends on whether the task is running; this is an inevitable result of async bridging. See [Architecture Overview](./overview.mdx#mutation-operations).
 
 | Operation | What happens after cancellation |
 |------|-------------|

@@ -68,7 +68,7 @@ The Selection goes from the content script to the background (Service Worker). T
 
 On cache miss, wait 1500ms; the webRequest listener may not have recorded a response for this URL yet. If still missing, generate a resource with zero metadata and let the desktop do Range probing itself.
 
-For merged downloads (video + audio split tracks), query both resources in parallel. Finally send via WebSocket to the desktop, entering the flow described in [Architecture Overview](./overview): parse → draft/direct → enqueue → schedule.
+For merged downloads (video + audio split tracks), query both resources in parallel. Finally send via WebSocket to the desktop, entering the flow described in [Architecture Overview](./overview.mdx): parse → draft/direct → enqueue → schedule.
 
 </Step>
 </Steps>

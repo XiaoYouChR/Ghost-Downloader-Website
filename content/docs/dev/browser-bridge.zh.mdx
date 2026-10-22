@@ -68,7 +68,7 @@ Selection 从 content script 发到 background（Service Worker）。background 
 
 缓存未命中时等待 1500ms，webRequest 监听器可能还没记录到这个 URL 的响应。仍然没有就生成一个零元数据的资源，桌面端自己做 Range 探测。
 
-合并下载（视频+音频分轨）时并行查两个资源。最终通过 WebSocket 发送到桌面端，进入[架构总览](./overview)中描述的 解析 → 草稿/直接 → 入队 → 调度 流程。
+合并下载（视频+音频分轨）时并行查两个资源。最终通过 WebSocket 发送到桌面端，进入[架构总览](./overview.mdx)中描述的 解析 → 草稿/直接 → 入队 → 调度 流程。
 
 </Step>
 </Steps>

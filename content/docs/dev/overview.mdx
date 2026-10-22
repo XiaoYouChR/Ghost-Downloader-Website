@@ -110,7 +110,7 @@ Tasks execute one Step at a time in order. A Bilibili video Task usually has thr
 The Step iterator re-checks the Task state each time before fetching the next Step. If the previous Step failed and the Task state becomes FAILED, iteration terminates immediately and does not attempt subsequent Steps. Output files of completed Steps remain on disk.
 
 <Callout type="info">
-For the download mechanism inside Steps (slicing, acceleration, resume), see [Download Engine](./download-engine). For the full communication pipeline from the browser extension to the desktop side, see [Browser Bridge](./browser-bridge).
+For the download mechanism inside Steps (slicing, acceleration, resume), see [Download Engine](./download-engine.mdx). For the full communication pipeline from the browser extension to the desktop side, see [Browser Bridge](./browser-bridge.mdx).
 </Callout>
 
 ### Pause and Resume
@@ -178,7 +178,7 @@ Write strategy: a 200ms debounce merges multiple state changes into one write; w
 |------|----------|
 | Debug a stuck download / abnormal speed | The corresponding FeaturePack's `task.py` |
 | Debug extension connection failure | `app/services/browser_service.py` |
-| Add support for a new site | [Start from the tutorial](./tutorial), create a new FeaturePack under `features/` |
+| Add support for a new site | [Start from the tutorial](./tutorial.mdx), create a new FeaturePack under `features/` |
 | Change UI | Dialogs and cards under `app/view/` |
-| Change the download engine | [Download Engine](./download-engine) |
-| Change extension behavior | [Browser Bridge](./browser-bridge) |
+| Change the download engine | [Download Engine](./download-engine.mdx) |
+| Change extension behavior | [Browser Bridge](./browser-bridge.mdx) |
