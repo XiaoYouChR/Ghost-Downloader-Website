@@ -2,14 +2,14 @@ import { type Donor, donors } from '@/data/donors';
 
 const i18n = {
   en: {
-    count: (n: number) => `${n} supporter${n === 1 ? '' : 's'} total`,
+    count: (n: number) => `${n} donation${n === 1 ? '' : 's'}`,
     empty: 'The donor list is being compiled.',
     anonymous: 'Anonymous',
     alipay: 'Alipay',
     wechat: 'WeChat Pay',
   },
   zh: {
-    count: (n: number) => `共 ${n} 位支持者`,
+    count: (n: number) => `共 ${n} 笔`,
     empty: '名单整理中。',
     anonymous: '匿名支持者',
     alipay: '支付宝',
