@@ -1,6 +1,6 @@
 ---
 title: Benchmark Data
-description: 2026-07-30, single-run benchmark of GD / IDM / Motrix Next / Gopeed.
+description: 2026-07-30, single-run benchmark of GD / IDM / Rayburst / Gopeed.
 ---
 
 Single run, one machine, one residential broadband connection. Losing entries are included.
@@ -18,12 +18,12 @@ Single run, one machine, one residential broadband connection. Losing entries ar
 |---|---|
 | Ghost Downloader | 4.2.2 (2026-07-29) |
 | IDM | 6.43 Build 7 (2026-07-22) |
-| [Motrix Next](https://github.com/AnInsomniacy/motrix-next) | v3.9.6 (2026-06-21) |
+| [Rayburst](https://github.com/AnInsomniacy/rayburst) | v3.9.6 (2026-06-21) |
 | Gopeed | v1.9.3 (2026-03-18) |
 
 ## Speed (default 32 connections)
 
-| File | Size | GD | IDM | Motrix Next | Gopeed |
+| File | Size | GD | IDM | Rayburst | Gopeed |
 |---|---|---|---|---|---|
 | Electron v33.3.1 | 101 MB | **1.07s** | 3.37s | 1.40s | 2.73s |
 | Qt 6.8.3 source | 949 MB | **11.83s** | 12.80s | 17s | ❌ Anti-crawler |
@@ -35,12 +35,12 @@ Single run, one machine, one residential broadband connection. Losing entries ar
 | Completed count | | 6/6 | 6/6 | 6/6 | 3/6 |
 
 <Callout type="info">
-In the OneDrive row, GD and Motrix Next used 128 connections; IDM and Gopeed used 32, so the conditions were unequal. GD lost one QQ entry (by 0.17s).
+In the OneDrive row, GD and Rayburst used 128 connections; IDM and Gopeed used 32, so the conditions were unequal. GD lost one QQ entry (by 0.17s).
 </Callout>
 
 ## Browser download takeover
 
-| Site | GD | IDM | Motrix Next | Gopeed |
+| Site | GD | IDM | Rayburst | Gopeed |
 |---|---|---|---|---|
 | Claude.ai | ✅ | Not intercepted | ✅ | ❌ Anti-crawler |
 | Lanzou Cloud | ✅ | ✅ | ✅ | ✅ |
@@ -48,7 +48,7 @@ In the OneDrive row, GD and Motrix Next used 128 connections; IDM and Gopeed use
 | 123 Netdisk | ✅ | ✅ | ✅ | ✅ |
 | Success rate | **4/4** | 3/4 | **4/4** | 3/4 |
 
-Sample size is small; GD and Motrix Next are tied.
+Sample size is small; GD and Rayburst are tied.
 
 ## Media sniffing (23 sites, GD vs IDM)
 

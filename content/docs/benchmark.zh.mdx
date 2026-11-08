@@ -1,6 +1,6 @@
 ---
 title: 实测数据
-description: 2026-07-30，GD / IDM / Motrix Next / Gopeed 单次实测。
+description: 2026-07-30，GD / IDM / Rayburst / Gopeed 单次实测。
 ---
 
 单次测量，一台机器，一条家用宽带。输了的项也在。
@@ -18,12 +18,12 @@ description: 2026-07-30，GD / IDM / Motrix Next / Gopeed 单次实测。
 |---|---|
 | Ghost Downloader | 4.2.2 (2026-07-29) |
 | IDM | 6.43 Build 7 (2026-07-22) |
-| [Motrix Next](https://github.com/AnInsomniacy/motrix-next) | v3.9.6 (2026-06-21) |
+| [Rayburst](https://github.com/AnInsomniacy/motrix-next) | v3.9.6 (2026-06-21) |
 | Gopeed | v1.9.3 (2026-03-18) |
 
 ## 速度（默认 32 连接）
 
-| 文件 | 大小 | GD | IDM | Motrix Next | Gopeed |
+| 文件 | 大小 | GD | IDM | Rayburst | Gopeed |
 |---|---|---|---|---|---|
 | Electron v33.3.1 | 101 MB | **1.07s** | 3.37s | 1.40s | 2.73s |
 | Qt 6.8.3 源码 | 949 MB | **11.83s** | 12.80s | 17s | ❌反爬 |
@@ -35,12 +35,12 @@ description: 2026-07-30，GD / IDM / Motrix Next / Gopeed 单次实测。
 | 完成次数 | | 6/6 | 6/6 | 6/6 | 3/6 |
 
 <Callout type="info">
-OneDrive 那行 GD 和 Motrix Next 用了 128 连接，IDM 和 Gopeed 是 32，条件不对等。GD 输了 QQ 一项（差 0.17s）。
+OneDrive 那行 GD 和 Rayburst 用了 128 连接，IDM 和 Gopeed 是 32，条件不对等。GD 输了 QQ 一项（差 0.17s）。
 </Callout>
 
 ## 接管浏览器下载
 
-| 站点 | GD | IDM | Motrix Next | Gopeed |
+| 站点 | GD | IDM | Rayburst | Gopeed |
 |---|---|---|---|---|
 | Claude.ai | ✅ | 未接管 | ✅ | ❌反爬 |
 | 蓝奏云 | ✅ | ✅ | ✅ | ✅ |
@@ -48,7 +48,7 @@ OneDrive 那行 GD 和 Motrix Next 用了 128 连接，IDM 和 Gopeed 是 32，�
 | 123 网盘 | ✅ | ✅ | ✅ | ✅ |
 | 成功率 | **4/4** | 3/4 | **4/4** | 3/4 |
 
-样本量小，GD 和 Motrix Next 并列。
+样本量小，GD 和 Rayburst 并列。
 
 ## 媒体嗅探（23 站，GD vs IDM）
 
