@@ -10,6 +10,23 @@ export interface Donor {
 }
 
 export const donors: Donor[] = [
+  { name: '小慕', amount: 20, at: '2026-11-13', channel: 'wechat' },
+  { name: '', amount: 10, at: '2026-11-12', channel: 'wechat', anonymous: true },
+  { name: '子豪', amount: 5, at: '2026-11-10', channel: 'wechat', message: '兄弟牛逼' },
+  { name: '风会记得每朵花的香', amount: 5, at: '2026-11-09', channel: 'wechat', message: '谢啦~下载器好用' },
+  { name: '朗朗乾坤', amount: 2, at: '2026-11-09', channel: 'wechat', message: '辛苦了，相当优秀' },
+  { name: '', amount: 1, at: '2026-11-09', channel: 'wechat', anonymous: true, message: '加油 作者这款软件非常好啊' },
+  { name: 'XUESHENG', amount: 10, at: '2026-11-08', channel: 'alipay' },
+  { name: '', amount: 6, at: '2026-11-08', channel: 'alipay', anonymous: true, message: '加油' },
+  { name: '', amount: 3, at: '2026-11-07', channel: 'alipay', anonymous: true },
+  { name: '', amount: 5, at: '2026-11-07', channel: 'alipay', anonymous: true, message: '好用，必须支持' },
+  { name: '小港', amount: 5.55, at: '2026-11-06', channel: 'wechat', message: 'Ghost Downloader' },
+  { name: '', amount: 5, at: '2026-11-06', channel: 'alipay', anonymous: true },
+  { name: '', amount: 5, at: '2026-10-30', channel: 'wechat', anonymous: true },
+  { name: '', amount: 20, at: '2026-10-30', channel: 'alipay', anonymous: true },
+  { name: '', amount: 5, at: '2026-10-30', channel: 'alipay', anonymous: true },
+  { name: '恺', amount: 1, at: '2026-10-29', channel: 'wechat', message: '谢谢你的分享' },
+  { name: '', amount: 10, at: '2026-10-27', channel: 'alipay', anonymous: true },
   { name: '', amount: 30, at: '2026-10-26', channel: 'alipay', anonymous: true, message: '加油' },
   { name: '', amount: 10, at: '2026-10-25', channel: 'alipay', anonymous: true, message: '你爱我，我爱你，买杯蜜雪冰城甜蜜蜜🥰' },
   { name: '', amount: 10, at: '2026-10-21', channel: 'alipay', anonymous: true },
